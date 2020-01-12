@@ -1,8 +1,12 @@
 import React from "react";
+import ToDoList from "./ToDoList/ToDoList";
 import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder/Folder";
 import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
+import { compose } from "redux";
+import { withRouter } from "react-router-dom";
+import { setCurrentFolderById, toggleChecked } from "./../../redux/todo";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -26,14 +30,28 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Folders({ folders }) {
+function Folders({
+  folders,
+  match,
+  setCurrentFolderById,
+  currentFolder,
+  toggleChecked
+}) {
   const classes = useStyles();
-  console.log(folders);
+  if (match.params.currentFolder)
+    return (
+      <ToDoList
+        id={match.params.currentFolder}
+        setCurrentFolderById={setCurrentFolderById}
+        currentFolder={currentFolder}
+        toggleChecked={toggleChecked}
+      />
+    );
 
   return (
     <div className={classes.root}>
       <Grid container spacing={2} className={classes.container}>
-        {Object.values(folders).map(el => {
+        {folders.map(el => {
           return (
             <Grid key={el.id} container item className={classes.item}>
               <Folder
@@ -51,9 +69,16 @@ function Folders({ folders }) {
 }
 
 const mapStateToProps = state => ({
-  folders: state.todo.folders
+  folders: state.todo.folders,
+  currentFolder: state.todo.currentFolder
 });
 
-const mapDispatchToProps = null;
+const mapDispatchToProps = {
+  setCurrentFolderById,
+  toggleChecked
+};
 
-export default connect(mapStateToProps, mapDispatchToProps)(Folders);
+export default compose(
+  connect(mapStateToProps, mapDispatchToProps),
+  withRouter
+)(Folders);

@@ -10,7 +10,7 @@ const App = () => {
   return (
     <div className="appWrapper">
       <Header />
-      <Route path="/folders" render={() => <Folders />} />
+      <Route path="/folders/:currentFolder?" render={() => <Folders />} />
     </div>
   );
 }

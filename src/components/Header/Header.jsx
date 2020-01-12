@@ -14,7 +14,6 @@ import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
-import SettingsIcon from "@material-ui/icons/Settings";
 import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { NavLink } from "react-router-dom";
 //import ClickAwayListener from "@material-ui/core/ClickAwayListener";
@@ -185,18 +184,6 @@ function Header() {
                 <FolderOpenIcon />
               </ListItemIcon>
               <ListItemText primary={"Folders"} />
-            </ListItem>
-          </NavLink>
-          <NavLink
-            to="/settings"
-            onClick={() => setOpen(false)}
-            className={classes.link}
-          >
-            <ListItem button>
-              <ListItemIcon>
-                <SettingsIcon />
-              </ListItemIcon>
-              <ListItemText primary={"Settings"} />
             </ListItem>
           </NavLink>
         </List>

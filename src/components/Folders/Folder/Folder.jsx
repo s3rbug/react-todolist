@@ -23,7 +23,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Folder({ id, headline, description, goals, ...props }) {
+function Folder({ id, headline, description, goals }) {
   const classes = useStyles();
   return (
     <Box boxShadow={5}>
