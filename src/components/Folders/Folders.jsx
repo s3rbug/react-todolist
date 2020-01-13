@@ -6,7 +6,12 @@ import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
-import { setCurrentFolderById, toggleChecked } from "./../../redux/todo";
+import {
+  setCurrentFolderById,
+  toggleChecked,
+  addGoal,
+  deleteFolder
+} from "./../../redux/todo";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,7 +26,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   item: {
-    maxWidth: window.innerWidth / 4 - 8 + "px"
+    maxWidth: "100vw"
   },
   container: {
     position: "relative",
@@ -35,17 +40,22 @@ function Folders({
   match,
   setCurrentFolderById,
   currentFolder,
-  toggleChecked
+  toggleChecked,
+  addGoal,
+  deleteFolder
 }) {
   const classes = useStyles();
   if (match.params.currentFolder)
     return (
-      <ToDoList
-        id={match.params.currentFolder}
-        setCurrentFolderById={setCurrentFolderById}
-        currentFolder={currentFolder}
-        toggleChecked={toggleChecked}
-      />
+      <div>
+        <ToDoList
+          id={match.params.currentFolder}
+          setCurrentFolderById={setCurrentFolderById}
+          currentFolder={currentFolder}
+          toggleChecked={toggleChecked}
+          addGoal={addGoal}
+        />
+      </div>
     );
 
   return (
@@ -53,12 +63,19 @@ function Folders({
       <Grid container spacing={2} className={classes.container}>
         {folders.map(el => {
           return (
-            <Grid key={el.id} container item className={classes.item}>
+            <Grid
+              key={el.id}
+              container
+              item
+              className={classes.item}
+              justify="center"
+            >
               <Folder
                 id={el.id}
                 description={el.description}
                 headline={el.headline}
                 goals={el.goals}
+                deleteFolder={deleteFolder}
               />
             </Grid>
           );
@@ -75,7 +92,9 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   setCurrentFolderById,
-  toggleChecked
+  toggleChecked,
+  addGoal,
+  deleteFolder
 };
 
 export default compose(

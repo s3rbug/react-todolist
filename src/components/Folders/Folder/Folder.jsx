@@ -11,44 +11,50 @@ import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
   card: {
-    borderWidth: "2px"
+    borderWidth: "2px",
+    width: "98vw"
   },
-  btn: {},
   btnContainer: {
     display: "flex",
     justifyContent: "flex-end"
   },
   link: {
-    textDecoration: "none"
+    textDecoration: "none",
+    color: "black"
   }
 }));
 
-function Folder({ id, headline, description, goals }) {
+function Folder({ id, headline, description, deleteFolder, goals }) {
   const classes = useStyles();
+  function deleteThisFolder() {
+    deleteFolder(id);
+  }
   return (
     <Box boxShadow={5}>
       <Card variant="outlined" className={classes.card}>
-        <CardActionArea>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {headline}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {description}
-            </Typography>
-          </CardContent>
-        </CardActionArea>
+        <NavLink to={`/folders/${id}`} className={classes.link}>
+          <CardActionArea>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {headline}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {description}
+              </Typography>
+            </CardContent>
+          </CardActionArea>
+        </NavLink>
         <CardActions className={classes.btnContainer}>
-          <Button size="large" color="secondary" className={classes.btn}>
+          <Button
+            size="large"
+            color="secondary"
+            className={classes.btn}
+            onClick={deleteThisFolder}
+          >
             Delete
           </Button>
           <NavLink to={`/folders/${id}`} className={classes.link}>
-            <Button
-              onClick={() => {}}
-              size="large"
-              color="primary"
-              className={classes.btn}
-            >
+            <Button size="large" color="primary" className={classes.btn}>
               Open
             </Button>
           </NavLink>
