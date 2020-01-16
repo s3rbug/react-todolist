@@ -8,6 +8,7 @@ import Divider from "@material-ui/core/Divider";
 import Box from "@material-ui/core/Box";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
+import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -15,6 +16,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
+import { Tooltip } from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,15 +39,15 @@ const useStyles = makeStyles(theme => ({
     borderBottom: "1px solid #E0E0E0",
     boxShadow: "2px 0 5px 0px rgba(209, 215, 249, 0.74);"
   },
-  add: {
+  buttons: {
     display: "flex",
     justifyContent: "flex-end"
   },
   checked: {
     textDecoration: "line-through"
   },
-  checkedList: {
-    //backgroundColor: theme.palette.success.light
+  deleteButton: {
+    marginRight: "1%"
   }
 }));
 
@@ -54,7 +56,8 @@ function ToDoList({
   id,
   currentFolder,
   toggleChecked,
-  addGoal
+  addGoal,
+  deleteDone
 }) {
   useEffect(() => {
     setCurrentFolderById(id);
@@ -64,12 +67,17 @@ function ToDoList({
   const [currentText, setCurrentText] = React.useState("");
   const [hasError, setError] = React.useState("");
 
+  const handleDeleteButton = () => {
+    deleteDone();
+  };
+
   const handleAddButton = () => {
     setOpen(!open);
   };
 
   const toggleCheckbox = e => {
-    toggleChecked(e.target.value);
+    if (e.target.value) toggleChecked(e.target.value);
+    else toggleChecked(e);
   };
 
   const textChanged = e => {
@@ -96,6 +104,9 @@ function ToDoList({
           return (
             <ListItem
               button
+              onClick={() => {
+                toggleChecked(el.id);
+              }}
               key={el.id + el.text}
               className={
                 classes.item +
@@ -124,15 +135,35 @@ function ToDoList({
           );
         })}
       </List>
-      <div className={classes.add}>
-        <Fab
-          color="primary"
-          aria-label="add"
-          size="medium"
-          onClick={handleAddButton}
-        >
-          <AddIcon />
-        </Fab>
+      <div>
+        <div className={classes.buttons}>
+          <div className={classes.deleteButton}>
+            <Tooltip
+              title="Delete done tasks"
+              aria-label="delete"
+              placement="bottom"
+            >
+              <Fab
+                color="secondary"
+                aria-label="add"
+                size="medium"
+                onClick={handleDeleteButton}
+              >
+                <DeleteIcon />
+              </Fab>
+            </Tooltip>
+          </div>
+          <Tooltip title="Add" aria-label="add" placement="bottom">
+            <Fab
+              color="primary"
+              aria-label="add"
+              size="medium"
+              onClick={handleAddButton}
+            >
+              <AddIcon />
+            </Fab>
+          </Tooltip>
+        </div>
         <Dialog
           open={open}
           onClose={handleAddButton}
@@ -140,7 +171,11 @@ function ToDoList({
           onKeyDown={e => {
             if (e.key === "Enter") {
               setOpen(false);
+              e.preventDefault();
               handleAddNewGoal();
+            } else if (e.key === "Escape") {
+              setOpen(false);
+              e.preventDefault();
             }
           }}
         >

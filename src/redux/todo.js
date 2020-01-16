@@ -2,7 +2,8 @@ const SET_CURRENT_FOLDER = "todo/SET_CURRENT_FOLDER"
 const TOGGLE_CHECKED = "todo/TOGGLE_CHECKED"
 const ADD_GOAL = "todo/ADD_GOAL"
 const DELETE_FOLDER = "todo/DELETE_FOLDER"
-
+const DELETE_DONE = "todo/DELETE_DONE"
+const ADD_FOLDER = "todo/ADD_FOLDER"
 
 const initialState = {
     folders: [
@@ -76,12 +77,17 @@ const initialState = {
     currentFolder: null
 }
 
+function sync(state, id) {
+    state.folders[id] = state.currentFolder
+}
+
 function reducer(state = initialState, action) {
     if (action.type === SET_CURRENT_FOLDER) {
-        return {
-            ...state,
-            currentFolder: state.folders[action.id]
-        }
+        if (state.currentFolder === null)
+            return {
+                ...state,
+                currentFolder: state.folders[action.id]
+            }
     }
     else if (action.type === TOGGLE_CHECKED) {
         let stateCopy = { ...state }
@@ -104,7 +110,7 @@ function reducer(state = initialState, action) {
             ...stateCopy
         }
     }
-    else if (action.type === DELETE_FOLDER) { ////
+    else if (action.type === DELETE_FOLDER) {
         let foldersCopy = [...state.folders]
         foldersCopy = foldersCopy.filter(el => {
             return action.id !== el.id
@@ -116,7 +122,34 @@ function reducer(state = initialState, action) {
             ...state,
             folders: foldersCopy
         }
-
+    }
+    else if (action.type === DELETE_DONE) {
+        let currentGoals = [...state.currentFolder.goals]
+        currentGoals = currentGoals.filter(el => {
+            return !el.checked
+        })
+        return {
+            ...state,
+            currentFolder: {
+                ...state.currentFolder,
+                goals: currentGoals
+            }
+        };
+    }
+    else if (action.type === ADD_FOLDER) {
+        const newFolder = {
+            id: state.folders.length,
+            headline: action.headline,
+            description: action.description,
+            goals: []
+        }
+        return {
+            ...state,
+            folders: [
+                ...state.folders,
+                newFolder
+            ]
+        }
     }
     return state;
 }
@@ -125,5 +158,8 @@ export const setCurrentFolderById = (id) => ({ type: SET_CURRENT_FOLDER, id })
 export const toggleChecked = (id) => ({ type: TOGGLE_CHECKED, id })
 export const addGoal = (text) => ({ type: ADD_GOAL, text })
 export const deleteFolder = (id) => ({ type: DELETE_FOLDER, id })
+export const deleteDone = () => ({ type: DELETE_DONE })
+export const addFolder = (headline, description) => ({ type: ADD_FOLDER, headline, description })
+
 
 export default reducer;

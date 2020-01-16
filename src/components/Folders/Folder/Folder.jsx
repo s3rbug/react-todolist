@@ -1,9 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
-import CardActionArea from "@material-ui/core/CardActionArea";
 import CardContent from "@material-ui/core/CardContent";
 import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
@@ -26,23 +25,28 @@ const useStyles = makeStyles(theme => ({
 
 function Folder({ id, headline, description, deleteFolder, goals }) {
   const classes = useStyles();
+  let [shadow, setShadow] = useState(2);
   function deleteThisFolder() {
     deleteFolder(id);
   }
+  function shadowOn() {
+    setShadow(12);
+  }
+  function shadowOff() {
+    setShadow(2);
+  }
   return (
-    <Box boxShadow={5}>
+    <Box boxShadow={shadow} onMouseEnter={shadowOn} onMouseLeave={shadowOff}>
       <Card variant="outlined" className={classes.card}>
         <NavLink to={`/folders/${id}`} className={classes.link}>
-          <CardActionArea>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {headline}
-              </Typography>
-              <Typography variant="body2" color="textSecondary" component="p">
-                {description}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
+          <CardContent>
+            <Typography gutterBottom variant="h5" component="h2">
+              {headline}
+            </Typography>
+            <Typography variant="body2" color="textSecondary" component="p">
+              {description}
+            </Typography>
+          </CardContent>
         </NavLink>
         <CardActions className={classes.btnContainer}>
           <Button
@@ -53,11 +57,6 @@ function Folder({ id, headline, description, deleteFolder, goals }) {
           >
             Delete
           </Button>
-          <NavLink to={`/folders/${id}`} className={classes.link}>
-            <Button size="large" color="primary" className={classes.btn}>
-              Open
-            </Button>
-          </NavLink>
         </CardActions>
       </Card>
     </Box>

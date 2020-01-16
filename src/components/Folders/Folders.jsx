@@ -6,11 +6,21 @@ import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
+import { Tooltip } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
+import Fab from "@material-ui/core/Fab";
+import Button from "@material-ui/core/Button";
+import Dialog from "@material-ui/core/Dialog";
+import DialogActions from "@material-ui/core/DialogActions";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import SetFolder from "./Folder/SetFolder";
 import {
   setCurrentFolderById,
   toggleChecked,
   addGoal,
-  deleteFolder
+  deleteFolder,
+  deleteDone,
+  addFolder
 } from "./../../redux/todo";
 
 const useStyles = makeStyles(theme => ({
@@ -20,18 +30,21 @@ const useStyles = makeStyles(theme => ({
     flexWrap: "wrap",
     flexGrow: 1,
     "& > *": {
-      margin: theme.spacing(1),
-      width: theme.spacing(16),
-      height: theme.spacing(16)
+      margin: theme.spacing(1)
     }
   },
   item: {
-    maxWidth: "100vw"
+    maxWidth: "98vw"
   },
   container: {
     position: "relative",
     height: "100%",
     width: "100%"
+  },
+  addButton: {
+    display: "flex",
+    justifyContent: "flex-end",
+    width: "98vw"
   }
 }));
 
@@ -42,9 +55,34 @@ function Folders({
   currentFolder,
   toggleChecked,
   addGoal,
-  deleteFolder
+  deleteFolder,
+  deleteDone,
+  addFolder
 }) {
   const classes = useStyles();
+  const [open, setOpen] = React.useState(false);
+  const [curHeadline, setCurHeadline] = React.useState("");
+  const [curDescription, setCurDescription] = React.useState("");
+  const [errorHead, setErrorHead] = React.useState("");
+  const [errorDesc, setErrorDesc] = React.useState("");
+
+  function handleAddButton() {
+    if (curHeadline !== "") {
+      if (curDescription !== "") {
+        addFolder(curHeadline, curDescription);
+        setCurDescription("");
+        setCurHeadline("");
+        setOpen(false);
+        setErrorDesc("");
+        setErrorHead("");
+      } else {
+        setErrorDesc("Field can not be empty");
+      }
+    } else {
+      setErrorHead("Field can not be empty");
+    }
+  }
+
   if (match.params.currentFolder)
     return (
       <div>
@@ -54,6 +92,7 @@ function Folders({
           currentFolder={currentFolder}
           toggleChecked={toggleChecked}
           addGoal={addGoal}
+          deleteDone={deleteDone}
         />
       </div>
     );
@@ -81,6 +120,43 @@ function Folders({
           );
         })}
       </Grid>
+      <div className={classes.addButton}>
+        <Tooltip title="Add" aria-label="add" placement="bottom">
+          <Fab
+            color="primary"
+            aria-label="add"
+            size="medium"
+            onClick={() => setOpen(true)}
+          >
+            <AddIcon />
+          </Fab>
+        </Tooltip>
+      </div>
+      <Dialog
+        open={open}
+        onClose={() => setOpen(false)}
+        aria-labelledby="form-dialog-folders"
+      >
+        <DialogTitle id="form-dialog-folders">Add new folder</DialogTitle>
+        <SetFolder
+          curHeadline={curHeadline}
+          setCurHeadline={setCurHeadline}
+          curDescription={curDescription}
+          setCurDescription={setCurDescription}
+          errorHead={errorHead}
+          errorDesc={errorDesc}
+          setErrorHead={setErrorHead}
+          setErrorDesc={setErrorDesc}
+        />
+        <DialogActions>
+          <Button onClick={() => setOpen(false)} color="secondary">
+            Cancel
+          </Button>
+          <Button onClick={handleAddButton} color="primary">
+            Add
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }
@@ -94,7 +170,9 @@ const mapDispatchToProps = {
   setCurrentFolderById,
   toggleChecked,
   addGoal,
-  deleteFolder
+  deleteFolder,
+  deleteDone,
+  addFolder
 };
 
 export default compose(
