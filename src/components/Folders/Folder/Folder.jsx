@@ -36,30 +36,32 @@ function Folder({ id, headline, description, deleteFolder, goals }) {
     setShadow(2);
   }
   return (
-    <Box boxShadow={shadow} onMouseEnter={shadowOn} onMouseLeave={shadowOff}>
-      <Card variant="outlined" className={classes.card}>
-        <NavLink to={`/folders/${id}`} className={classes.link}>
-          <CardContent>
-            <Typography gutterBottom variant="h5" component="h2">
-              {headline}
-            </Typography>
-            <Typography variant="body2" color="textSecondary" component="p">
-              {description}
-            </Typography>
-          </CardContent>
-        </NavLink>
-        <CardActions className={classes.btnContainer}>
-          <Button
-            size="large"
-            color="secondary"
-            className={classes.btn}
-            onClick={deleteThisFolder}
-          >
-            Delete
-          </Button>
-        </CardActions>
-      </Card>
-    </Box>
+    <div id={classes.root}>
+      <Box boxShadow={shadow} onMouseEnter={shadowOn} onMouseLeave={shadowOff}>
+        <Card variant="outlined" className={classes.card}>
+          <NavLink to={`/folders/${id}`} className={classes.link}>
+            <CardContent>
+              <Typography gutterBottom variant="h5" component="h2">
+                {headline}
+              </Typography>
+              <Typography variant="body2" color="textSecondary" component="p">
+                {description}
+              </Typography>
+            </CardContent>
+          </NavLink>
+          <CardActions className={classes.btnContainer}>
+            <Button
+              size="large"
+              color="secondary"
+              className={classes.btn}
+              onClick={deleteThisFolder}
+            >
+              Delete
+            </Button>
+          </CardActions>
+        </Card>
+      </Box>
+    </div>
   );
 }
 

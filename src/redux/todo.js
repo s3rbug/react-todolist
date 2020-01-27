@@ -77,37 +77,39 @@ const initialState = {
     currentFolder: null
 }
 
-function sync(state, id) {
-    state.folders[id] = state.currentFolder
+function sync(state, folder) {
+    state.folders[state.currentFolder.id] = folder
 }
 
 function reducer(state = initialState, action) {
     if (action.type === SET_CURRENT_FOLDER) {
-        if (state.currentFolder === null)
-            return {
-                ...state,
-                currentFolder: state.folders[action.id]
-            }
-    }
-    else if (action.type === TOGGLE_CHECKED) {
-        let stateCopy = { ...state }
-        stateCopy.currentFolder.goals[action.id].checked = !stateCopy.currentFolder.goals[action.id].checked;
         return {
             ...state,
-            currentFolder: { ...stateCopy.currentFolder }
+            currentFolder: state.folders[action.id]
+        }
+    }
+    else if (action.type === TOGGLE_CHECKED) {
+        let currentFolderCopy = { ...state.currentFolder }
+        currentFolderCopy.goals[action.id].checked = !currentFolderCopy.goals[action.id].checked
+        sync(state, currentFolderCopy)
+        return {
+            ...state,
+            currentFolder: currentFolderCopy
         };
     }
     else if (action.type === ADD_GOAL) {
-        let stateCopy = { ...state }
+        let currentFolderCopy = { ...state.currentFolder }
         const newGoal = {
-            id: stateCopy.currentFolder.goals.length,
+            id: state.currentFolder.goals.length,
             text: action.text,
             checked: false
         }
-        const newGoals = [...state.currentFolder.goals, newGoal];
-        stateCopy.currentFolder.goals = newGoals
+        const newGoals = [...currentFolderCopy.goals, newGoal];
+        currentFolderCopy.goals = newGoals
+        sync(state, currentFolderCopy)
         return {
-            ...stateCopy
+            ...state,
+            currentFolder: currentFolderCopy
         }
     }
     else if (action.type === DELETE_FOLDER) {
@@ -127,6 +129,13 @@ function reducer(state = initialState, action) {
         let currentGoals = [...state.currentFolder.goals]
         currentGoals = currentGoals.filter(el => {
             return !el.checked
+        })
+        for (let i = 0; i < currentGoals.length; ++i) {
+            currentGoals[i].id = i;
+        }
+        sync(state, {
+            ...state.currentFolder,
+            goals: currentGoals
         })
         return {
             ...state,

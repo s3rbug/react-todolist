@@ -175,7 +175,9 @@ const mapDispatchToProps = {
   addFolder
 };
 
-export default compose(
+const FoldersWithHooks = compose(
   connect(mapStateToProps, mapDispatchToProps),
   withRouter
 )(Folders);
+
+export default FoldersWithHooks;
