@@ -34,7 +34,7 @@ const useStyles = makeStyles(theme => ({
     }
   },
   item: {
-    maxWidth: "98vw"
+    maxWidth: "100%"
   },
   container: {
     position: "relative",
@@ -44,7 +44,11 @@ const useStyles = makeStyles(theme => ({
   addButton: {
     display: "flex",
     justifyContent: "flex-end",
-    width: "98vw"
+    width: "98%"
+  },
+  addIcon: {},
+  addFolderDialog: {
+    //maxWidth: "100%"
   }
 }));
 
@@ -126,13 +130,15 @@ function Folders({
             color="primary"
             aria-label="add"
             size="medium"
+            className={classes.subButtons}
             onClick={() => setOpen(true)}
           >
-            <AddIcon />
+            <AddIcon className={classes.addIcon} />
           </Fab>
         </Tooltip>
       </div>
       <Dialog
+        className={classes.addFolderDialog}
         open={open}
         onClose={() => setOpen(false)}
         aria-labelledby="form-dialog-folders"

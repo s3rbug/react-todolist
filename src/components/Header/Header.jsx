@@ -1,24 +1,25 @@
 import React from "react";
 import clsx from "clsx";
-import { makeStyles /*, useTheme */ } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
+import Drawer from "@material-ui/core/Drawer";
+import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
-import CssBaseline from "@material-ui/core/CssBaseline";
 import Typography from "@material-ui/core/Typography";
+import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
+import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
-import Divider from "@material-ui/core/Divider";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import FolderOpenIcon from "@material-ui/icons/FolderOpen";
-import SwipeableDrawer from "@material-ui/core/SwipeableDrawer";
 import { NavLink } from "react-router-dom";
+import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 //import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
-let drawerWidth = window.innerWidth * 0.2;
+let drawerWidth = window.innerWidth * 0.17;
 let useStyles;
 updateStyles();
 
@@ -59,13 +60,13 @@ function updateStyles() {
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(["width", "margin"], {
+      transition: theme.transitions.create(["margin", "width"], {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       })
     },
     menuButton: {
-      marginRight: 18
+      marginRight: theme.spacing(2)
     },
     hide: {
       display: "none"
@@ -73,69 +74,60 @@ function updateStyles() {
     drawer: {
       width: drawerWidth,
       flexShrink: 0,
-      whiteSpace: "nowrap",
-      position: "fixed",
-      zIndex: 100
+      height: "100vh"
     },
-    drawerOpen: {
+    drawerPaper: {
       width: drawerWidth,
-      transition: theme.transitions.create("width", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.enteringScreen
-      })
+      boxShadow: "0 0 20px 0 rgba(209, 215, 249, 0.74);"
     },
-    drawerClose: {
-      transition: theme.transitions.create("width", {
+    drawerHeader: {
+      display: "flex",
+      alignItems: "center",
+      padding: theme.spacing(0, 1),
+      ...theme.mixins.toolbar,
+      justifyContent: "flex-end"
+    },
+    content: {
+      flexGrow: 1,
+      transition: theme.transitions.create("margin", {
         easing: theme.transitions.easing.sharp,
         duration: theme.transitions.duration.leavingScreen
       }),
-      overflowX: "hidden",
-      width: 0
+      marginLeft: -drawerWidth
     },
-    toolbar: {
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "flex-end",
-      padding: theme.spacing(0, 1),
-      ...theme.mixins.toolbar
+    contentShift: {
+      transition: theme.transitions.create("margin", {
+        easing: theme.transitions.easing.easeOut,
+        duration: theme.transitions.duration.enteringScreen / 2
+      }),
+      marginLeft: 0
     },
     link: {
       textDecoration: "none",
       color: "black"
+    },
+    listText: {
+      color: theme.palette.text.primary
     }
   }));
 }
-function Header() {
-  drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
-  updateStyles();
-
+function Header({ children }) {
   const classes = useStyles();
+  const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.17);
+  updateStyles();
 
   const handleDrawer = () => {
     setOpen(!open);
   };
 
-  const handleSwipableDrawer = opened => event => {
-    if (
-      event &&
-      event.type === "keydown" &&
-      (event.key === "Tab" || event.key === "Shift")
-    ) {
-      return;
-    }
-    if (open !== opened) setOpen(opened);
-  };
-
-  // const handleClickAway = () => {
-  //   if (open) setOpen(false);
-  // };
-
   return (
     <div className={classes.root}>
       <CssBaseline />
       <AppBar
-        position="sticky"
+        position="fixed"
         className={clsx(classes.appBar, {
           [classes.appBarShift]: open
         })}
@@ -146,32 +138,33 @@ function Header() {
             aria-label="open drawer"
             onClick={handleDrawer}
             edge="start"
+            className={classes.menuButton}
           >
-            {open ? <ChevronRightIcon /> : <ChevronLeftIcon />}
+            <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
             To do list
           </Typography>
         </Toolbar>
       </AppBar>
-      {/* <ClickAwayListener onClickAway={handleClickAway}> */}
-      <SwipeableDrawer
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
         open={open}
-        onClose={handleSwipableDrawer(false)}
-        onOpen={handleSwipableDrawer(true)}
-        variant="permanent"
-        className={clsx(classes.drawer, {
-          [classes.drawerOpen]: open,
-          [classes.drawerClose]: !open
-        })}
         classes={{
-          paper: clsx({
-            [classes.drawerOpen]: open,
-            [classes.drawerClose]: !open
-          })
+          paper: classes.drawerPaper
         }}
       >
-        <div className={classes.toolbar} />
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawer}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </div>
         <Divider />
         <List>
           <NavLink
@@ -183,12 +176,19 @@ function Header() {
               <ListItemIcon>
                 <FolderOpenIcon />
               </ListItemIcon>
-              <ListItemText primary={"Folders"} />
+              <ListItemText primary="Folders" className={classes.listText} />
             </ListItem>
           </NavLink>
         </List>
-      </SwipeableDrawer>
-      {/* </ClickAwayListener> */}
+      </Drawer>
+      <main
+        className={clsx(classes.content, {
+          [classes.contentShift]: open
+        })}
+      >
+        <div className={classes.drawerHeader} />
+        {children}
+      </main>
     </div>
   );
 }

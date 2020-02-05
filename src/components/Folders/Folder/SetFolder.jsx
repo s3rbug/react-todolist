@@ -1,11 +1,9 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import CardContent from "@material-ui/core/CardContent";
 import { makeStyles } from "@material-ui/core/styles";
+import { DialogContent } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({
-  card: {}
-}));
+const useStyles = makeStyles(theme => ({}));
 
 function Folder({
   curHeadline,
@@ -20,8 +18,9 @@ function Folder({
   const classes = useStyles();
   return (
     <div className={classes.card}>
-      <CardContent>
+      <DialogContent>
         <TextField
+          className={classes.textField}
           error={!!errorHead}
           helperText={errorHead}
           margin="dense"
@@ -35,7 +34,10 @@ function Folder({
             setErrorHead("");
           }}
         ></TextField>
+      </DialogContent>
+      <DialogContent>
         <TextField
+          className={classes.textField}
           error={!!errorDesc}
           helperText={errorDesc}
           margin="dense"
@@ -49,7 +51,7 @@ function Folder({
             setErrorHead("");
           }}
         ></TextField>
-      </CardContent>
+      </DialogContent>
     </div>
   );
 }

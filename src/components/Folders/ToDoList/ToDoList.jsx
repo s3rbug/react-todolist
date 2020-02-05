@@ -179,7 +179,7 @@ function ToDoList({
             }
           }}
         >
-          <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+          <DialogTitle id="form-dialog-title">Add a new goal</DialogTitle>
           <DialogContent>
             <DialogContentText>
               To accomplish your goals you need to know how to set them. You
@@ -194,6 +194,7 @@ function ToDoList({
               margin="dense"
               id="name"
               label="Add goal"
+              fullWidth
               type="text"
               onChange={textChanged}
             />

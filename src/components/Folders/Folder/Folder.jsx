@@ -9,9 +9,12 @@ import Box from "@material-ui/core/Box";
 import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
+  root: {
+    width: "100%"
+  },
   card: {
     borderWidth: "2px",
-    width: "98vw"
+    width: "100%"
   },
   btnContainer: {
     display: "flex",
@@ -20,6 +23,9 @@ const useStyles = makeStyles(theme => ({
   link: {
     textDecoration: "none",
     color: "black"
+  },
+  shadow: {
+    width: "100%"
   }
 }));
 
@@ -36,8 +42,13 @@ function Folder({ id, headline, description, deleteFolder, goals }) {
     setShadow(2);
   }
   return (
-    <div id={classes.root}>
-      <Box boxShadow={shadow} onMouseEnter={shadowOn} onMouseLeave={shadowOff}>
+    <div className={classes.root}>
+      <Box
+        boxShadow={shadow}
+        onMouseEnter={shadowOn}
+        onMouseLeave={shadowOff}
+        className={classes.shadow}
+      >
         <Card variant="outlined" className={classes.card}>
           <NavLink to={`/folders/${id}`} className={classes.link}>
             <CardContent>
