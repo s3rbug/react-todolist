@@ -20,9 +20,9 @@ import {
   addGoal,
   deleteFolder,
   deleteDone,
-  addFolder
+  addFolder,
+  swapTasks
 } from "./../../redux/todo";
-
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -49,7 +49,8 @@ const useStyles = makeStyles(theme => ({
   addIcon: {},
   addFolderDialog: {
     //maxWidth: "100%"
-  }
+  },
+  subButtons: {}
 }));
 
 function Folders({
@@ -61,7 +62,8 @@ function Folders({
   addGoal,
   deleteFolder,
   deleteDone,
-  addFolder
+  addFolder,
+  swapTasks
 }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -97,6 +99,7 @@ function Folders({
           toggleChecked={toggleChecked}
           addGoal={addGoal}
           deleteDone={deleteDone}
+          swapTasks={swapTasks}
         />
       </div>
     );
@@ -178,7 +181,8 @@ const mapDispatchToProps = {
   addGoal,
   deleteFolder,
   deleteDone,
-  addFolder
+  addFolder,
+  swapTasks
 };
 
 const FoldersWithHooks = compose(

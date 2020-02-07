@@ -17,6 +17,10 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import { Tooltip } from "@material-ui/core";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
+//import DraggableItem from "./../../../asserts/DraggableItem";
+//import test from "./test.css";
+//import ReactCSSTransitionGroup from "react-addons-css-transition-group";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -35,6 +39,7 @@ const useStyles = makeStyles(theme => ({
   },
   item: {
     width: "100%",
+    height: "100%",
     position: "relative",
     borderBottom: "1px solid #E0E0E0",
     boxShadow: "2px 0 5px 0px rgba(209, 215, 249, 0.74);"
@@ -48,7 +53,11 @@ const useStyles = makeStyles(theme => ({
   },
   deleteButton: {
     marginRight: "1%"
-  }
+  },
+  divider: {
+    light: theme.palette.type
+  },
+  back: {}
 }));
 
 function ToDoList({
@@ -57,7 +66,8 @@ function ToDoList({
   currentFolder,
   toggleChecked,
   addGoal,
-  deleteDone
+  deleteDone,
+  swapTasks
 }) {
   useEffect(() => {
     setCurrentFolderById(id);
@@ -94,47 +104,89 @@ function ToDoList({
     }
   };
 
+  const onDragEnd = result => {
+    if (!result.destination) {
+      return;
+    }
+    swapTasks(result.source.index, result.destination.index);
+  };
+
+  const onDragStart = result => {};
+
   const classes = useStyles();
   if (!currentFolder) return null;
 
   return (
     <div className={classes.root}>
-      <List className={classes.list}>
-        {Object.values(currentFolder.goals).map(el => {
-          return (
-            <ListItem
-              button
-              onClick={() => {
-                toggleChecked(el.id);
-              }}
-              key={el.id + el.text}
-              className={
-                classes.item +
-                " , " +
-                (el.checked ? classes.checkedList : classes.notCheckedList)
-              }
+      <DragDropContext onDragStart={onDragStart} onDragEnd={onDragEnd}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div
+              {...provided.droppableProps}
+              ref={provided.innerRef}
+              className={classes.back}
             >
-              <span
-                className={el.checked ? classes.checked : classes.notChecked}
-              >
-                {el.text}
-              </span>
-              <Box boxShadow={5}>
-                <Divider light={false} />
-              </Box>
-              <ListItemSecondaryAction>
-                <Checkbox
-                  edge="end"
-                  className={classes.check}
-                  checked={el.checked}
-                  onChange={toggleCheckbox}
-                  value={el.id}
-                />
-              </ListItemSecondaryAction>
-            </ListItem>
-          );
-        })}
-      </List>
+              <List className={classes.list}>
+                {Object.values(currentFolder.goals).map(el => {
+                  return (
+                    <Draggable
+                      key={el.id}
+                      draggableId={"item-" + el.id}
+                      index={el.id}
+                    >
+                      {provided => (
+                        <div
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <ListItem
+                            button
+                            onClick={() => {
+                              toggleChecked(el.id);
+                            }}
+                            className={
+                              classes.item +
+                              " , " +
+                              (el.checked
+                                ? classes.checkedList
+                                : classes.notCheckedList)
+                            }
+                          >
+                            <span
+                              className={
+                                el.checked
+                                  ? classes.checked
+                                  : classes.notChecked
+                              }
+                            >
+                              {el.text}
+                            </span>
+                            <Box boxShadow={5}>
+                              <Divider className={classes.divider} />
+                            </Box>
+                            <ListItemSecondaryAction>
+                              <Checkbox
+                                edge="end"
+                                className={classes.check}
+                                checked={el.checked}
+                                onChange={toggleCheckbox}
+                                value={el.id}
+                              />
+                            </ListItemSecondaryAction>
+                          </ListItem>
+                          {provided.placeholder}
+                        </div>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {provided.placeholder}
+              </List>
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
       <div>
         <div className={classes.buttons}>
           <div className={classes.deleteButton}>

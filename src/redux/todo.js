@@ -4,6 +4,7 @@ const ADD_GOAL = "todo/ADD_GOAL"
 const DELETE_FOLDER = "todo/DELETE_FOLDER"
 const DELETE_DONE = "todo/DELETE_DONE"
 const ADD_FOLDER = "todo/ADD_FOLDER"
+const SWAP_TASKS = "todo/SWAP_TASKS"
 
 const initialState = {
     folders: [
@@ -160,6 +161,28 @@ function reducer(state = initialState, action) {
             ]
         }
     }
+    else if (action.type === SWAP_TASKS) {
+        //console.log(state.currentFolder.goals);
+        let newCurrentFolder = {
+            ...state.currentFolder
+        }
+
+        let t = { ...newCurrentFolder.goals[action.from] }
+        newCurrentFolder.goals[action.from] = { ...newCurrentFolder.goals[action.to] };
+        newCurrentFolder.goals[action.to] = { ...t };
+
+        t = newCurrentFolder.goals[action.from].id;
+        newCurrentFolder.goals[action.from].id = newCurrentFolder.goals[action.to].id;
+        newCurrentFolder.goals[action.to].id = t;
+
+
+        sync(state, newCurrentFolder);
+
+        return {
+            ...state,
+            currentFolder: newCurrentFolder
+        }
+    }
     return state;
 }
 
@@ -169,6 +192,7 @@ export const addGoal = (text) => ({ type: ADD_GOAL, text })
 export const deleteFolder = (id) => ({ type: DELETE_FOLDER, id })
 export const deleteDone = () => ({ type: DELETE_DONE })
 export const addFolder = (headline, description) => ({ type: ADD_FOLDER, headline, description })
+export const swapTasks = (from, to) => ({ type: SWAP_TASKS, from, to })
 
 
 export default reducer;

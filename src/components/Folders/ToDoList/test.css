@@ -1,0 +1,46 @@
+.example-enter {
+  opacity: 0;
+}
+
+.example-enter.example-enter-active {
+  animation: openspace 0.3s ease forwards,
+    add-item-animation 0.5s 0.3s cubic-bezier(0.14, 0.25, 0.52, 1.56) forwards;
+}
+
+@keyframes restored-item-animation {
+  0% {
+    opacity: 1;
+    transform: translateX(300px);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translateX(0);
+  }
+}
+
+@keyframes add-item-animation {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes openspace {
+  to {
+    height: auto;
+  }
+}
+
+/* <ReactCSSTransitionGroup
+          transitionName="example"
+          transitionAppear={false}
+          transitionEnter={true}
+          transitionEnterTimeout={500}
+          transitionLeave={true}
+          transitionLeaveTimeout={500}
+          className="example"
+        > */
