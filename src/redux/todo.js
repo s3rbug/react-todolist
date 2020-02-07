@@ -50,6 +50,12 @@ const initialState = {
                     text: "Watch 7 anime",
                     checked: false
                 }
+                ,
+                {
+                    id: 3,
+                    text: "Watch 9 anime",
+                    checked: false
+                }
             ]
         },
         {
@@ -80,6 +86,16 @@ const initialState = {
 
 function sync(state, folder) {
     state.folders[state.currentFolder.id] = folder
+}
+/*
+       let t = { ...newGoals[action.from] };
+        newGoals[action.from] = newGoals[action.to];
+        newGoals[action.to] = { ...t };
+*/
+function swap(newGoals, from, to) {
+    let t = { ...newGoals[from] };
+    newGoals[from] = newGoals[to];
+    newGoals[to] = { ...t };
 }
 
 function reducer(state = initialState, action) {
@@ -162,25 +178,24 @@ function reducer(state = initialState, action) {
         }
     }
     else if (action.type === SWAP_TASKS) {
-        //console.log(state.currentFolder.goals);
-        let newCurrentFolder = {
-            ...state.currentFolder
+        let newGoals = [
+            ...state.currentFolder.goals
+        ]
+        const [removed] = newGoals.splice(action.from, 1);
+        newGoals.splice(action.to, 0, removed);
+
+        for (let i = 0; i < newGoals.length; ++i) {
+            newGoals[i].id = i;
         }
 
-        let t = { ...newCurrentFolder.goals[action.from] }
-        newCurrentFolder.goals[action.from] = { ...newCurrentFolder.goals[action.to] };
-        newCurrentFolder.goals[action.to] = { ...t };
-
-        t = newCurrentFolder.goals[action.from].id;
-        newCurrentFolder.goals[action.from].id = newCurrentFolder.goals[action.to].id;
-        newCurrentFolder.goals[action.to].id = t;
-
-
-        sync(state, newCurrentFolder);
+        sync(state, { ...state.currentFolder, goals: [...newGoals] });
 
         return {
             ...state,
-            currentFolder: newCurrentFolder
+            currentFolder: {
+                ...state.currentFolder,
+                goals: [...newGoals]
+            }
         }
     }
     return state;

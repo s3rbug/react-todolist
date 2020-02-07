@@ -3,7 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 
 function DraggableItem({ el, children }) {
   return (
-    <Draggable key={el.id} draggableId={"item-" + el.id} index={el.id}>
+    <Draggable draggableId={"item-" + el.id} index={el.id}>
       {provided => (
         <div
           ref={provided.innerRef}
