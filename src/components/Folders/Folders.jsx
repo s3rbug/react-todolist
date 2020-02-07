@@ -9,11 +9,6 @@ import { withRouter } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
-import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogActions from "@material-ui/core/DialogActions";
-import DialogTitle from "@material-ui/core/DialogTitle";
-import SetFolder from "./Folder/SetFolder";
 import {
   setCurrentFolderById,
   toggleChecked,
@@ -21,8 +16,14 @@ import {
   deleteFolder,
   deleteDone,
   addFolder,
-  swapTasks
+  swapTasks,
+  swapFolders
 } from "./../../redux/todo";
+import { DragDropContext } from "react-beautiful-dnd";
+import DroppableItem from "../../asserts/DroppableItem";
+import DraggableItem from "../../asserts/DraggableItem";
+import AddFolderDialog from "./AddFolderDialog";
+
 const useStyles = makeStyles(theme => ({
   root: {
     display: "flex",
@@ -36,6 +37,13 @@ const useStyles = makeStyles(theme => ({
   item: {
     maxWidth: "100%"
   },
+  drop: {
+    width: "100%",
+    height: "100%"
+  },
+  drag: {
+    width: "100%"
+  },
   container: {
     position: "relative",
     height: "100%",
@@ -46,11 +54,9 @@ const useStyles = makeStyles(theme => ({
     justifyContent: "flex-end",
     width: "98%"
   },
-  addIcon: {},
-  addFolderDialog: {
-    //maxWidth: "100%"
-  },
-  subButtons: {}
+  icon: {
+    color: theme.palette.background.default
+  }
 }));
 
 function Folders({
@@ -63,7 +69,8 @@ function Folders({
   deleteFolder,
   deleteDone,
   addFolder,
-  swapTasks
+  swapTasks,
+  swapFolders
 }) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
@@ -89,6 +96,13 @@ function Folders({
     }
   }
 
+  function onDragEnd(result) {
+    if (!result.destination) {
+      return;
+    }
+    swapFolders(result.source.index, result.destination.index);
+  }
+
   if (match.params.currentFolder)
     return (
       <div>
@@ -105,49 +119,45 @@ function Folders({
     );
 
   return (
-    <div className={classes.root}>
-      <Grid container spacing={2} className={classes.container}>
-        {folders.map(el => {
-          return (
-            <Grid
-              key={el.id}
-              container
-              item
-              className={classes.item}
-              justify="center"
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div className={classes.root}>
+        <DroppableItem classes={classes} droppableId="DroppableFolder">
+          <Grid container spacing={2} className={classes.container}>
+            {folders.map(el => {
+              return (
+                <Grid key={el.id} container item justify="center">
+                  <DraggableItem el={el} classes={classes}>
+                    <Folder
+                      className={classes.item}
+                      id={el.id}
+                      description={el.description}
+                      headline={el.headline}
+                      goals={el.goals}
+                      deleteFolder={deleteFolder}
+                    />
+                  </DraggableItem>
+                </Grid>
+              );
+            })}
+          </Grid>
+        </DroppableItem>
+        <div className={classes.addButton}>
+          <Tooltip title="Add" aria-label="add" placement="bottom">
+            <Fab
+              color="primary"
+              aria-label="add"
+              size="medium"
+              className={classes.subButtons}
+              onClick={() => setOpen(true)}
             >
-              <Folder
-                id={el.id}
-                description={el.description}
-                headline={el.headline}
-                goals={el.goals}
-                deleteFolder={deleteFolder}
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
-      <div className={classes.addButton}>
-        <Tooltip title="Add" aria-label="add" placement="bottom">
-          <Fab
-            color="primary"
-            aria-label="add"
-            size="medium"
-            className={classes.subButtons}
-            onClick={() => setOpen(true)}
-          >
-            <AddIcon className={classes.addIcon} />
-          </Fab>
-        </Tooltip>
-      </div>
-      <Dialog
-        className={classes.addFolderDialog}
-        open={open}
-        onClose={() => setOpen(false)}
-        aria-labelledby="form-dialog-folders"
-      >
-        <DialogTitle id="form-dialog-folders">Add new folder</DialogTitle>
-        <SetFolder
+              <AddIcon className={classes.icon} />
+            </Fab>
+          </Tooltip>
+        </div>
+        <AddFolderDialog
+          classes={classes}
+          open={open}
+          setOpen={setOpen}
           curHeadline={curHeadline}
           setCurHeadline={setCurHeadline}
           curDescription={curDescription}
@@ -156,17 +166,10 @@ function Folders({
           errorDesc={errorDesc}
           setErrorHead={setErrorHead}
           setErrorDesc={setErrorDesc}
+          handleAddButton={handleAddButton}
         />
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="secondary">
-            Cancel
-          </Button>
-          <Button onClick={handleAddButton} color="primary">
-            Add
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+      </div>
+    </DragDropContext>
   );
 }
 
@@ -182,7 +185,8 @@ const mapDispatchToProps = {
   deleteFolder,
   deleteDone,
   addFolder,
-  swapTasks
+  swapTasks,
+  swapFolders
 };
 
 const FoldersWithHooks = compose(

@@ -7,19 +7,29 @@ import { Provider } from 'react-redux';
 import { BrowserRouter, Route } from 'react-router-dom';
 import { createMuiTheme, ThemeProvider } from '@material-ui/core/styles';
 
-const testTheme = createMuiTheme({
+const lightTheme = createMuiTheme({
   palette: {
     type: "light"
   }
 });
 
+const darkTheme = createMuiTheme({
+  palette: {
+    type: "dark"
+  }
+});
+
+
 const App = () => {
+  const [isLight, setIsLight] = React.useState(true)
   return (
     <div className="appWrapper">
-      <Header>
-        <Route path="/folders/:currentFolder?" render={() => <Folders />} />
-      </Header>
-    </div>
+      <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
+        <Header isLight={isLight} setIsLight={setIsLight} >
+          <Route path="/folders/:currentFolder?" render={() => <Folders />} />
+        </Header>
+      </ThemeProvider>
+    </div >
   );
 }
 
@@ -27,9 +37,7 @@ const MainApp = () => {
   return (
     <BrowserRouter>
       <Provider store={store}>
-        <ThemeProvider theme={testTheme}>
-          <App />
-        </ThemeProvider>
+        <App />
       </Provider>
     </BrowserRouter>
   )

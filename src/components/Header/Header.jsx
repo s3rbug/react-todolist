@@ -7,7 +7,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import List from "@material-ui/core/List";
 import Typography from "@material-ui/core/Typography";
-import Divider from "@material-ui/core/Divider";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -17,9 +16,11 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
 import { NavLink } from "react-router-dom";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+import SunIcon from "@material-ui/icons/Brightness5Outlined";
+import MoonIcon from "@material-ui/icons/Brightness2Outlined";
 //import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
-let drawerWidth = window.innerWidth * 0.17;
+let drawerWidth = window.innerWidth * 0.2;
 let useStyles;
 updateStyles();
 
@@ -78,7 +79,7 @@ function updateStyles() {
     },
     drawerPaper: {
       width: drawerWidth,
-      boxShadow: "0 0 20px 0 rgba(209, 215, 249, 0.74);"
+      boxShadow: theme.shadows[3]
     },
     drawerHeader: {
       display: "flex",
@@ -111,17 +112,22 @@ function updateStyles() {
     }
   }));
 }
-function Header({ children }) {
+
+function Header({ isLight, setIsLight, children }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
 
-  drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.17);
+  drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
   updateStyles();
 
   const handleDrawer = () => {
     setOpen(!open);
   };
+
+  function toggleTheme() {
+    setIsLight(!isLight);
+  }
 
   return (
     <div className={classes.root}>
@@ -165,7 +171,6 @@ function Header({ children }) {
             )}
           </IconButton>
         </div>
-        <Divider />
         <List>
           <NavLink
             to="/folders"
@@ -179,6 +184,13 @@ function Header({ children }) {
               <ListItemText primary="Folders" className={classes.listText} />
             </ListItem>
           </NavLink>
+          <ListItem button onClick={toggleTheme}>
+            <ListItemIcon>{isLight ? <SunIcon /> : <MoonIcon />}</ListItemIcon>
+            <ListItemText
+              primary={isLight ? "Light theme" : "Dark theme"}
+              className={classes.listText}
+            />
+          </ListItem>
         </List>
       </Drawer>
       <main

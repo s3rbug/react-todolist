@@ -1,7 +1,7 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 
-function DraggableItem({ el, children }) {
+function DraggableItem({ el, classes, children }) {
   return (
     <Draggable draggableId={"item-" + el.id} index={el.id}>
       {provided => (
@@ -9,6 +9,7 @@ function DraggableItem({ el, children }) {
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
+          className={classes ? classes.drag : ""}
         >
           {children}
           {provided.placeholder}

@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function Folder({ id, headline, description, deleteFolder, goals }) {
+function Folder({ id, headline, description, deleteFolder }) {
   const classes = useStyles();
   let [shadow, setShadow] = useState(2);
   function deleteThisFolder() {
@@ -52,7 +52,12 @@ function Folder({ id, headline, description, deleteFolder, goals }) {
         <Card variant="outlined" className={classes.card}>
           <NavLink to={`/folders/${id}`} className={classes.link}>
             <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
+              <Typography
+                gutterBottom
+                variant="h5"
+                component="h2"
+                color="textPrimary"
+              >
                 {headline}
               </Typography>
               <Typography variant="body2" color="textSecondary" component="p">

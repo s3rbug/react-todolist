@@ -10,6 +10,7 @@ import DraggableItem from "../../../asserts/DraggableItem";
 import DroppableItem from "../../../asserts/DroppableItem";
 import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
+import AlertDialog from "../../../asserts/AlertDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,8 +31,8 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     height: "100%",
     position: "relative",
-    borderBottom: "1px solid #E0E0E0",
-    boxShadow: "2px 0 5px 0px rgba(209, 215, 249, 0.74);"
+    borderBottom: "1px solid " + theme.palette.action.selected,
+    boxShadow: theme.shadows[3]
   },
   buttons: {
     display: "flex",
@@ -45,6 +46,9 @@ const useStyles = makeStyles(theme => ({
   },
   divider: {
     light: theme.palette.type
+  },
+  icon: {
+    color: theme.palette.background.default
   }
 }));
 
@@ -62,9 +66,11 @@ function ToDoList({
   });
 
   const [open, setOpen] = React.useState(false);
+  const [alertOpen, setAlertOpen] = React.useState(false);
 
   const handleDeleteButton = () => {
-    deleteDone();
+    setAlertOpen(true);
+    //deleteDone();
   };
 
   const handleAddButton = () => {
@@ -81,6 +87,15 @@ function ToDoList({
       return;
     }
     swapTasks(result.source.index, result.destination.index);
+  };
+
+  const handleFail = () => {
+    setAlertOpen(false);
+  };
+
+  const handleSuccess = () => {
+    setAlertOpen(false);
+    deleteDone();
   };
 
   const classes = useStyles();
@@ -120,7 +135,7 @@ function ToDoList({
                 size="medium"
                 onClick={handleDeleteButton}
               >
-                <DeleteIcon />
+                <DeleteIcon className={classes.icon} />
               </Fab>
             </Tooltip>
           </div>
@@ -131,7 +146,7 @@ function ToDoList({
               size="medium"
               onClick={handleAddButton}
             >
-              <AddIcon />
+              <AddIcon className={classes.icon} />
             </Fab>
           </Tooltip>
         </div>
@@ -140,6 +155,13 @@ function ToDoList({
           open={open}
           setOpen={setOpen}
           addGoal={addGoal}
+        />
+        <AlertDialog
+          question="Delete all done tasks?"
+          text="Do you really want to delete all the done tasks? You will be unable to restore them."
+          open={alertOpen}
+          handleSuccess={handleSuccess}
+          handleFail={handleFail}
         />
       </div>
     </div>

@@ -8,7 +8,7 @@ function DroppableItem({ classes, droppableId, children }) {
         <div
           {...provided.droppableProps}
           ref={provided.innerRef}
-          className={classes.back}
+          className={classes ? classes.drop : ""}
         >
           {children}
           {provided.placeholder}

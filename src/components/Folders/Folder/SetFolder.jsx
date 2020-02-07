@@ -17,42 +17,38 @@ function Folder({
 }) {
   const classes = useStyles();
   return (
-    <div className={classes.card}>
-      <DialogContent>
-        <TextField
-          className={classes.textField}
-          error={!!errorHead}
-          helperText={errorHead}
-          margin="dense"
-          id="headline"
-          label="Headline"
-          fullWidth
-          value={curHeadline}
-          onChange={e => {
-            setCurHeadline(e.target.value);
-            setErrorDesc("");
-            setErrorHead("");
-          }}
-        ></TextField>
-      </DialogContent>
-      <DialogContent>
-        <TextField
-          className={classes.textField}
-          error={!!errorDesc}
-          helperText={errorDesc}
-          margin="dense"
-          id="description"
-          label="Description"
-          fullWidth
-          value={curDescription}
-          onChange={e => {
-            setCurDescription(e.target.value);
-            setErrorDesc("");
-            setErrorHead("");
-          }}
-        ></TextField>
-      </DialogContent>
-    </div>
+    <DialogContent className={classes.card}>
+      <TextField
+        className={classes.textField}
+        error={!!errorHead}
+        helperText={errorHead}
+        margin="dense"
+        id="headline"
+        label="Headline"
+        fullWidth
+        value={curHeadline}
+        onChange={e => {
+          setCurHeadline(e.target.value);
+          setErrorDesc("");
+          setErrorHead("");
+        }}
+      ></TextField>
+      <TextField
+        className={classes.textField}
+        error={!!errorDesc}
+        helperText={errorDesc}
+        margin="dense"
+        id="description"
+        label="Description"
+        fullWidth
+        value={curDescription}
+        onChange={e => {
+          setCurDescription(e.target.value);
+          setErrorDesc("");
+          setErrorHead("");
+        }}
+      ></TextField>
+    </DialogContent>
   );
 }
 

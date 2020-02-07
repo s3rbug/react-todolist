@@ -19,6 +19,7 @@ function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }) {
   const handleAddNewGoal = () => {
     if (currentText !== "") {
       addGoal(currentText);
+      setCurrentText("");
       setOpen(false);
     } else {
       setError("Field can not be empty");
@@ -32,7 +33,6 @@ function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }) {
       aria-labelledby="form-dialog-title"
       onKeyDown={e => {
         if (e.key === "Enter") {
-          setOpen(false);
           e.preventDefault();
           handleAddNewGoal();
         } else if (e.key === "Escape") {
