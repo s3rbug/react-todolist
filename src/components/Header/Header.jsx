@@ -18,6 +18,7 @@ import { NavLink } from "react-router-dom";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import SunIcon from "@material-ui/icons/Brightness5Outlined";
 import MoonIcon from "@material-ui/icons/Brightness2Outlined";
+import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 //import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 let drawerWidth = window.innerWidth * 0.2;
@@ -96,19 +97,17 @@ function updateStyles() {
       }),
       marginLeft: -drawerWidth
     },
-    contentShift: {
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.easeOut,
-        duration: theme.transitions.duration.enteringScreen / 2
-      }),
-      marginLeft: 0
-    },
     link: {
       textDecoration: "none",
       color: "black"
     },
     listText: {
       color: theme.palette.text.primary
+    },
+    blurredContent: {
+      opacity: 0.2,
+      backgroundColor: theme.palette.background.default,
+      pointerEvents: "none"
     }
   }));
 }
@@ -117,16 +116,23 @@ function Header({ isLight, setIsLight, children }) {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+  const [pressed, setPressed] = React.useState(false);
 
   drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
   updateStyles();
 
   const handleDrawer = () => {
     setOpen(!open);
+    setPressed(true);
   };
 
   function toggleTheme() {
     setIsLight(!isLight);
+  }
+
+  function handleClickAway(e) {
+    if (open && !pressed) setOpen(false);
+    setPressed(false);
   }
 
   return (
@@ -153,49 +159,53 @@ function Header({ isLight, setIsLight, children }) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawer}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
-            )}
-          </IconButton>
-        </div>
-        <List>
-          <NavLink
-            to="/folders"
-            className={classes.link}
-            onClick={() => setOpen(false)}
-          >
-            <ListItem button>
+      <ClickAwayListener onClickAway={handleClickAway}>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawer}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </div>
+          <List>
+            <NavLink
+              to="/folders"
+              className={classes.link}
+              onClick={() => setOpen(false)}
+            >
+              <ListItem button>
+                <ListItemIcon>
+                  <FolderOpenIcon />
+                </ListItemIcon>
+                <ListItemText primary="Folders" className={classes.listText} />
+              </ListItem>
+            </NavLink>
+            <ListItem button onClick={toggleTheme}>
               <ListItemIcon>
-                <FolderOpenIcon />
+                {isLight ? <SunIcon /> : <MoonIcon />}
               </ListItemIcon>
-              <ListItemText primary="Folders" className={classes.listText} />
+              <ListItemText
+                primary={isLight ? "Light theme" : "Dark theme"}
+                className={classes.listText}
+              />
             </ListItem>
-          </NavLink>
-          <ListItem button onClick={toggleTheme}>
-            <ListItemIcon>{isLight ? <SunIcon /> : <MoonIcon />}</ListItemIcon>
-            <ListItemText
-              primary={isLight ? "Light theme" : "Dark theme"}
-              className={classes.listText}
-            />
-          </ListItem>
-        </List>
-      </Drawer>
+          </List>
+        </Drawer>
+      </ClickAwayListener>
       <main
         className={clsx(classes.content, {
-          [classes.contentShift]: open
+          [classes.blurredContent]: open
         })}
       >
         <div className={classes.drawerHeader} />
