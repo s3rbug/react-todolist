@@ -17,8 +17,8 @@ const useStyles = makeStyles(theme => ({
     width: "100%",
     height: "100%",
     position: "relative",
-    paddingLeft: "1%",
-    paddingRight: "1%"
+    paddingLeft: "10px",
+    paddingRight: "10px"
   },
   list: {
     width: "100%",
@@ -36,7 +36,14 @@ const useStyles = makeStyles(theme => ({
   },
   buttons: {
     display: "flex",
-    justifyContent: "flex-end"
+    position: "fixed",
+    right: 0,
+    bottom: 0,
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2)
+  },
+  button: {
+    marginLeft: theme.spacing(1)
   },
   checked: {
     textDecoration: "line-through"
@@ -70,7 +77,6 @@ function ToDoList({
 
   const handleDeleteButton = () => {
     setAlertOpen(true);
-    //deleteDone();
   };
 
   const handleAddButton = () => {
@@ -134,6 +140,7 @@ function ToDoList({
                 aria-label="add"
                 size="medium"
                 onClick={handleDeleteButton}
+                className={classes.button}
               >
                 <DeleteIcon className={classes.icon} />
               </Fab>
@@ -145,6 +152,7 @@ function ToDoList({
               aria-label="add"
               size="medium"
               onClick={handleAddButton}
+              className={classes.button}
             >
               <AddIcon className={classes.icon} />
             </Fab>

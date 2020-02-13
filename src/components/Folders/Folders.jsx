@@ -50,9 +50,11 @@ const useStyles = makeStyles(theme => ({
     width: "100%"
   },
   addButton: {
-    display: "flex",
-    justifyContent: "flex-end",
-    width: "98%"
+    position: "fixed",
+    right: 0,
+    bottom: 0,
+    marginRight: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   icon: {
     color: theme.palette.background.default
@@ -119,8 +121,8 @@ function Folders({
     );
 
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <div className={classes.root}>
+    <div className={classes.root}>
+      <DragDropContext onDragEnd={onDragEnd}>
         <DroppableItem classes={classes} droppableId="DroppableFolder">
           <Grid container spacing={2} className={classes.container}>
             {folders.map(el => {
@@ -147,7 +149,6 @@ function Folders({
               color="primary"
               aria-label="add"
               size="medium"
-              className={classes.subButtons}
               onClick={() => setOpen(true)}
             >
               <AddIcon className={classes.icon} />
@@ -168,8 +169,8 @@ function Folders({
           setErrorDesc={setErrorDesc}
           handleAddButton={handleAddButton}
         />
-      </div>
-    </DragDropContext>
+      </DragDropContext>
+    </div>
   );
 }
 

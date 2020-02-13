@@ -18,8 +18,6 @@ import { NavLink } from "react-router-dom";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import SunIcon from "@material-ui/icons/Brightness5Outlined";
 import MoonIcon from "@material-ui/icons/Brightness2Outlined";
-import ClickAwayListener from "@material-ui/core/ClickAwayListener";
-//import ClickAwayListener from "@material-ui/core/ClickAwayListener";
 
 let drawerWidth = window.innerWidth * 0.2;
 let useStyles;
@@ -58,7 +56,8 @@ var isMobile = {
 function updateStyles() {
   useStyles = makeStyles(theme => ({
     root: {
-      display: "flex"
+      display: "flex",
+      height: "100vh"
     },
     appBar: {
       zIndex: theme.zIndex.drawer + 1,
@@ -75,8 +74,7 @@ function updateStyles() {
     },
     drawer: {
       width: drawerWidth,
-      flexShrink: 0,
-      height: "100vh"
+      flexShrink: 0
     },
     drawerPaper: {
       width: drawerWidth,
@@ -103,36 +101,23 @@ function updateStyles() {
     },
     listText: {
       color: theme.palette.text.primary
-    },
-    blurredContent: {
-      opacity: 0.2,
-      backgroundColor: theme.palette.background.default,
-      pointerEvents: "none"
     }
   }));
 }
 
-function Header({ isLight, setIsLight, children }) {
+function Header({ isLight, setIsLight, open, setOpen, children }) {
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
-  const [pressed, setPressed] = React.useState(false);
 
   drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
   updateStyles();
 
   const handleDrawer = () => {
     setOpen(!open);
-    setPressed(true);
   };
 
   function toggleTheme() {
     setIsLight(!isLight);
-  }
-
-  function handleClickAway(e) {
-    if (open && !pressed) setOpen(false);
-    setPressed(false);
   }
 
   return (
@@ -159,57 +144,52 @@ function Header({ isLight, setIsLight, children }) {
           </Typography>
         </Toolbar>
       </AppBar>
-      <ClickAwayListener onClickAway={handleClickAway}>
-        <Drawer
-          className={classes.drawer}
-          variant="persistent"
-          anchor="left"
-          open={open}
-          classes={{
-            paper: classes.drawerPaper
-          }}
-        >
-          <div className={classes.drawerHeader}>
-            <IconButton onClick={handleDrawer}>
-              {theme.direction === "ltr" ? (
-                <ChevronLeftIcon />
-              ) : (
-                <ChevronRightIcon />
-              )}
-            </IconButton>
-          </div>
-          <List>
-            <NavLink
-              to="/folders"
-              className={classes.link}
-              onClick={() => setOpen(false)}
-            >
-              <ListItem button>
-                <ListItemIcon>
-                  <FolderOpenIcon />
-                </ListItemIcon>
-                <ListItemText primary="Folders" className={classes.listText} />
-              </ListItem>
-            </NavLink>
-            <ListItem button onClick={toggleTheme}>
-              <ListItemIcon>
-                {isLight ? <SunIcon /> : <MoonIcon />}
-              </ListItemIcon>
-              <ListItemText
-                primary={isLight ? "Light theme" : "Dark theme"}
-                className={classes.listText}
-              />
-            </ListItem>
-          </List>
-        </Drawer>
-      </ClickAwayListener>
-      <main
-        className={clsx(classes.content, {
-          [classes.blurredContent]: open
-        })}
+      <Drawer
+        className={classes.drawer}
+        variant="persistent"
+        anchor="left"
+        open={open}
+        classes={{
+          paper: classes.drawerPaper
+        }}
       >
-        <div className={classes.drawerHeader} />
-        {children}
+        <div className={classes.drawerHeader}>
+          <IconButton onClick={handleDrawer}>
+            {theme.direction === "ltr" ? (
+              <ChevronLeftIcon />
+            ) : (
+              <ChevronRightIcon />
+            )}
+          </IconButton>
+        </div>
+        <List>
+          <NavLink
+            to="/folders"
+            className={classes.link}
+            onClick={() => setOpen(false)}
+          >
+            <ListItem button>
+              <ListItemIcon>
+                <FolderOpenIcon />
+              </ListItemIcon>
+              <ListItemText primary="Folders" className={classes.listText} />
+            </ListItem>
+          </NavLink>
+          <ListItem button onClick={toggleTheme}>
+            <ListItemIcon>{isLight ? <SunIcon /> : <MoonIcon />}</ListItemIcon>
+            <ListItemText
+              primary={isLight ? "Light theme" : "Dark theme"}
+              className={classes.listText}
+            />
+          </ListItem>
+        </List>
+      </Drawer>
+
+      <main className={classes.content}>
+        <div>
+          <div className={classes.drawerHeader} />
+          {children}
+        </div>
       </main>
     </div>
   );

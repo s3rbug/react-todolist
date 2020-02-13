@@ -22,13 +22,15 @@ const darkTheme = createMuiTheme({
 
 const App = () => {
   const [isLight, setIsLight] = React.useState(true)
+  const [drawerOpened, setDrawerOpened] = React.useState(false)
   return (
-    <div className="appWrapper">
+    <div className="app-wrapper">
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
-        <Header isLight={isLight} setIsLight={setIsLight} >
+        <Header isLight={isLight} setIsLight={setIsLight} open={drawerOpened} setOpen={setDrawerOpened}>
           <Route path="/folders/:currentFolder?" render={() => <Folders />} />
         </Header>
       </ThemeProvider>
+      <div className={drawerOpened ? "overlay" : ""} onClick={() => { setDrawerOpened(false) }} />
     </div >
   );
 }
