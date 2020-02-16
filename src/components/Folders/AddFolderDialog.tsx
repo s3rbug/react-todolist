@@ -5,6 +5,21 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import SetFolder from "./Folder/SetFolder";
 
+type AddFolderDialogPropsType = {
+  classes: any;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  curHeadline: string;
+  setCurHeadline: (newHeadline: string) => void;
+  curDescription: string;
+  setCurDescription: (newDescription: string) => void;
+  errorHead: string;
+  errorDesc: string;
+  setErrorHead: (newErrorHead: string) => void;
+  setErrorDesc: (newErrorDesc: string) => void;
+  handleAddButton: () => void;
+};
+
 function AddFolderDialog({
   classes,
   open,
@@ -18,7 +33,7 @@ function AddFolderDialog({
   setErrorHead,
   setErrorDesc,
   handleAddButton
-}) {
+}: AddFolderDialogPropsType) {
   return (
     <Dialog
       className={classes.addFolderDialog}

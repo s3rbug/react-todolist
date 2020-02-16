@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, StyleRules } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
@@ -8,37 +8,46 @@ import Card from "@material-ui/core/Card";
 import Box from "@material-ui/core/Box";
 import { NavLink } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    width: "100%"
-  },
-  card: {
-    borderWidth: "2px",
-    width: "100%"
-  },
-  btnContainer: {
-    display: "flex",
-    justifyContent: "flex-end"
-  },
-  link: {
-    textDecoration: "none",
-    color: "black"
-  },
-  shadow: {
-    width: "100%"
-  }
-}));
+const useStyles = makeStyles(
+  (theme): StyleRules<string> => ({
+    root: {
+      width: "100%"
+    },
+    card: {
+      borderWidth: "2px",
+      width: "100%"
+    },
+    btnContainer: {
+      display: "flex",
+      justifyContent: "flex-end"
+    },
+    link: {
+      textDecoration: "none",
+      color: "black"
+    },
+    shadow: {
+      width: "100%"
+    }
+  })
+);
 
-function Folder({ id, headline, description, deleteFolder }) {
+type FolderPropsType = {
+  id: number;
+  headline: string;
+  description: string;
+  deleteFolder: (folderId: number) => void;
+};
+
+function Folder({ id, headline, description, deleteFolder }: FolderPropsType) {
   const classes = useStyles();
   let [shadow, setShadow] = useState(2);
-  function deleteThisFolder() {
+  function deleteThisFolder(): void {
     deleteFolder(id);
   }
-  function shadowOn() {
+  function shadowOn(): void {
     setShadow(12);
   }
-  function shadowOff() {
+  function shadowOff(): void {
     setShadow(2);
   }
   return (
@@ -66,12 +75,7 @@ function Folder({ id, headline, description, deleteFolder }) {
             </CardContent>
           </NavLink>
           <CardActions className={classes.btnContainer}>
-            <Button
-              size="large"
-              color="secondary"
-              className={classes.btn}
-              onClick={deleteThisFolder}
-            >
+            <Button size="large" color="secondary" onClick={deleteThisFolder}>
               Delete
             </Button>
           </CardActions>

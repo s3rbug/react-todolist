@@ -6,17 +6,24 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 
+type AlertDialogPropsType = {
+  question: string;
+  text: string;
+  open: boolean;
+  handleSuccess: () => void;
+  handleFail: () => void;
+};
+
 export default function AlertDialog({
   question,
   text,
   open,
   handleSuccess,
   handleFail
-}) {
+}: AlertDialogPropsType) {
   return (
     <Dialog
       open={open}
-      onClose={null}
       aria-labelledby="alert-dialog-title"
       aria-describedby="alert-dialog-description"
     >

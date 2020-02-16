@@ -1,5 +1,4 @@
 import React from "react";
-import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -20,8 +19,7 @@ import SunIcon from "@material-ui/icons/Brightness5Outlined";
 import MoonIcon from "@material-ui/icons/Brightness2Outlined";
 
 let drawerWidth = window.innerWidth * 0.2;
-let useStyles;
-updateStyles();
+let useStyles = updateStyles();
 
 var isMobile = {
   Android: function() {
@@ -54,7 +52,7 @@ var isMobile = {
 };
 
 function updateStyles() {
-  useStyles = makeStyles(theme => ({
+  return makeStyles(theme => ({
     root: {
       display: "flex",
       height: "100vh"
@@ -105,12 +103,26 @@ function updateStyles() {
   }));
 }
 
-function Header({ isLight, setIsLight, open, setOpen, children }) {
+type HeaderPropsType = {
+  isLight: boolean;
+  setIsLight: (isLight: boolean) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  children: any;
+};
+
+function Header({
+  isLight,
+  setIsLight,
+  open,
+  setOpen,
+  children
+}: HeaderPropsType) {
   const classes = useStyles();
   const theme = useTheme();
 
   drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
-  updateStyles();
+  useStyles = updateStyles();
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -123,12 +135,7 @@ function Header({ isLight, setIsLight, open, setOpen, children }) {
   return (
     <div className={classes.root}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open
-        })}
-      >
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <IconButton
             color="inherit"

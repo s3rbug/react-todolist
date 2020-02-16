@@ -1,10 +1,20 @@
 import React from "react";
-import { Droppable } from "react-beautiful-dnd";
+import { Droppable, DroppableProvided } from "react-beautiful-dnd";
 
-function DroppableItem({ classes, droppableId, children }) {
+type DroppableItemPropsType = {
+  classes: any;
+  droppableId: string;
+  children: React.ReactChild;
+};
+
+function DroppableItem({
+  classes,
+  droppableId,
+  children
+}: DroppableItemPropsType) {
   return (
     <Droppable droppableId={droppableId}>
-      {provided => (
+      {(provided: DroppableProvided) => (
         <div
           {...provided.droppableProps}
           ref={provided.innerRef}

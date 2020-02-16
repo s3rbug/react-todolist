@@ -1,10 +1,16 @@
 import React from "react";
-import { Draggable } from "react-beautiful-dnd";
+import { Draggable, DraggableProvided } from "react-beautiful-dnd";
 
-function DraggableItem({ el, classes, children }) {
+type DraggableItemPropsType = {
+  el: any;
+  classes: any;
+  children: React.ReactChild;
+};
+
+function DraggableItem({ el, classes, children }: DraggableItemPropsType) {
   return (
     <Draggable draggableId={"item-" + el.id} index={el.id}>
-      {provided => (
+      {(provided: DraggableProvided) => (
         <div
           ref={provided.innerRef}
           {...provided.draggableProps}
@@ -12,7 +18,6 @@ function DraggableItem({ el, classes, children }) {
           className={classes ? classes.drag : ""}
         >
           {children}
-          {provided.placeholder}
         </div>
       )}
     </Draggable>

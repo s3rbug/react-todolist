@@ -7,11 +7,23 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
-function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }) {
+type AddTaskDialogPropsType = {
+  handleAddButton: (e: any) => void;
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  addGoal: (text: string) => void;
+};
+
+function AddTaskDialog({
+  handleAddButton,
+  open,
+  setOpen,
+  addGoal
+}: AddTaskDialogPropsType) {
   const [hasError, setError] = React.useState("");
   const [currentText, setCurrentText] = React.useState("");
 
-  const textChanged = e => {
+  const textChanged = (e: any) => {
     setError("");
     setCurrentText(e.target.value);
   };

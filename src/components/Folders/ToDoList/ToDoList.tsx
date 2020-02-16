@@ -6,11 +6,11 @@ import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { Tooltip } from "@material-ui/core";
 import { DragDropContext } from "react-beautiful-dnd";
-import DraggableItem from "../../../asserts/DraggableItem";
-import DroppableItem from "../../../asserts/DroppableItem";
+import DraggableItem from "../../../assets/DraggableItem";
+import DroppableItem from "../../../assets/DroppableItem";
 import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
-import AlertDialog from "../../../asserts/AlertDialog";
+import AlertDialog from "../../../assets/AlertDialog";
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -59,6 +59,29 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+type GoalType = {
+  id: number;
+  text: string;
+  checked: boolean;
+};
+
+type FolderType = {
+  id: number;
+  headline: string;
+  description: string;
+  goals: Array<GoalType>;
+};
+
+type ToDoListPropsType = {
+  setCurrentFolderById: (id: number) => void;
+  id: number;
+  currentFolder: FolderType;
+  toggleChecked: (id: number) => void;
+  addGoal: (newGoalText: string) => void;
+  deleteDone: () => void;
+  swapTasks: (from: number, to: number) => void;
+};
+
 function ToDoList({
   setCurrentFolderById,
   id,
@@ -67,7 +90,7 @@ function ToDoList({
   addGoal,
   deleteDone,
   swapTasks
-}) {
+}: ToDoListPropsType) {
   useEffect(() => {
     setCurrentFolderById(id);
   });
@@ -83,12 +106,12 @@ function ToDoList({
     setOpen(!open);
   };
 
-  const toggleCheckbox = e => {
+  const toggleCheckbox = (e: any) => {
     if (e.target.value) toggleChecked(e.target.value);
     else toggleChecked(e);
   };
 
-  const onDragEnd = result => {
+  const onDragEnd = (result: any) => {
     if (!result.destination) {
       return;
     }
@@ -112,11 +135,11 @@ function ToDoList({
       <DragDropContext onDragEnd={onDragEnd}>
         <DroppableItem classes={classes} droppableId="DroppableToDo">
           <List className={classes.list}>
-            {Object.values(currentFolder.goals).map(el => {
+            {Object.values(currentFolder.goals).map(goal => {
               return (
-                <DraggableItem el={el} key={el.id}>
+                <DraggableItem el={goal} key={goal.id} classes={classes}>
                   <ToDo
-                    el={el}
+                    goal={goal}
                     classes={classes}
                     toggleCheckbox={toggleCheckbox}
                     toggleChecked={toggleChecked}

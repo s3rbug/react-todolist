@@ -18,13 +18,13 @@ import {
   addFolder,
   swapTasks,
   swapFolders
-} from "./../../redux/todo";
+} from "../../redux/todo";
 import { DragDropContext } from "react-beautiful-dnd";
-import DroppableItem from "../../asserts/DroppableItem";
-import DraggableItem from "../../asserts/DraggableItem";
+import DroppableItem from "../../assets/DroppableItem";
+import DraggableItem from "../../assets/DraggableItem";
 import AddFolderDialog from "./AddFolderDialog";
 
-const useStyles = makeStyles(theme => ({
+let useStyles: any = makeStyles((theme: any): any => ({
   root: {
     display: "flex",
     position: "block",
@@ -61,6 +61,33 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
+type GoalType = {
+  id: number;
+  text: string;
+  checked: boolean;
+};
+
+type FolderType = {
+  id: number;
+  headline: string;
+  description: string;
+  goals: Array<GoalType>;
+};
+
+type FoldersPropsType = {
+  folders: Array<FolderType>;
+  match: any;
+  setCurrentFolderById: (folderId: number) => void;
+  currentFolder: FolderType;
+  toggleChecked: () => void;
+  addGoal: (text: string) => void;
+  deleteFolder: (folderId: number) => void;
+  deleteDone: () => void;
+  addFolder: (headline: string, description: string) => void;
+  swapTasks: (from: number, to: number) => void;
+  swapFolders: (from: number, to: number) => void;
+};
+
 function Folders({
   folders,
   match,
@@ -73,7 +100,7 @@ function Folders({
   addFolder,
   swapTasks,
   swapFolders
-}) {
+}: FoldersPropsType) {
   const classes = useStyles();
   const [open, setOpen] = React.useState(false);
   const [curHeadline, setCurHeadline] = React.useState("");
@@ -98,7 +125,7 @@ function Folders({
     }
   }
 
-  function onDragEnd(result) {
+  function onDragEnd(result: any) {
     if (!result.destination) {
       return;
     }
@@ -125,16 +152,14 @@ function Folders({
       <DragDropContext onDragEnd={onDragEnd}>
         <DroppableItem classes={classes} droppableId="DroppableFolder">
           <Grid container spacing={2} className={classes.container}>
-            {folders.map(el => {
+            {folders.map((folder: FolderType) => {
               return (
-                <Grid key={el.id} container item justify="center">
-                  <DraggableItem el={el} classes={classes}>
+                <Grid key={folder.id} container item justify="center">
+                  <DraggableItem el={folder} classes={classes}>
                     <Folder
-                      className={classes.item}
-                      id={el.id}
-                      description={el.description}
-                      headline={el.headline}
-                      goals={el.goals}
+                      id={folder.id}
+                      description={folder.description}
+                      headline={folder.headline}
                       deleteFolder={deleteFolder}
                     />
                   </DraggableItem>
@@ -174,7 +199,7 @@ function Folders({
   );
 }
 
-const mapStateToProps = state => ({
+const mapStateToProps = (state: any) => ({
   folders: state.todo.folders,
   currentFolder: state.todo.currentFolder
 });
@@ -190,9 +215,9 @@ const mapDispatchToProps = {
   swapFolders
 };
 
-const FoldersWithHooks = compose(
-  connect(mapStateToProps, mapDispatchToProps),
+const WrappedFolders = compose(
+  connect<any>(mapStateToProps, mapDispatchToProps),
   withRouter
 )(Folders);
 
-export default FoldersWithHooks;
+export default WrappedFolders as React.ComponentType<any>;

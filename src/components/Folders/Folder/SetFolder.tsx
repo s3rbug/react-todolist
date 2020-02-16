@@ -1,11 +1,19 @@
 import React from "react";
 import TextField from "@material-ui/core/TextField";
-import { makeStyles } from "@material-ui/core/styles";
 import { DialogContent } from "@material-ui/core";
 
-const useStyles = makeStyles(theme => ({}));
+type SetFolderProps = {
+  curHeadline: string;
+  setCurHeadline: (a: string) => void;
+  curDescription: string;
+  setCurDescription: (a: string) => void;
+  errorDesc: string;
+  errorHead: string;
+  setErrorDesc: (a: string) => void;
+  setErrorHead: (a: string) => void;
+};
 
-function Folder({
+function SetFolder({
   curHeadline,
   setCurHeadline,
   curDescription,
@@ -14,12 +22,14 @@ function Folder({
   errorHead,
   setErrorDesc,
   setErrorHead
-}) {
-  const classes = useStyles();
+}: SetFolderProps) {
+  function clearError(): void {
+    setErrorDesc("");
+    setErrorHead("");
+  }
   return (
-    <DialogContent className={classes.card}>
+    <DialogContent>
       <TextField
-        className={classes.textField}
         error={!!errorHead}
         helperText={errorHead}
         margin="dense"
@@ -29,12 +39,10 @@ function Folder({
         value={curHeadline}
         onChange={e => {
           setCurHeadline(e.target.value);
-          setErrorDesc("");
-          setErrorHead("");
+          clearError();
         }}
       ></TextField>
       <TextField
-        className={classes.textField}
         error={!!errorDesc}
         helperText={errorDesc}
         margin="dense"
@@ -44,12 +52,11 @@ function Folder({
         value={curDescription}
         onChange={e => {
           setCurDescription(e.target.value);
-          setErrorDesc("");
-          setErrorHead("");
+          clearError();
         }}
       ></TextField>
     </DialogContent>
   );
 }
 
-export default Folder;
+export default SetFolder;

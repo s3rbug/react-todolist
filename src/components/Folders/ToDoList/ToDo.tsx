@@ -5,21 +5,34 @@ import Divider from "@material-ui/core/Divider";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Checkbox from "@material-ui/core/Checkbox";
 
-function ToDo({ el, classes, toggleCheckbox, toggleChecked }) {
+type GoalType = {
+  id: number;
+  text: string;
+  checked: boolean;
+};
+
+type ToDoPropsType = {
+  goal: GoalType;
+  classes: any;
+  toggleCheckbox: (taskId: any) => void;
+  toggleChecked: (taskId: number) => void;
+};
+
+function ToDo({ goal, classes, toggleCheckbox, toggleChecked }: ToDoPropsType) {
   return (
     <ListItem
       button
       onClick={() => {
-        toggleChecked(el.id);
+        toggleChecked(goal.id);
       }}
       className={
         classes.item +
         " , " +
-        (el.checked ? classes.checkedList : classes.notCheckedList)
+        (goal.checked ? classes.checkedList : classes.notCheckedList)
       }
     >
-      <span className={el.checked ? classes.checked : classes.notChecked}>
-        {el.text}
+      <span className={goal.checked ? classes.checked : classes.notChecked}>
+        {goal.text}
       </span>
       <Box boxShadow={5}>
         <Divider className={classes.divider} />
@@ -28,9 +41,9 @@ function ToDo({ el, classes, toggleCheckbox, toggleChecked }) {
         <Checkbox
           edge="end"
           className={classes.check}
-          checked={el.checked}
+          checked={goal.checked}
           onChange={toggleCheckbox}
-          value={el.id}
+          value={goal.id}
         />
       </ListItemSecondaryAction>
     </ListItem>
