@@ -19,9 +19,9 @@ const darkTheme = createMuiTheme({
   }
 });
 
-const App = () => {
-  const [isLight, setIsLight] = React.useState(true);
-  const [drawerOpened, setDrawerOpened] = React.useState(false);
+const App: React.FC = () => {
+  const [isLight, setIsLight] = React.useState<boolean>(true);
+  const [drawerOpened, setDrawerOpened] = React.useState<boolean>(false);
   return (
     <div className="app-wrapper">
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

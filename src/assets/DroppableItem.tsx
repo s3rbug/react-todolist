@@ -2,13 +2,13 @@ import React from "react";
 import { Droppable, DroppableProvided } from "react-beautiful-dnd";
 
 type DroppableItemPropsType = {
-  classes: any;
+  className?: string;
   droppableId: string;
   children: React.ReactChild;
 };
 
 function DroppableItem({
-  classes,
+  className,
   droppableId,
   children
 }: DroppableItemPropsType) {
@@ -18,7 +18,7 @@ function DroppableItem({
         <div
           {...provided.droppableProps}
           ref={provided.innerRef}
-          className={classes ? classes.drop : ""}
+          className={className}
         >
           {children}
           {provided.placeholder}

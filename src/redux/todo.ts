@@ -1,3 +1,5 @@
+import { FolderType, ActionType } from "./../types/index";
+
 const SET_CURRENT_FOLDER = "todo/SET_CURRENT_FOLDER";
 const TOGGLE_CHECKED = "todo/TOGGLE_CHECKED";
 const ADD_GOAL = "todo/ADD_GOAL";
@@ -6,24 +8,6 @@ const DELETE_DONE = "todo/DELETE_DONE";
 const ADD_FOLDER = "todo/ADD_FOLDER";
 const SWAP_TASKS = "todo/SWAP_TASKS";
 const SWAP_FOLDERS = "todo/SWAP_FOLDERS";
-
-type GoalType = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
-
-type FolderType = {
-  id: number;
-  headline: string;
-  description: string;
-  goals: Array<GoalType>;
-};
-
-type StateType = {
-  folders: Array<FolderType>;
-  currentFolder: FolderType;
-};
 
 const initialState = {
   folders: [
@@ -123,11 +107,13 @@ const initialState = {
   }
 };
 
-function sync(state: any, folder: any) {
+type StateType = typeof initialState;
+
+function sync(state: StateType, folder: FolderType) {
   state.folders[state.currentFolder.id] = folder;
 }
 
-function reducer(state = initialState, action: any): StateType {
+function reducer(state = initialState, action: ActionType): StateType {
   if (action.type === SET_CURRENT_FOLDER) {
     return {
       ...state,

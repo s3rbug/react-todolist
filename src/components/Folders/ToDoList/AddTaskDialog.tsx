@@ -8,7 +8,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 
 type AddTaskDialogPropsType = {
-  handleAddButton: (e: any) => void;
+  handleAddButton: () => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   addGoal: (text: string) => void;
@@ -20,10 +20,10 @@ function AddTaskDialog({
   setOpen,
   addGoal
 }: AddTaskDialogPropsType) {
-  const [hasError, setError] = React.useState("");
-  const [currentText, setCurrentText] = React.useState("");
+  const [hasError, setError] = React.useState<string>("");
+  const [currentText, setCurrentText] = React.useState<string>("");
 
-  const textChanged = (e: any) => {
+  const textChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
     setError("");
     setCurrentText(e.target.value);
   };

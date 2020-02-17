@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles, StyleRules } from "@material-ui/core/styles";
+import { makeStyles, StyleRules, Theme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import CardActions from "@material-ui/core/CardActions";
 import Button from "@material-ui/core/Button";
@@ -9,7 +9,7 @@ import Box from "@material-ui/core/Box";
 import { NavLink } from "react-router-dom";
 
 const useStyles = makeStyles(
-  (theme): StyleRules<string> => ({
+  (theme: Theme): StyleRules<string> => ({
     root: {
       width: "100%"
     },
@@ -23,7 +23,7 @@ const useStyles = makeStyles(
     },
     link: {
       textDecoration: "none",
-      color: "black"
+      color: theme.palette.text.primary
     },
     shadow: {
       width: "100%"
@@ -40,7 +40,7 @@ type FolderPropsType = {
 
 function Folder({ id, headline, description, deleteFolder }: FolderPropsType) {
   const classes = useStyles();
-  let [shadow, setShadow] = useState(2);
+  let [shadow, setShadow] = useState<number>(2);
   function deleteThisFolder(): void {
     deleteFolder(id);
   }

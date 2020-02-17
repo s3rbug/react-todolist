@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -52,7 +52,7 @@ var isMobile = {
 };
 
 function updateStyles() {
-  return makeStyles(theme => ({
+  return makeStyles((theme: Theme) => ({
     root: {
       display: "flex",
       height: "100vh"
@@ -108,7 +108,7 @@ type HeaderPropsType = {
   setIsLight: (isLight: boolean) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
-  children: any;
+  children: React.ReactChild;
 };
 
 function Header({

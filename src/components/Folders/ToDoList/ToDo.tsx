@@ -4,17 +4,12 @@ import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Checkbox from "@material-ui/core/Checkbox";
-
-type GoalType = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
+import { GoalType } from "./../../../types/index";
 
 type ToDoPropsType = {
   goal: GoalType;
   classes: any;
-  toggleCheckbox: (taskId: any) => void;
+  toggleCheckbox: (event: React.ChangeEvent<HTMLInputElement>) => void;
   toggleChecked: (taskId: number) => void;
 };
 

@@ -14,7 +14,7 @@ type AlertDialogPropsType = {
   handleFail: () => void;
 };
 
-export default function AlertDialog({
+function AlertDialog({
   question,
   text,
   open,
@@ -44,3 +44,5 @@ export default function AlertDialog({
     </Dialog>
   );
 }
+
+export default AlertDialog;

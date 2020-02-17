@@ -2,7 +2,7 @@ import React from "react";
 import ToDoList from "./ToDoList/ToDoList";
 import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder/Folder";
-import { Grid } from "@material-ui/core";
+import { Grid, Theme } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
@@ -19,12 +19,13 @@ import {
   swapTasks,
   swapFolders
 } from "../../redux/todo";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DroppableItem from "../../assets/DroppableItem";
 import DraggableItem from "../../assets/DraggableItem";
 import AddFolderDialog from "./AddFolderDialog";
+import { FolderType } from "./../../types/index";
 
-let useStyles: any = makeStyles((theme: any): any => ({
+let useStyles: any = makeStyles((theme: Theme): any => ({
   root: {
     display: "flex",
     position: "block",
@@ -61,19 +62,6 @@ let useStyles: any = makeStyles((theme: any): any => ({
   }
 }));
 
-type GoalType = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
-
-type FolderType = {
-  id: number;
-  headline: string;
-  description: string;
-  goals: Array<GoalType>;
-};
-
 type FoldersPropsType = {
   folders: Array<FolderType>;
   match: any;
@@ -102,11 +90,11 @@ function Folders({
   swapFolders
 }: FoldersPropsType) {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-  const [curHeadline, setCurHeadline] = React.useState("");
-  const [curDescription, setCurDescription] = React.useState("");
-  const [errorHead, setErrorHead] = React.useState("");
-  const [errorDesc, setErrorDesc] = React.useState("");
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [curHeadline, setCurHeadline] = React.useState<string>("");
+  const [curDescription, setCurDescription] = React.useState<string>("");
+  const [errorHead, setErrorHead] = React.useState<string>("");
+  const [errorDesc, setErrorDesc] = React.useState<string>("");
 
   function handleAddButton() {
     if (curHeadline !== "") {
@@ -125,7 +113,7 @@ function Folders({
     }
   }
 
-  function onDragEnd(result: any) {
+  function onDragEnd(result: DropResult) {
     if (!result.destination) {
       return;
     }
@@ -150,12 +138,12 @@ function Folders({
   return (
     <div className={classes.root}>
       <DragDropContext onDragEnd={onDragEnd}>
-        <DroppableItem classes={classes} droppableId="DroppableFolder">
+        <DroppableItem className={classes.drop} droppableId="DroppableFolder">
           <Grid container spacing={2} className={classes.container}>
             {folders.map((folder: FolderType) => {
               return (
                 <Grid key={folder.id} container item justify="center">
-                  <DraggableItem el={folder} classes={classes}>
+                  <DraggableItem id={folder.id} className={classes.drag}>
                     <Folder
                       id={folder.id}
                       description={folder.description}
@@ -216,8 +204,8 @@ const mapDispatchToProps = {
 };
 
 const WrappedFolders = compose(
-  connect<any>(mapStateToProps, mapDispatchToProps),
+  connect(mapStateToProps, mapDispatchToProps),
   withRouter
 )(Folders);
 
-export default WrappedFolders as React.ComponentType<any>;
+export default WrappedFolders as React.ComponentType;

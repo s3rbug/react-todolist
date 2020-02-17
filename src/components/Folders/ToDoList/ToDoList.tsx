@@ -4,15 +4,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Tooltip } from "@material-ui/core";
-import { DragDropContext } from "react-beautiful-dnd";
+import { Tooltip, Theme } from "@material-ui/core";
+import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DraggableItem from "../../../assets/DraggableItem";
 import DroppableItem from "../../../assets/DroppableItem";
 import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
 import AlertDialog from "../../../assets/AlertDialog";
+import { FolderType } from "./../../../types/index";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     width: "100%",
     height: "100%",
@@ -59,19 +60,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-type GoalType = {
-  id: number;
-  text: string;
-  checked: boolean;
-};
-
-type FolderType = {
-  id: number;
-  headline: string;
-  description: string;
-  goals: Array<GoalType>;
-};
-
 type ToDoListPropsType = {
   setCurrentFolderById: (id: number) => void;
   id: number;
@@ -95,8 +83,8 @@ function ToDoList({
     setCurrentFolderById(id);
   });
 
-  const [open, setOpen] = React.useState(false);
-  const [alertOpen, setAlertOpen] = React.useState(false);
+  const [open, setOpen] = React.useState<boolean>(false);
+  const [alertOpen, setAlertOpen] = React.useState<boolean>(false);
 
   const handleDeleteButton = () => {
     setAlertOpen(true);
@@ -106,12 +94,11 @@ function ToDoList({
     setOpen(!open);
   };
 
-  const toggleCheckbox = (e: any) => {
-    if (e.target.value) toggleChecked(e.target.value);
-    else toggleChecked(e);
+  const toggleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.value) toggleChecked(parseInt(e.target.value));
   };
 
-  const onDragEnd = (result: any) => {
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
@@ -133,11 +120,11 @@ function ToDoList({
   return (
     <div className={classes.root}>
       <DragDropContext onDragEnd={onDragEnd}>
-        <DroppableItem classes={classes} droppableId="DroppableToDo">
+        <DroppableItem droppableId="DroppableToDo">
           <List className={classes.list}>
             {Object.values(currentFolder.goals).map(goal => {
               return (
-                <DraggableItem el={goal} key={goal.id} classes={classes}>
+                <DraggableItem id={goal.id} key={goal.id}>
                   <ToDo
                     goal={goal}
                     classes={classes}
