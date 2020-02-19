@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
@@ -12,6 +12,7 @@ import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
 import AlertDialog from "../../../assets/AlertDialog";
 import { FolderType } from "./../../../types/index";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -61,30 +62,28 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 type ToDoListPropsType = {
-  setCurrentFolderById: (id: number) => void;
   id: number;
-  currentFolder: FolderType;
+  currentFolderId: number;
   toggleChecked: (id: number) => void;
   addGoal: (newGoalText: string) => void;
   deleteDone: () => void;
   swapTasks: (from: number, to: number) => void;
+  folders: Array<FolderType>;
 };
 
 function ToDoList({
-  setCurrentFolderById,
   id,
-  currentFolder,
+  currentFolderId,
   toggleChecked,
   addGoal,
   deleteDone,
-  swapTasks
+  swapTasks,
+  folders
 }: ToDoListPropsType) {
-  useEffect(() => {
-    setCurrentFolderById(id);
-  });
-
   const [open, setOpen] = React.useState<boolean>(false);
   const [alertOpen, setAlertOpen] = React.useState<boolean>(false);
+
+  let folder = folders[id];
 
   const handleDeleteButton = () => {
     setAlertOpen(true);
@@ -115,25 +114,30 @@ function ToDoList({
   };
 
   const classes = useStyles();
-  if (!currentFolder) return null;
+
+  if (!currentFolderId) return null;
 
   return (
     <div className={classes.root}>
       <DragDropContext onDragEnd={onDragEnd}>
         <DroppableItem droppableId="DroppableToDo">
           <List className={classes.list}>
-            {Object.values(currentFolder.goals).map(goal => {
-              return (
-                <DraggableItem id={goal.id} key={goal.id}>
-                  <ToDo
-                    goal={goal}
-                    classes={classes}
-                    toggleCheckbox={toggleCheckbox}
-                    toggleChecked={toggleChecked}
-                  />
-                </DraggableItem>
-              );
-            })}
+            <TransitionGroup className={"list-group " + classes.list}>
+              {folder.goals.map(goal => {
+                return (
+                  <CSSTransition classNames="note" timeout={500} key={goal.id}>
+                    <DraggableItem id={goal.id}>
+                      <ToDo
+                        goal={goal}
+                        classes={classes}
+                        toggleCheckbox={toggleCheckbox}
+                        toggleChecked={toggleChecked}
+                      />
+                    </DraggableItem>
+                  </CSSTransition>
+                );
+              })}
+            </TransitionGroup>
           </List>
         </DroppableItem>
       </DragDropContext>

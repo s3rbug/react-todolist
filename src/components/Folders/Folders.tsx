@@ -66,7 +66,7 @@ type FoldersPropsType = {
   folders: Array<FolderType>;
   match: any;
   setCurrentFolderById: (folderId: number) => void;
-  currentFolder: FolderType;
+  currentFolderId: number;
   toggleChecked: () => void;
   addGoal: (text: string) => void;
   deleteFolder: (folderId: number) => void;
@@ -80,7 +80,7 @@ function Folders({
   folders,
   match,
   setCurrentFolderById,
-  currentFolder,
+  currentFolderId,
   toggleChecked,
   addGoal,
   deleteFolder,
@@ -120,20 +120,22 @@ function Folders({
     swapFolders(result.source.index, result.destination.index);
   }
 
-  if (match.params.currentFolder)
+  if (match.params.currentFolder) {
+    setCurrentFolderById(match.params.currentFolder);
     return (
       <div>
         <ToDoList
           id={match.params.currentFolder}
-          setCurrentFolderById={setCurrentFolderById}
-          currentFolder={currentFolder}
+          currentFolderId={currentFolderId}
           toggleChecked={toggleChecked}
           addGoal={addGoal}
           deleteDone={deleteDone}
           swapTasks={swapTasks}
+          folders={folders}
         />
       </div>
     );
+  }
 
   return (
     <div className={classes.root}>
@@ -189,7 +191,7 @@ function Folders({
 
 const mapStateToProps = (state: any) => ({
   folders: state.todo.folders,
-  currentFolder: state.todo.currentFolder
+  currentFolderId: state.todo.currentFolderId
 });
 
 const mapDispatchToProps = {

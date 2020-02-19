@@ -1,4 +1,4 @@
-import { FolderType, ActionType } from "./../types/index";
+import { ActionType } from "./../types/index";
 
 const SET_CURRENT_FOLDER = "todo/SET_CURRENT_FOLDER";
 const TOGGLE_CHECKED = "todo/TOGGLE_CHECKED";
@@ -83,65 +83,41 @@ const initialState = {
       ]
     }
   ],
-  currentFolder: {
-    id: 0,
-    headline: "Anime goals",
-    description: "About this goals",
-    goals: [
-      {
-        id: 0,
-        text: "Watch 1 anime",
-        checked: true
-      },
-      {
-        id: 1,
-        text: "Watch 2 anime",
-        checked: false
-      },
-      {
-        id: 2,
-        text: "Watch 3 anime",
-        checked: false
-      }
-    ]
-  }
+  currentFolderId: 0
 };
 
-type StateType = typeof initialState;
-
-function sync(state: StateType, folder: FolderType) {
-  state.folders[state.currentFolder.id] = folder;
-}
+export type StateType = typeof initialState;
 
 function reducer(state = initialState, action: ActionType): StateType {
   if (action.type === SET_CURRENT_FOLDER) {
     return {
       ...state,
-      currentFolder: state.folders[action.id]
+      currentFolderId: action.id
     };
   } else if (action.type === TOGGLE_CHECKED) {
-    let currentFolderCopy = { ...state.currentFolder };
+    let foldersCopy = [...state.folders];
+    let currentFolderCopy = { ...state.folders[state.currentFolderId] };
     currentFolderCopy.goals[action.id].checked = !currentFolderCopy.goals[
       action.id
     ].checked;
-    sync(state, currentFolderCopy);
+    foldersCopy[state.currentFolderId] = { ...currentFolderCopy };
+
     return {
       ...state,
-      currentFolder: currentFolderCopy
+      folders: [...foldersCopy]
     };
   } else if (action.type === ADD_GOAL) {
-    let currentFolderCopy = { ...state.currentFolder };
+    let foldersCopy = [...state.folders];
     const newGoal = {
-      id: state.currentFolder.goals.length,
+      id: state.folders[state.currentFolderId].goals.length,
       text: action.text,
       checked: false
     };
-    const newGoals = [...currentFolderCopy.goals, newGoal];
-    currentFolderCopy.goals = newGoals;
-    sync(state, currentFolderCopy);
+    const newGoals = [...state.folders[state.currentFolderId].goals, newGoal];
+    foldersCopy[state.currentFolderId].goals = [...newGoals];
     return {
       ...state,
-      currentFolder: currentFolderCopy
+      folders: [...foldersCopy]
     };
   } else if (action.type === DELETE_FOLDER) {
     let foldersCopy = [...state.folders];
@@ -153,26 +129,21 @@ function reducer(state = initialState, action: ActionType): StateType {
     }
     return {
       ...state,
-      folders: foldersCopy
+      folders: [...foldersCopy]
     };
   } else if (action.type === DELETE_DONE) {
-    let currentGoals = [...state.currentFolder.goals];
+    let foldersCopy = [...state.folders];
+    let currentGoals = [...state.folders[state.currentFolderId].goals];
     currentGoals = currentGoals.filter(el => {
       return !el.checked;
     });
     for (let i = 0; i < currentGoals.length; ++i) {
       currentGoals[i].id = i;
     }
-    sync(state, {
-      ...state.currentFolder,
-      goals: currentGoals
-    });
+    foldersCopy[state.currentFolderId].goals = [...currentGoals];
     return {
       ...state,
-      currentFolder: {
-        ...state.currentFolder,
-        goals: currentGoals
-      }
+      folders: [...foldersCopy]
     };
   } else if (action.type === ADD_FOLDER) {
     const newFolder = {
@@ -186,7 +157,8 @@ function reducer(state = initialState, action: ActionType): StateType {
       folders: [...state.folders, newFolder]
     };
   } else if (action.type === SWAP_TASKS) {
-    let newGoals = [...state.currentFolder.goals];
+    let foldersCopy = [...state.folders];
+    let newGoals = [...state.folders[state.currentFolderId].goals];
     const [removed] = newGoals.splice(action.from, 1);
     newGoals.splice(action.to, 0, removed);
 
@@ -194,14 +166,10 @@ function reducer(state = initialState, action: ActionType): StateType {
       newGoals[i].id = i;
     }
 
-    sync(state, { ...state.currentFolder, goals: [...newGoals] });
-
+    foldersCopy[state.currentFolderId].goals = [...newGoals];
     return {
       ...state,
-      currentFolder: {
-        ...state.currentFolder,
-        goals: [...newGoals]
-      }
+      folders: [...foldersCopy]
     };
   } else if (action.type === SWAP_FOLDERS) {
     let newFolders = [...state.folders];

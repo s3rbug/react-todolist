@@ -120,7 +120,6 @@ function Header({
 }: HeaderPropsType) {
   const classes = useStyles();
   const theme = useTheme();
-
   drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
   useStyles = updateStyles();
 
