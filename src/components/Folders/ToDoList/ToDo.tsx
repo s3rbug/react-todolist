@@ -4,16 +4,17 @@ import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Checkbox from "@material-ui/core/Checkbox";
-import { GoalType } from "./../../../types/index";
+import { GoalType } from "../../../types/index_d";
+import { ToDoListStyleType } from "./ToDoList";
 
-type ToDoPropsType = {
+type PropsType = {
   goal: GoalType;
-  classes: any;
+  classes: ToDoListStyleType;
   toggleCheckbox: (event: React.ChangeEvent<HTMLInputElement>) => void;
   toggleChecked: (taskId: number) => void;
 };
 
-function ToDo({ goal, classes, toggleCheckbox, toggleChecked }: ToDoPropsType) {
+function ToDo({ goal, classes, toggleCheckbox, toggleChecked }: PropsType) {
   return (
     <ListItem
       button

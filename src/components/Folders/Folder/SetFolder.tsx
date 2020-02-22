@@ -2,7 +2,7 @@ import React from "react";
 import TextField from "@material-ui/core/TextField";
 import { DialogContent } from "@material-ui/core";
 
-type SetFolderProps = {
+type PropsType = {
   curHeadline: string;
   setCurHeadline: (a: string) => void;
   curDescription: string;
@@ -22,7 +22,7 @@ function SetFolder({
   errorHead,
   setErrorDesc,
   setErrorHead
-}: SetFolderProps) {
+}: PropsType) {
   function clearError(): void {
     setErrorDesc("");
     setErrorHead("");

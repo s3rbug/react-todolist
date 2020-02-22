@@ -4,64 +4,68 @@ import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
 import AddIcon from "@material-ui/icons/Add";
 import DeleteIcon from "@material-ui/icons/Delete";
-import { Tooltip, Theme } from "@material-ui/core";
+import { Tooltip, Theme, StyleRules } from "@material-ui/core";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DraggableItem from "../../../assets/DraggableItem";
 import DroppableItem from "../../../assets/DroppableItem";
 import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
 import AlertDialog from "../../../assets/AlertDialog";
-import { FolderType } from "./../../../types/index";
+import { FolderType } from "../../../types/index_d";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
-    paddingLeft: "10px",
-    paddingRight: "10px"
-  },
-  list: {
-    width: "100%",
-    position: "relative",
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center"
-  },
-  item: {
-    width: "100%",
-    height: "100%",
-    position: "relative",
-    borderBottom: "1px solid " + theme.palette.action.selected,
-    boxShadow: theme.shadows[3]
-  },
-  buttons: {
-    display: "flex",
-    position: "fixed",
-    right: 0,
-    bottom: 0,
-    marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  },
-  button: {
-    marginLeft: theme.spacing(1)
-  },
-  checked: {
-    textDecoration: "line-through"
-  },
-  deleteButton: {
-    marginRight: "1%"
-  },
-  divider: {
-    light: theme.palette.type
-  },
-  icon: {
-    color: theme.palette.background.default
-  }
-}));
+const useStyles = makeStyles(
+  (theme: Theme): StyleRules<string> => ({
+    root: {
+      width: "100%",
+      height: "100%",
+      position: "relative",
+      paddingLeft: "10px",
+      paddingRight: "10px"
+    },
+    list: {
+      width: "100%",
+      position: "relative",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center"
+    },
+    item: {
+      width: "100%",
+      height: "100%",
+      position: "relative",
+      borderBottom: "1px solid " + theme.palette.action.selected,
+      boxShadow: theme.shadows[3]
+    },
+    buttons: {
+      display: "flex",
+      position: "fixed",
+      right: 0,
+      bottom: 0,
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+    button: {
+      marginLeft: theme.spacing(1)
+    },
+    checked: {
+      textDecoration: "line-through"
+    },
+    deleteButton: {
+      marginRight: "1%"
+    },
+    divider: {
+      light: theme.palette.type
+    },
+    icon: {
+      color: theme.palette.background.default
+    }
+  })
+);
 
-type ToDoListPropsType = {
+export type ToDoListStyleType = ReturnType<typeof useStyles>;
+
+type PropsType = {
   id: number;
   currentFolderId: number;
   toggleChecked: (id: number) => void;
@@ -79,11 +83,11 @@ function ToDoList({
   deleteDone,
   swapTasks,
   folders
-}: ToDoListPropsType) {
+}: PropsType) {
   const [open, setOpen] = React.useState<boolean>(false);
   const [alertOpen, setAlertOpen] = React.useState<boolean>(false);
 
-  let folder = folders[id];
+  let currentFolder = folders[id];
 
   const handleDeleteButton = () => {
     setAlertOpen(true);
@@ -123,7 +127,7 @@ function ToDoList({
         <DroppableItem droppableId="DroppableToDo">
           <List className={classes.list}>
             <TransitionGroup className={"list-group " + classes.list}>
-              {folder.goals.map(goal => {
+              {currentFolder.goals.map(goal => {
                 return (
                   <CSSTransition classNames="note" timeout={500} key={goal.id}>
                     <DraggableItem id={goal.id}>

@@ -1,4 +1,4 @@
-import { ActionType } from "./../types/index";
+import { ActionType } from "../types/index_d";
 
 const SET_CURRENT_FOLDER = "todo/SET_CURRENT_FOLDER";
 const TOGGLE_CHECKED = "todo/TOGGLE_CHECKED";
@@ -86,7 +86,7 @@ const initialState = {
   currentFolderId: 0
 };
 
-export type StateType = typeof initialState;
+type StateType = typeof initialState;
 
 function reducer(state = initialState, action: ActionType): StateType {
   if (action.type === SET_CURRENT_FOLDER) {
@@ -194,24 +194,46 @@ type SetFolderType = {
   id: number;
 };
 
+export const setCurrentFolderById = (id: number): SetFolderType => ({
+  type: SET_CURRENT_FOLDER,
+  id
+});
+
 type ToggleCheckedType = {
   type: typeof TOGGLE_CHECKED;
   id: number;
 };
+
+export const toggleChecked = (id: number): ToggleCheckedType => ({
+  type: TOGGLE_CHECKED,
+  id
+});
 
 type AddGoalType = {
   type: typeof ADD_GOAL;
   text: string;
 };
 
+export const addGoal = (text: string): AddGoalType => ({
+  type: ADD_GOAL,
+  text
+});
+
 type DeleteFolderType = {
   type: typeof DELETE_FOLDER;
   id: number;
 };
 
+export const deleteFolder = (id: number): DeleteFolderType => ({
+  type: DELETE_FOLDER,
+  id
+});
+
 type DeleteDoneType = {
   type: typeof DELETE_DONE;
 };
+
+export const deleteDone = (): DeleteDoneType => ({ type: DELETE_DONE });
 
 type AddFolderType = {
   type: typeof ADD_FOLDER;
@@ -219,35 +241,6 @@ type AddFolderType = {
   description: string;
 };
 
-type SwapTasksType = {
-  type: typeof SWAP_TASKS;
-  from: number;
-  to: number;
-};
-
-type SwapFoldersType = {
-  type: typeof SWAP_FOLDERS;
-  from: number;
-  to: number;
-};
-
-export const setCurrentFolderById = (id: number): SetFolderType => ({
-  type: SET_CURRENT_FOLDER,
-  id
-});
-export const toggleChecked = (id: number): ToggleCheckedType => ({
-  type: TOGGLE_CHECKED,
-  id
-});
-export const addGoal = (text: string): AddGoalType => ({
-  type: ADD_GOAL,
-  text
-});
-export const deleteFolder = (id: number): DeleteFolderType => ({
-  type: DELETE_FOLDER,
-  id
-});
-export const deleteDone = (): DeleteDoneType => ({ type: DELETE_DONE });
 export const addFolder = (
   headline: string,
   description: string
@@ -256,11 +249,25 @@ export const addFolder = (
   headline,
   description
 });
+
+type SwapTasksType = {
+  type: typeof SWAP_TASKS;
+  from: number;
+  to: number;
+};
+
 export const swapTasks = (from: number, to: number): SwapTasksType => ({
   type: SWAP_TASKS,
   from,
   to
 });
+
+type SwapFoldersType = {
+  type: typeof SWAP_FOLDERS;
+  from: number;
+  to: number;
+};
+
 export const swapFolders = (from: number, to: number): SwapFoldersType => ({
   type: SWAP_FOLDERS,
   from,

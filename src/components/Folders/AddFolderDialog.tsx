@@ -4,9 +4,10 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button";
 import SetFolder from "./Folder/SetFolder";
+import { FoldersStyleType } from "./Folders";
 
-type AddFolderDialogPropsType = {
-  classes: any;
+type PropsType = {
+  classes: FoldersStyleType;
   open: boolean;
   setOpen: (open: boolean) => void;
   curHeadline: string;
@@ -33,10 +34,9 @@ function AddFolderDialog({
   setErrorHead,
   setErrorDesc,
   handleAddButton
-}: AddFolderDialogPropsType) {
+}: PropsType) {
   return (
     <Dialog
-      className={classes.addFolderDialog}
       open={open}
       onClose={() => setOpen(false)}
       aria-labelledby="form-dialog-folders"

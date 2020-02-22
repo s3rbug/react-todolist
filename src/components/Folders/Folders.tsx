@@ -2,7 +2,7 @@ import React from "react";
 import ToDoList from "./ToDoList/ToDoList";
 import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder/Folder";
-import { Grid, Theme } from "@material-ui/core";
+import { Grid, Theme, StyleRules } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
@@ -23,58 +23,57 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DroppableItem from "../../assets/DroppableItem";
 import DraggableItem from "../../assets/DraggableItem";
 import AddFolderDialog from "./AddFolderDialog";
-import { FolderType } from "./../../types/index";
+import { FolderType } from "../../types/index_d";
+import { AppStateType } from "../../redux/reduxStore";
+import { RouteComponentProps } from "react-router";
 
-let useStyles: any = makeStyles((theme: Theme): any => ({
-  root: {
-    display: "flex",
-    position: "block",
-    flexWrap: "wrap",
-    flexGrow: 1,
-    "& > *": {
-      margin: theme.spacing(1)
+let useStyles = makeStyles(
+  (theme: Theme): StyleRules<string> => ({
+    root: {
+      display: "flex",
+      flexWrap: "wrap",
+      flexGrow: 1,
+      "& > *": {
+        margin: theme.spacing(1)
+      }
+    },
+    item: {
+      maxWidth: "100%"
+    },
+    drop: {
+      width: "100%",
+      height: "100%"
+    },
+    drag: {
+      width: "100%"
+    },
+    container: {
+      position: "relative",
+      height: "100%",
+      width: "100%"
+    },
+    addButton: {
+      position: "fixed",
+      right: 0,
+      bottom: 0,
+      marginRight: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+    icon: {
+      color: theme.palette.background.default
     }
-  },
-  item: {
-    maxWidth: "100%"
-  },
-  drop: {
-    width: "100%",
-    height: "100%"
-  },
-  drag: {
-    width: "100%"
-  },
-  container: {
-    position: "relative",
-    height: "100%",
-    width: "100%"
-  },
-  addButton: {
-    position: "fixed",
-    right: 0,
-    bottom: 0,
-    marginRight: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  },
-  icon: {
-    color: theme.palette.background.default
-  }
-}));
+  })
+);
 
-type FoldersPropsType = {
-  folders: Array<FolderType>;
-  match: any;
-  setCurrentFolderById: (folderId: number) => void;
-  currentFolderId: number;
-  toggleChecked: () => void;
-  addGoal: (text: string) => void;
-  deleteFolder: (folderId: number) => void;
-  deleteDone: () => void;
-  addFolder: (headline: string, description: string) => void;
-  swapTasks: (from: number, to: number) => void;
-  swapFolders: (from: number, to: number) => void;
-};
+export type FoldersStyleType = ReturnType<typeof useStyles>;
+
+interface MatchParams {
+  currentFolder?: string;
+}
+
+interface OwnProps extends RouteComponentProps<MatchParams> {}
+
+type PropsType = OwnProps & MapDispatchPropsType & MapStatePropsType;
 
 function Folders({
   folders,
@@ -88,7 +87,7 @@ function Folders({
   addFolder,
   swapTasks,
   swapFolders
-}: FoldersPropsType) {
+}: PropsType) {
   const classes = useStyles();
   const [open, setOpen] = React.useState<boolean>(false);
   const [curHeadline, setCurHeadline] = React.useState<string>("");
@@ -120,12 +119,17 @@ function Folders({
     swapFolders(result.source.index, result.destination.index);
   }
 
-  if (match.params.currentFolder) {
-    setCurrentFolderById(match.params.currentFolder);
+  let currentFolder: number | null = null;
+
+  if (match.params.currentFolder)
+    currentFolder = parseInt(match.params.currentFolder);
+
+  if (currentFolder !== null) {
+    setCurrentFolderById(currentFolder);
     return (
       <div>
         <ToDoList
-          id={match.params.currentFolder}
+          id={currentFolder}
           currentFolderId={currentFolderId}
           toggleChecked={toggleChecked}
           addGoal={addGoal}
@@ -189,12 +193,28 @@ function Folders({
   );
 }
 
-const mapStateToProps = (state: any) => ({
+type MapStatePropsType = {
+  folders: Array<FolderType>;
+  currentFolderId: number;
+};
+
+type MapDispatchPropsType = {
+  setCurrentFolderById: (id: number) => void;
+  toggleChecked: (id: number) => void;
+  addGoal: (text: string) => void;
+  deleteFolder: (id: number) => void;
+  deleteDone: () => void;
+  addFolder: (headline: string, description: string) => void;
+  swapTasks: (from: number, to: number) => void;
+  swapFolders: (from: number, to: number) => void;
+};
+
+const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
   folders: state.todo.folders,
   currentFolderId: state.todo.currentFolderId
 });
 
-const mapDispatchToProps = {
+const mapDispatchToProps: MapDispatchPropsType = {
   setCurrentFolderById,
   toggleChecked,
   addGoal,
@@ -206,7 +226,10 @@ const mapDispatchToProps = {
 };
 
 const WrappedFolders = compose(
-  connect(mapStateToProps, mapDispatchToProps),
+  connect<MapStatePropsType, MapDispatchPropsType, OwnProps, AppStateType>(
+    mapStateToProps,
+    mapDispatchToProps
+  ),
   withRouter
 )(Folders);
 

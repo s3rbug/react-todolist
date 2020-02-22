@@ -103,7 +103,7 @@ function updateStyles() {
   }));
 }
 
-type HeaderPropsType = {
+type PropsType = {
   isLight: boolean;
   setIsLight: (isLight: boolean) => void;
   open: boolean;
@@ -111,13 +111,7 @@ type HeaderPropsType = {
   children: React.ReactChild;
 };
 
-function Header({
-  isLight,
-  setIsLight,
-  open,
-  setOpen,
-  children
-}: HeaderPropsType) {
+function Header({ isLight, setIsLight, open, setOpen, children }: PropsType) {
   const classes = useStyles();
   const theme = useTheme();
   drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);

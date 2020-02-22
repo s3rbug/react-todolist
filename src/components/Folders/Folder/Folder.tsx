@@ -31,14 +31,14 @@ const useStyles = makeStyles(
   })
 );
 
-type FolderPropsType = {
+type PropsType = {
   id: number;
   headline: string;
   description: string;
   deleteFolder: (folderId: number) => void;
 };
 
-function Folder({ id, headline, description, deleteFolder }: FolderPropsType) {
+function Folder({ id, headline, description, deleteFolder }: PropsType) {
   const classes = useStyles();
   let [shadow, setShadow] = useState<number>(2);
   function deleteThisFolder(): void {
