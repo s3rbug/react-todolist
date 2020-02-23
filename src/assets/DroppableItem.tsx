@@ -7,11 +7,11 @@ type DroppableItemPropsType = {
   children: React.ReactChild;
 };
 
-function DroppableItem({
+const DroppableItem = ({
   className,
   droppableId,
   children
-}: DroppableItemPropsType) {
+}: DroppableItemPropsType) => {
   return (
     <Droppable droppableId={droppableId}>
       {(provided: DroppableProvided) => (
@@ -26,6 +26,6 @@ function DroppableItem({
       )}
     </Droppable>
   );
-}
+};
 
 export default DroppableItem;

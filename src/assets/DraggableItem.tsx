@@ -7,7 +7,7 @@ type DraggableItemPropsType = {
   children: React.ReactChild;
 };
 
-function DraggableItem({ id, className, children }: DraggableItemPropsType) {
+const DraggableItem = ({ id, className, children }: DraggableItemPropsType) => {
   return (
     <Draggable draggableId={"item-" + id} index={id}>
       {(provided: DraggableProvided) => (
@@ -22,6 +22,6 @@ function DraggableItem({ id, className, children }: DraggableItemPropsType) {
       )}
     </Draggable>
   );
-}
+};
 
 export default DraggableItem;

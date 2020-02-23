@@ -15,7 +15,8 @@ const useStyles = makeStyles(
     },
     card: {
       borderWidth: "2px",
-      width: "100%"
+      width: "100%",
+      marginBottom: theme.spacing(2)
     },
     btnContainer: {
       display: "flex",
@@ -38,18 +39,18 @@ type PropsType = {
   deleteFolder: (folderId: number) => void;
 };
 
-function Folder({ id, headline, description, deleteFolder }: PropsType) {
+const Folder = ({ id, headline, description, deleteFolder }: PropsType) => {
   const classes = useStyles();
-  let [shadow, setShadow] = useState<number>(2);
-  function deleteThisFolder(): void {
+  const [shadow, setShadow] = useState(2);
+  const deleteThisFolder = () => {
     deleteFolder(id);
-  }
-  function shadowOn(): void {
+  };
+  const shadowOn = () => {
     setShadow(12);
-  }
-  function shadowOff(): void {
+  };
+  const shadowOff = () => {
     setShadow(2);
-  }
+  };
   return (
     <div className={classes.root}>
       <Box
@@ -83,6 +84,6 @@ function Folder({ id, headline, description, deleteFolder }: PropsType) {
       </Box>
     </div>
   );
-}
+};
 
 export default Folder;

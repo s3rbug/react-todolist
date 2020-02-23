@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
@@ -11,7 +11,7 @@ import DroppableItem from "../../../assets/DroppableItem";
 import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
 import AlertDialog from "../../../assets/AlertDialog";
-import { FolderType } from "../../../types/index_d";
+import { FolderType } from "./../../../types/index_d";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const useStyles = makeStyles(
@@ -75,7 +75,7 @@ type PropsType = {
   folders: Array<FolderType>;
 };
 
-function ToDoList({
+const ToDoList = ({
   id,
   currentFolderId,
   toggleChecked,
@@ -83,9 +83,9 @@ function ToDoList({
   deleteDone,
   swapTasks,
   folders
-}: PropsType) {
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [alertOpen, setAlertOpen] = React.useState<boolean>(false);
+}: PropsType) => {
+  const [open, setOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
 
   let currentFolder = folders[id];
 
@@ -118,8 +118,6 @@ function ToDoList({
   };
 
   const classes = useStyles();
-
-  if (!currentFolderId) return null;
 
   return (
     <div className={classes.root}>
@@ -192,6 +190,6 @@ function ToDoList({
       </div>
     </div>
   );
-}
+};
 
 export default ToDoList;

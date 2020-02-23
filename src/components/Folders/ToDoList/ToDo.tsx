@@ -4,7 +4,7 @@ import Box from "@material-ui/core/Box";
 import Divider from "@material-ui/core/Divider";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Checkbox from "@material-ui/core/Checkbox";
-import { GoalType } from "../../../types/index_d";
+import { GoalType } from "./../../../types/index_d";
 import { ToDoListStyleType } from "./ToDoList";
 
 type PropsType = {
@@ -14,7 +14,7 @@ type PropsType = {
   toggleChecked: (taskId: number) => void;
 };
 
-function ToDo({ goal, classes, toggleCheckbox, toggleChecked }: PropsType) {
+const ToDo = ({ goal, classes, toggleCheckbox, toggleChecked }: PropsType) => {
   return (
     <ListItem
       button
@@ -44,6 +44,6 @@ function ToDo({ goal, classes, toggleCheckbox, toggleChecked }: PropsType) {
       </ListItemSecondaryAction>
     </ListItem>
   );
-}
+};
 
 export default ToDo;

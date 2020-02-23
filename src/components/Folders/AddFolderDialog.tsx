@@ -21,7 +21,7 @@ type PropsType = {
   handleAddButton: () => void;
 };
 
-function AddFolderDialog({
+const AddFolderDialog = ({
   classes,
   open,
   setOpen,
@@ -34,7 +34,7 @@ function AddFolderDialog({
   setErrorHead,
   setErrorDesc,
   handleAddButton
-}: PropsType) {
+}: PropsType) => {
   return (
     <Dialog
       open={open}
@@ -62,6 +62,6 @@ function AddFolderDialog({
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 export default AddFolderDialog;

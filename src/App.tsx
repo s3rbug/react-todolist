@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Folders from "./components/Folders/Folders";
@@ -19,9 +19,9 @@ const darkTheme = createMuiTheme({
   }
 });
 
-const App: React.FC = () => {
-  const [isLight, setIsLight] = React.useState<boolean>(true);
-  const [drawerOpened, setDrawerOpened] = React.useState<boolean>(false);
+const App = () => {
+  const [isLight, setIsLight] = useState(true);
+  const [drawerOpened, setDrawerOpened] = useState(false);
   return (
     <div className="app-wrapper">
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>

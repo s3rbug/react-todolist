@@ -14,13 +14,13 @@ type AlertDialogPropsType = {
   handleFail: () => void;
 };
 
-function AlertDialog({
+const AlertDialog = ({
   question,
   text,
   open,
   handleSuccess,
   handleFail
-}: AlertDialogPropsType) {
+}: AlertDialogPropsType) => {
   return (
     <Dialog
       open={open}
@@ -43,6 +43,6 @@ function AlertDialog({
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 export default AlertDialog;

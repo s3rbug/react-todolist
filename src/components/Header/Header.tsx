@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles, useTheme, Theme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -18,40 +18,25 @@ import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import SunIcon from "@material-ui/icons/Brightness5Outlined";
 import MoonIcon from "@material-ui/icons/Brightness2Outlined";
 
-let drawerWidth = window.innerWidth * 0.2;
-let useStyles = updateStyles();
-
-var isMobile = {
-  Android: function() {
-    return navigator.userAgent.match(/Android/i);
-  },
-  BlackBerry: function() {
-    return navigator.userAgent.match(/BlackBerry/i);
-  },
-  iOS: function() {
-    return navigator.userAgent.match(/iPhone|iPad|iPod/i);
-  },
-  Opera: function() {
-    return navigator.userAgent.match(/Opera Mini/i);
-  },
-  Windows: function() {
-    return (
-      navigator.userAgent.match(/IEMobile/i) ||
-      navigator.userAgent.match(/WPDesktop/i)
-    );
-  },
-  any: function() {
-    return (
-      isMobile.Android() ||
-      isMobile.BlackBerry() ||
-      isMobile.iOS() ||
-      isMobile.Opera() ||
-      isMobile.Windows()
-    );
-  }
+const isMobile = {
+  Android: () => navigator.userAgent.match(/Android/i),
+  BlackBerry: () => navigator.userAgent.match(/BlackBerry/i),
+  iOS: () => navigator.userAgent.match(/iPhone|iPad|iPod/i),
+  Opera: () => navigator.userAgent.match(/Opera Mini/i),
+  Windows: () =>
+    navigator.userAgent.match(/IEMobile/i) ||
+    navigator.userAgent.match(/WPDesktop/i),
+  any: () =>
+    isMobile.Android() ||
+    isMobile.BlackBerry() ||
+    isMobile.iOS() ||
+    isMobile.Opera() ||
+    isMobile.Windows()
 };
 
-function updateStyles() {
+let drawerWidth: number = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
+
+const updateStyles = () => {
   return makeStyles((theme: Theme) => ({
     root: {
       display: "flex",
@@ -101,7 +86,9 @@ function updateStyles() {
       color: theme.palette.text.primary
     }
   }));
-}
+};
+
+let useStyles = updateStyles();
 
 type PropsType = {
   isLight: boolean;
@@ -111,19 +98,37 @@ type PropsType = {
   children: React.ReactChild;
 };
 
-function Header({ isLight, setIsLight, open, setOpen, children }: PropsType) {
+const Header = ({
+  isLight,
+  setIsLight,
+  open,
+  setOpen,
+  children
+}: PropsType) => {
   const classes = useStyles();
   const theme = useTheme();
+  const [width, setWidth] = useState(window.innerWidth);
   drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
-  useStyles = updateStyles();
+
+  useEffect(() => {
+    const handleResize = () => {
+      drawerWidth = width * (isMobile.any() ? 0.5 : 0.2);
+      useStyles = updateStyles();
+      setWidth(window.innerWidth);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, [width]);
 
   const handleDrawer = () => {
     setOpen(!open);
   };
 
-  function toggleTheme() {
+  const toggleTheme = () => {
     setIsLight(!isLight);
-  }
+  };
 
   return (
     <div className={classes.root}>
@@ -193,6 +198,6 @@ function Header({ isLight, setIsLight, open, setOpen, children }: PropsType) {
       </main>
     </div>
   );
-}
+};
 
 export default Header;

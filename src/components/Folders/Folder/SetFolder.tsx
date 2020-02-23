@@ -13,7 +13,7 @@ type PropsType = {
   setErrorHead: (a: string) => void;
 };
 
-function SetFolder({
+const SetFolder = ({
   curHeadline,
   setCurHeadline,
   curDescription,
@@ -22,14 +22,15 @@ function SetFolder({
   errorHead,
   setErrorDesc,
   setErrorHead
-}: PropsType) {
-  function clearError(): void {
+}: PropsType) => {
+  const clearError = () => {
     setErrorDesc("");
     setErrorHead("");
-  }
+  };
   return (
     <DialogContent>
       <TextField
+        autoFocus
         error={!!errorHead}
         helperText={errorHead}
         margin="dense"
@@ -57,6 +58,6 @@ function SetFolder({
       ></TextField>
     </DialogContent>
   );
-}
+};
 
 export default SetFolder;

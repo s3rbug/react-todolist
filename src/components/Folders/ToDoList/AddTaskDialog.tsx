@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useCallback } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -14,16 +14,16 @@ type PropsType = {
   addGoal: (text: string) => void;
 };
 
-function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }: PropsType) {
-  const [hasError, setError] = React.useState<string>("");
-  const [currentText, setCurrentText] = React.useState<string>("");
+const AddTaskDialog = ({
+  handleAddButton,
+  open,
+  setOpen,
+  addGoal
+}: PropsType) => {
+  const [hasError, setError] = useState("");
+  const [currentText, setCurrentText] = useState("");
 
-  const textChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setError("");
-    setCurrentText(e.target.value);
-  };
-
-  const handleAddNewGoal = () => {
+  const handleAddNewGoal = useCallback(() => {
     if (currentText !== "") {
       addGoal(currentText);
       setCurrentText("");
@@ -31,6 +31,23 @@ function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }: PropsType) {
     } else {
       setError("Field can not be empty");
     }
+  }, [addGoal, setCurrentText, setOpen, currentText]);
+
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleAddNewGoal();
+      } else if (e.key === "Escape") {
+        setOpen(false);
+        e.preventDefault();
+      }
+    },
+    [setOpen, handleAddNewGoal]
+  );
+  const textChanged = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setError("");
+    setCurrentText(e.target.value);
   };
 
   return (
@@ -38,15 +55,7 @@ function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }: PropsType) {
       open={open}
       onClose={handleAddButton}
       aria-labelledby="form-dialog-title"
-      onKeyDown={e => {
-        if (e.key === "Enter") {
-          e.preventDefault();
-          handleAddNewGoal();
-        } else if (e.key === "Escape") {
-          setOpen(false);
-          e.preventDefault();
-        }
-      }}
+      onKeyDown={onKeyDown}
     >
       <DialogTitle id="form-dialog-title">Add a new goal</DialogTitle>
       <DialogContent>
@@ -78,6 +87,6 @@ function AddTaskDialog({ handleAddButton, open, setOpen, addGoal }: PropsType) {
       </DialogActions>
     </Dialog>
   );
-}
+};
 
 export default AddTaskDialog;

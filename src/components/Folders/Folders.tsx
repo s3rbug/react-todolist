@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ToDoList from "./ToDoList/ToDoList";
 import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder/Folder";
@@ -18,24 +18,22 @@ import {
   addFolder,
   swapTasks,
   swapFolders
-} from "../../redux/todo";
+} from "../../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DroppableItem from "../../assets/DroppableItem";
 import DraggableItem from "../../assets/DraggableItem";
 import AddFolderDialog from "./AddFolderDialog";
-import { FolderType } from "../../types/index_d";
+import { FolderType } from "./../../types/index_d";
 import { AppStateType } from "../../redux/reduxStore";
 import { RouteComponentProps } from "react-router";
+import { TransitionGroup, CSSTransition } from "react-transition-group";
 
 let useStyles = makeStyles(
   (theme: Theme): StyleRules<string> => ({
     root: {
       display: "flex",
       flexWrap: "wrap",
-      flexGrow: 1,
-      "& > *": {
-        margin: theme.spacing(1)
-      }
+      flexGrow: 1
     },
     item: {
       maxWidth: "100%"
@@ -50,7 +48,9 @@ let useStyles = makeStyles(
     container: {
       position: "relative",
       height: "100%",
-      width: "100%"
+      width: "100%",
+      padding: theme.spacing(1),
+      paddingRight: theme.spacing(2)
     },
     addButton: {
       position: "fixed",
@@ -75,7 +75,7 @@ interface OwnProps extends RouteComponentProps<MatchParams> {}
 
 type PropsType = OwnProps & MapDispatchPropsType & MapStatePropsType;
 
-function Folders({
+const Folders = ({
   folders,
   match,
   setCurrentFolderById,
@@ -87,15 +87,15 @@ function Folders({
   addFolder,
   swapTasks,
   swapFolders
-}: PropsType) {
+}: PropsType) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState<boolean>(false);
-  const [curHeadline, setCurHeadline] = React.useState<string>("");
-  const [curDescription, setCurDescription] = React.useState<string>("");
-  const [errorHead, setErrorHead] = React.useState<string>("");
-  const [errorDesc, setErrorDesc] = React.useState<string>("");
+  const [open, setOpen] = useState(false);
+  const [curHeadline, setCurHeadline] = useState("");
+  const [curDescription, setCurDescription] = useState("");
+  const [errorHead, setErrorHead] = useState("");
+  const [errorDesc, setErrorDesc] = useState("");
 
-  function handleAddButton() {
+  const handleAddButton = () => {
     if (curHeadline !== "") {
       if (curDescription !== "") {
         addFolder(curHeadline, curDescription);
@@ -110,18 +110,21 @@ function Folders({
     } else {
       setErrorHead("Field can not be empty");
     }
-  }
+  };
 
-  function onDragEnd(result: DropResult) {
+  const onDragEnd = (result: DropResult) => {
     if (!result.destination) {
       return;
     }
     swapFolders(result.source.index, result.destination.index);
-  }
+  };
 
   let currentFolder: number | null = null;
 
-  if (match.params.currentFolder)
+  if (
+    match.params.currentFolder !== "" &&
+    match.params.currentFolder !== undefined
+  )
     currentFolder = parseInt(match.params.currentFolder);
 
   if (currentFolder !== null) {
@@ -145,21 +148,31 @@ function Folders({
     <div className={classes.root}>
       <DragDropContext onDragEnd={onDragEnd}>
         <DroppableItem className={classes.drop} droppableId="DroppableFolder">
-          <Grid container spacing={2} className={classes.container}>
-            {folders.map((folder: FolderType) => {
-              return (
-                <Grid key={folder.id} container item justify="center">
-                  <DraggableItem id={folder.id} className={classes.drag}>
-                    <Folder
-                      id={folder.id}
-                      description={folder.description}
-                      headline={folder.headline}
-                      deleteFolder={deleteFolder}
-                    />
-                  </DraggableItem>
-                </Grid>
-              );
-            })}
+          <Grid>
+            <TransitionGroup
+              className={"list-group " + classes.list + " " + classes.container}
+            >
+              {folders.map((folder: FolderType) => {
+                return (
+                  <CSSTransition
+                    classNames="note"
+                    timeout={500}
+                    key={folder.id}
+                  >
+                    <Grid container item justify="center">
+                      <DraggableItem id={folder.id} className={classes.drag}>
+                        <Folder
+                          id={folder.id}
+                          description={folder.description}
+                          headline={folder.headline}
+                          deleteFolder={deleteFolder}
+                        />
+                      </DraggableItem>
+                    </Grid>
+                  </CSSTransition>
+                );
+              })}
+            </TransitionGroup>
           </Grid>
         </DroppableItem>
         <div className={classes.addButton}>
@@ -191,7 +204,7 @@ function Folders({
       </DragDropContext>
     </div>
   );
-}
+};
 
 type MapStatePropsType = {
   folders: Array<FolderType>;
