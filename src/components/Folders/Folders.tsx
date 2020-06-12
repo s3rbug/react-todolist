@@ -17,7 +17,7 @@ import {
   deleteDone,
   addFolder,
   swapTasks,
-  swapFolders
+  swapFolders,
 } from "../../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import DroppableItem from "../../assets/DroppableItem";
@@ -33,35 +33,35 @@ let useStyles = makeStyles(
     root: {
       display: "flex",
       flexWrap: "wrap",
-      flexGrow: 1
+      flexGrow: 1,
     },
     item: {
-      maxWidth: "100%"
+      maxWidth: "100%",
     },
     drop: {
       width: "100%",
-      height: "100%"
+      height: "100%",
     },
     drag: {
-      width: "100%"
+      width: "100%",
     },
     container: {
       position: "relative",
       height: "100%",
       width: "100%",
       padding: theme.spacing(1),
-      paddingRight: theme.spacing(2)
+      paddingRight: theme.spacing(2),
     },
     addButton: {
       position: "fixed",
       right: 0,
       bottom: 0,
       marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     icon: {
-      color: theme.palette.background.default
-    }
+      color: theme.palette.background.default,
+    },
   })
 );
 
@@ -86,7 +86,7 @@ const Folders = ({
   deleteDone,
   addFolder,
   swapTasks,
-  swapFolders
+  swapFolders,
 }: PropsType) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -94,6 +94,7 @@ const Folders = ({
   const [curDescription, setCurDescription] = useState("");
   const [errorHead, setErrorHead] = useState("");
   const [errorDesc, setErrorDesc] = useState("");
+  console.log("Called");
 
   const handleAddButton = () => {
     if (curHeadline !== "") {
@@ -224,7 +225,7 @@ type MapDispatchPropsType = {
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
   folders: state.todo.folders,
-  currentFolderId: state.todo.currentFolderId
+  currentFolderId: state.todo.currentFolderId,
 });
 
 const mapDispatchToProps: MapDispatchPropsType = {
@@ -235,7 +236,7 @@ const mapDispatchToProps: MapDispatchPropsType = {
   deleteDone,
   addFolder,
   swapTasks,
-  swapFolders
+  swapFolders,
 };
 
 const WrappedFolders = compose(

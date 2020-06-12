@@ -10,8 +10,3 @@ export type FolderType = {
   description: string;
   goals: Array<GoalType>;
 };
-
-// export type ActionType = {
-//   type: string;
-//   [key: string]: any;
-// };

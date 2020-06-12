@@ -34,61 +34,52 @@ const isMobile = {
     isMobile.Windows()
 };
 
-let drawerWidth: number = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
-
-const updateStyles = () => {
-  return makeStyles((theme: Theme) => ({
-    root: {
-      display: "flex",
-      height: "100vh"
-    },
-    appBar: {
-      zIndex: theme.zIndex.drawer + 1,
-      transition: theme.transitions.create(["margin", "width"], {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      })
-    },
-    menuButton: {
-      marginRight: theme.spacing(2)
-    },
-    hide: {
-      display: "none"
-    },
-    drawer: {
-      width: drawerWidth,
-      flexShrink: 0
-    },
-    drawerPaper: {
-      width: drawerWidth,
-      boxShadow: theme.shadows[3]
-    },
-    drawerHeader: {
-      display: "flex",
-      alignItems: "center",
-      padding: theme.spacing(0, 1),
-      ...theme.mixins.toolbar,
-      justifyContent: "flex-end"
-    },
-    content: {
-      flexGrow: 1,
-      transition: theme.transitions.create("margin", {
-        easing: theme.transitions.easing.sharp,
-        duration: theme.transitions.duration.leavingScreen
-      }),
-      marginLeft: -drawerWidth
-    },
-    link: {
-      textDecoration: "none",
-      color: "black"
-    },
-    listText: {
-      color: theme.palette.text.primary
-    }
-  }));
-};
-
-let useStyles = updateStyles();
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    display: "flex",
+    height: "100vh"
+  },
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
+    transition: theme.transitions.create(["margin", "width"], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  menuButton: {
+    marginRight: theme.spacing(2)
+  },
+  hide: {
+    display: "none"
+  },
+  drawer: {
+    flexShrink: 0
+  },
+  drawerPaper: {
+    boxShadow: theme.shadows[3]
+  },
+  drawerHeader: {
+    display: "flex",
+    alignItems: "center",
+    padding: theme.spacing(0, 1),
+    ...theme.mixins.toolbar,
+    justifyContent: "flex-end"
+  },
+  content: {
+    flexGrow: 1,
+    transition: theme.transitions.create("margin", {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.leavingScreen
+    })
+  },
+  link: {
+    textDecoration: "none",
+    color: "black"
+  },
+  listText: {
+    color: theme.palette.text.primary
+  }
+}));
 
 type PropsType = {
   isLight: boolean;
@@ -107,20 +98,20 @@ const Header = ({
 }: PropsType) => {
   const classes = useStyles();
   const theme = useTheme();
-  const [width, setWidth] = useState(window.innerWidth);
-  drawerWidth = window.innerWidth * (isMobile.any() ? 0.5 : 0.2);
+  const [drawerWidth, setDrawerWidth] = useState(
+    window.innerWidth * (isMobile.any() ? 0.5 : 0.2)
+  );
 
   useEffect(() => {
     const handleResize = () => {
-      drawerWidth = width * (isMobile.any() ? 0.5 : 0.2);
-      useStyles = updateStyles();
-      setWidth(window.innerWidth);
+      if (drawerWidth !== window.innerWidth * (isMobile.any() ? 0.5 : 0.2))
+        setDrawerWidth(window.innerWidth * (isMobile.any() ? 0.5 : 0.2));
     };
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, [width]);
+  });
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -151,6 +142,9 @@ const Header = ({
       </AppBar>
       <Drawer
         className={classes.drawer}
+        style={{
+          width: drawerWidth + "px"
+        }}
         variant="persistent"
         anchor="left"
         open={open}
@@ -158,7 +152,12 @@ const Header = ({
           paper: classes.drawerPaper
         }}
       >
-        <div className={classes.drawerHeader}>
+        <div
+          className={classes.drawerHeader}
+          style={{
+            width: drawerWidth + "px"
+          }}
+        >
           <IconButton onClick={handleDrawer}>
             {theme.direction === "ltr" ? (
               <ChevronLeftIcon />
@@ -190,7 +189,12 @@ const Header = ({
         </List>
       </Drawer>
 
-      <main className={classes.content}>
+      <main
+        className={classes.content}
+        style={{
+          marginLeft: -drawerWidth + "px"
+        }}
+      >
         <div>
           <div className={classes.drawerHeader} />
           {children}

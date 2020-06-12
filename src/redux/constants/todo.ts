@@ -6,3 +6,4 @@ export const DELETE_DONE = "todo/DELETE_DONE";
 export const ADD_FOLDER = "todo/ADD_FOLDER";
 export const SWAP_TASKS = "todo/SWAP_TASKS";
 export const SWAP_FOLDERS = "todo/SWAP_FOLDERS";
+export const UNDO_DELETE_TASKS = "todo/UNDO_DELETE_TASKS";

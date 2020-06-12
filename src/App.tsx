@@ -9,14 +9,14 @@ import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
 const lightTheme = createMuiTheme({
   palette: {
-    type: "light"
-  }
+    type: "light",
+  },
 });
 
 const darkTheme = createMuiTheme({
   palette: {
-    type: "dark"
-  }
+    type: "dark",
+  },
 });
 
 const App = () => {
@@ -31,7 +31,10 @@ const App = () => {
           open={drawerOpened}
           setOpen={setDrawerOpened}
         >
-          <Route path="/folders/:currentFolder?" render={() => <Folders />} />
+          <div>
+            <Route path="/folders/:currentFolder?" render={() => <Folders />} />
+            <Route path="/" exact render={() => <Folders />} />
+          </div>
         </Header>
       </ThemeProvider>
       <div

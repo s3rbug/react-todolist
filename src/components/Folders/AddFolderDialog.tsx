@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogTitle from "@material-ui/core/DialogTitle";
@@ -35,11 +35,24 @@ const AddFolderDialog = ({
   setErrorDesc,
   handleAddButton
 }: PropsType) => {
+  const onKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        handleAddButton();
+      } else if (e.key === "Escape") {
+        setOpen(false);
+        e.preventDefault();
+      }
+    },
+    [setOpen, handleAddButton]
+  );
   return (
     <Dialog
       open={open}
       onClose={() => setOpen(false)}
       aria-labelledby="form-dialog-folders"
+      onKeyDown={onKeyDown}
     >
       <DialogTitle id="form-dialog-folders">Add new folder</DialogTitle>
       <SetFolder
