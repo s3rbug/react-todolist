@@ -3,17 +3,22 @@ import { Droppable, DroppableProvided } from "react-beautiful-dnd";
 
 type DroppableItemPropsType = {
   className?: string;
+  horizontal?: boolean;
   droppableId: string;
   children: React.ReactChild;
 };
 
 const DroppableItem = ({
   className,
+  horizontal,
   droppableId,
-  children
+  children,
 }: DroppableItemPropsType) => {
   return (
-    <Droppable droppableId={droppableId}>
+    <Droppable
+      droppableId={droppableId}
+      direction={horizontal ? "horizontal" : "vertical"}
+    >
       {(provided: DroppableProvided) => (
         <div
           {...provided.droppableProps}

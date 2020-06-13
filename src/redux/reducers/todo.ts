@@ -6,52 +6,52 @@ const initialState = {
   folders: [
     {
       id: 0,
-      headline: "Anime goals",
-      description: "About this goals",
+      headline: "Anime SUPERgoals",
+      description: "About Anime SUPERgoals",
       goals: [
         {
           id: 0,
           text: "Watch 1 anime",
-          checked: true
+          checked: true,
         },
         {
           id: 1,
           text: "Watch 2 anime",
-          checked: false
+          checked: false,
         },
         {
           id: 2,
           text: "Watch 3 anime",
-          checked: false
-        }
-      ]
+          checked: false,
+        },
+      ],
     },
     {
       id: 1,
-      headline: "Anime SUPERgoals",
+      headline: "SUPERgoals",
       description: "About this SUPERgoals",
       goals: [
         {
           id: 0,
           text: "Watch 4 anime",
-          checked: true
+          checked: true,
         },
         {
           id: 1,
           text: "Watch 5 anime",
-          checked: false
+          checked: false,
         },
         {
           id: 2,
           text: "Watch 7 anime",
-          checked: false
+          checked: false,
         },
         {
           id: 3,
           text: "Watch 9 anime",
-          checked: false
-        }
-      ]
+          checked: false,
+        },
+      ],
     },
     {
       id: 2,
@@ -61,22 +61,22 @@ const initialState = {
         {
           id: 0,
           text: "Watch 4 anime",
-          checked: true
+          checked: true,
         },
         {
           id: 1,
           text: "Watch 5 anime",
-          checked: false
+          checked: false,
         },
         {
           id: 2,
           text: "Watch 7 anime",
-          checked: false
-        }
-      ]
-    }
+          checked: false,
+        },
+      ],
+    },
   ],
-  currentFolderId: 0
+  currentFolderId: 0,
 };
 
 type StateType = typeof initialState;
@@ -88,7 +88,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       const { id } = action.payload;
       return {
         ...state,
-        currentFolderId: id
+        currentFolderId: id,
       };
     }
     case constants.TOGGLE_CHECKED: {
@@ -101,7 +101,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 
       return {
         ...state,
-        folders: [...foldersCopy]
+        folders: [...foldersCopy],
       };
     }
     case constants.ADD_GOAL: {
@@ -110,19 +110,19 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       const newGoal = {
         id: state.folders[state.currentFolderId].goals.length,
         text: text,
-        checked: false
+        checked: false,
       };
       const newGoals = [...state.folders[state.currentFolderId].goals, newGoal];
       foldersCopy[state.currentFolderId].goals = [...newGoals];
       return {
         ...state,
-        folders: [...foldersCopy]
+        folders: [...foldersCopy],
       };
     }
     case constants.DELETE_FOLDER: {
       const { id } = action.payload;
       let foldersCopy = [...state.folders];
-      foldersCopy = foldersCopy.filter(el => {
+      foldersCopy = foldersCopy.filter((el) => {
         return id !== el.id;
       });
       for (let i = id; i < foldersCopy.length; ++i) {
@@ -130,13 +130,13 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       }
       return {
         ...state,
-        folders: [...foldersCopy]
+        folders: [...foldersCopy],
       };
     }
     case constants.DELETE_DONE: {
       let foldersCopy = [...state.folders];
       let currentGoals = [...state.folders[state.currentFolderId].goals];
-      currentGoals = currentGoals.filter(el => {
+      currentGoals = currentGoals.filter((el) => {
         return !el.checked;
       });
       for (let i = 0; i < currentGoals.length; ++i) {
@@ -145,7 +145,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       foldersCopy[state.currentFolderId].goals = [...currentGoals];
       return {
         ...state,
-        folders: [...foldersCopy]
+        folders: [...foldersCopy],
       };
     }
     case constants.ADD_FOLDER: {
@@ -155,11 +155,11 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
         id: state.folders.length,
         headline: headline,
         description: description,
-        goals: []
+        goals: [],
       };
       return {
         ...state,
-        folders: [...state.folders, newFolder]
+        folders: [...state.folders, newFolder],
       };
     }
     case constants.SWAP_TASKS: {
@@ -176,7 +176,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       foldersCopy[state.currentFolderId].goals = [...newGoals];
       return {
         ...state,
-        folders: [...foldersCopy]
+        folders: [...foldersCopy],
       };
     }
     case constants.SWAP_FOLDERS: {
@@ -192,7 +192,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 
       return {
         ...state,
-        folders: [...newFolders]
+        folders: [...newFolders],
       };
     }
     default:

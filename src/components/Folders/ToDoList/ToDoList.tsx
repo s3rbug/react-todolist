@@ -21,21 +21,21 @@ const useStyles = makeStyles(
       height: "100%",
       position: "relative",
       paddingLeft: "10px",
-      paddingRight: "10px"
+      paddingRight: "10px",
     },
     list: {
       width: "100%",
       position: "relative",
       display: "flex",
       flexDirection: "column",
-      justifyContent: "center"
+      justifyContent: "center",
     },
     item: {
       width: "100%",
       height: "100%",
       position: "relative",
       borderBottom: "1px solid " + theme.palette.action.selected,
-      boxShadow: theme.shadows[3]
+      boxShadow: theme.shadows[3],
     },
     buttons: {
       display: "flex",
@@ -43,23 +43,23 @@ const useStyles = makeStyles(
       right: 0,
       bottom: 0,
       marginRight: theme.spacing(2),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
     },
     button: {
-      marginLeft: theme.spacing(1)
+      marginLeft: theme.spacing(1),
     },
     checked: {
-      textDecoration: "line-through"
+      textDecoration: "line-through",
     },
     deleteButton: {
-      marginRight: "1%"
+      marginRight: "1%",
     },
     divider: {
-      light: theme.palette.type
+      light: theme.palette.type,
     },
     icon: {
-      color: theme.palette.background.default
-    }
+      color: theme.palette.background.default,
+    },
   })
 );
 
@@ -82,7 +82,7 @@ const ToDoList = ({
   addGoal,
   deleteDone,
   swapTasks,
-  folders
+  folders,
 }: PropsType) => {
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -125,7 +125,7 @@ const ToDoList = ({
         <DroppableItem droppableId="DroppableToDo">
           <List className={classes.list}>
             <TransitionGroup className={"list-group " + classes.list}>
-              {currentFolder.goals.map(goal => {
+              {currentFolder.goals.map((goal) => {
                 return (
                   <CSSTransition classNames="note" timeout={500} key={goal.id}>
                     <DraggableItem id={goal.id}>

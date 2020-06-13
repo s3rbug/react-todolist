@@ -31,54 +31,55 @@ const isMobile = {
     isMobile.BlackBerry() ||
     isMobile.iOS() ||
     isMobile.Opera() ||
-    isMobile.Windows()
+    isMobile.Windows(),
 };
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: "flex",
-    height: "100vh"
+    height: "100vh",
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(["margin", "width"], {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
+    background: theme.palette.type === "dark" ? "#3700B3" : "#3F51B5",
   },
   menuButton: {
-    marginRight: theme.spacing(2)
+    marginRight: theme.spacing(2),
   },
   hide: {
-    display: "none"
+    display: "none",
   },
   drawer: {
-    flexShrink: 0
+    flexShrink: 0,
   },
   drawerPaper: {
-    boxShadow: theme.shadows[3]
+    boxShadow: theme.shadows[3],
   },
   drawerHeader: {
     display: "flex",
     alignItems: "center",
     padding: theme.spacing(0, 1),
     ...theme.mixins.toolbar,
-    justifyContent: "flex-end"
+    justifyContent: "flex-end",
   },
   content: {
     flexGrow: 1,
     transition: theme.transitions.create("margin", {
       easing: theme.transitions.easing.sharp,
-      duration: theme.transitions.duration.leavingScreen
-    })
+      duration: theme.transitions.duration.leavingScreen,
+    }),
   },
   link: {
     textDecoration: "none",
-    color: "black"
+    color: "black",
   },
   listText: {
-    color: theme.palette.text.primary
-  }
+    color: theme.palette.text.primary,
+  },
 }));
 
 type PropsType = {
@@ -94,7 +95,7 @@ const Header = ({
   setIsLight,
   open,
   setOpen,
-  children
+  children,
 }: PropsType) => {
   const classes = useStyles();
   const theme = useTheme();
@@ -143,19 +144,19 @@ const Header = ({
       <Drawer
         className={classes.drawer}
         style={{
-          width: drawerWidth + "px"
+          width: drawerWidth + "px",
         }}
         variant="persistent"
         anchor="left"
         open={open}
         classes={{
-          paper: classes.drawerPaper
+          paper: classes.drawerPaper,
         }}
       >
         <div
           className={classes.drawerHeader}
           style={{
-            width: drawerWidth + "px"
+            width: drawerWidth + "px",
           }}
         >
           <IconButton onClick={handleDrawer}>
@@ -192,7 +193,7 @@ const Header = ({
       <main
         className={classes.content}
         style={{
-          marginLeft: -drawerWidth + "px"
+          marginLeft: -drawerWidth + "px",
         }}
       >
         <div>

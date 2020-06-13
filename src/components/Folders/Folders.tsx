@@ -19,14 +19,10 @@ import {
   swapTasks,
   swapFolders,
 } from "../../redux/actions/todo";
-import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import DroppableItem from "../../assets/DroppableItem";
-import DraggableItem from "../../assets/DraggableItem";
 import AddFolderDialog from "./AddFolderDialog";
 import { FolderType } from "./../../types/index_d";
 import { AppStateType } from "../../redux/reduxStore";
-import { RouteComponentProps } from "react-router";
-import { TransitionGroup, CSSTransition } from "react-transition-group";
+import { RouteComponentProps, Redirect } from "react-router";
 
 let useStyles = makeStyles(
   (theme: Theme): StyleRules<string> => ({
@@ -34,23 +30,20 @@ let useStyles = makeStyles(
       display: "flex",
       flexWrap: "wrap",
       flexGrow: 1,
-    },
-    item: {
-      maxWidth: "100%",
+      width: "100%",
+      paddingTop: theme.spacing(2),
+      paddingLeft: theme.spacing(3),
     },
     drop: {
       width: "100%",
-      height: "100%",
     },
+    item: {},
     drag: {
       width: "100%",
     },
     container: {
       position: "relative",
-      height: "100%",
       width: "100%",
-      padding: theme.spacing(1),
-      paddingRight: theme.spacing(2),
     },
     addButton: {
       position: "fixed",
@@ -94,7 +87,6 @@ const Folders = ({
   const [curDescription, setCurDescription] = useState("");
   const [errorHead, setErrorHead] = useState("");
   const [errorDesc, setErrorDesc] = useState("");
-  console.log("Called");
 
   const handleAddButton = () => {
     if (curHeadline !== "") {
@@ -113,13 +105,6 @@ const Folders = ({
     }
   };
 
-  const onDragEnd = (result: DropResult) => {
-    if (!result.destination) {
-      return;
-    }
-    swapFolders(result.source.index, result.destination.index);
-  };
-
   let currentFolder: number | null = null;
 
   if (
@@ -129,6 +114,8 @@ const Folders = ({
     currentFolder = parseInt(match.params.currentFolder);
 
   if (currentFolder !== null) {
+    if (currentFolder >= folders.length || currentFolder < 0)
+      return <Redirect to="folders" />;
     setCurrentFolderById(currentFolder);
     return (
       <div>
@@ -147,62 +134,53 @@ const Folders = ({
 
   return (
     <div className={classes.root}>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <DroppableItem className={classes.drop} droppableId="DroppableFolder">
-          <Grid>
-            <TransitionGroup
-              className={"list-group " + classes.list + " " + classes.container}
+      <Grid container className={classes.container} spacing={3}>
+        {folders.map((folder: FolderType) => {
+          return (
+            <Grid
+              key={folder.id}
+              item
+              className={classes.item}
+              xs={6}
+              md={4}
+              lg={3}
             >
-              {folders.map((folder: FolderType) => {
-                return (
-                  <CSSTransition
-                    classNames="note"
-                    timeout={500}
-                    key={folder.id}
-                  >
-                    <Grid container item justify="center">
-                      <DraggableItem id={folder.id} className={classes.drag}>
-                        <Folder
-                          id={folder.id}
-                          description={folder.description}
-                          headline={folder.headline}
-                          deleteFolder={deleteFolder}
-                        />
-                      </DraggableItem>
-                    </Grid>
-                  </CSSTransition>
-                );
-              })}
-            </TransitionGroup>
-          </Grid>
-        </DroppableItem>
-        <div className={classes.addButton}>
-          <Tooltip title="Add" aria-label="add" placement="bottom">
-            <Fab
-              color="primary"
-              aria-label="add"
-              size="medium"
-              onClick={() => setOpen(true)}
-            >
-              <AddIcon className={classes.icon} />
-            </Fab>
-          </Tooltip>
-        </div>
-        <AddFolderDialog
-          classes={classes}
-          open={open}
-          setOpen={setOpen}
-          curHeadline={curHeadline}
-          setCurHeadline={setCurHeadline}
-          curDescription={curDescription}
-          setCurDescription={setCurDescription}
-          errorHead={errorHead}
-          errorDesc={errorDesc}
-          setErrorHead={setErrorHead}
-          setErrorDesc={setErrorDesc}
-          handleAddButton={handleAddButton}
-        />
-      </DragDropContext>
+              <Folder
+                id={folder.id}
+                description={folder.description}
+                headline={folder.headline}
+                deleteFolder={deleteFolder}
+              />
+            </Grid>
+          );
+        })}
+      </Grid>
+      <div className={classes.addButton}>
+        <Tooltip title="Add" aria-label="add" placement="bottom">
+          <Fab
+            color="primary"
+            aria-label="add"
+            size="medium"
+            onClick={() => setOpen(true)}
+          >
+            <AddIcon className={classes.icon} />
+          </Fab>
+        </Tooltip>
+      </div>
+      <AddFolderDialog
+        classes={classes}
+        open={open}
+        setOpen={setOpen}
+        curHeadline={curHeadline}
+        setCurHeadline={setCurHeadline}
+        curDescription={curDescription}
+        setCurDescription={setCurDescription}
+        errorHead={errorHead}
+        errorDesc={errorDesc}
+        setErrorHead={setErrorHead}
+        setErrorDesc={setErrorDesc}
+        handleAddButton={handleAddButton}
+      />
     </div>
   );
 };

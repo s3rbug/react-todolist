@@ -6,7 +6,7 @@ import store from "./redux/reduxStore";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-
+//palette.primary.main
 const lightTheme = createMuiTheme({
   palette: {
     type: "light",
@@ -16,6 +16,16 @@ const lightTheme = createMuiTheme({
 const darkTheme = createMuiTheme({
   palette: {
     type: "dark",
+    primary: {
+      main: "#E87509",
+      dark: "#C04D09",
+    },
+    secondary: {
+      main: "#FF69B4",
+    },
+    action: {
+      disabledBackground: "#121212",
+    },
   },
 });
 
@@ -34,6 +44,7 @@ const App = () => {
           <div>
             <Route path="/folders/:currentFolder?" render={() => <Folders />} />
             <Route path="/" exact render={() => <Folders />} />
+            <Route path="/react-todolist" exact render={() => <Folders />} />
           </div>
         </Header>
       </ThemeProvider>
