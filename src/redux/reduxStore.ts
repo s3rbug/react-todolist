@@ -1,9 +1,11 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 import todo from "./reducers/todo";
+import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
-  todo: todo
+  todo: todo,
+  form: formReducer,
 });
 
 type RootReducerType = typeof rootReducer;

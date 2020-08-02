@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import ToDoList from "./ToDoList/ToDoList";
 import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder/Folder";
-import { Grid, Theme, StyleRules } from "@material-ui/core";
+import { Grid, Theme, StyleRules, Typography } from "@material-ui/core";
 import { connect } from "react-redux";
 import { compose } from "redux";
 import { withRouter } from "react-router-dom";
@@ -22,7 +22,7 @@ import {
 import AddFolderDialog from "./AddFolderDialog";
 import { FolderType } from "./../../types/index_d";
 import { AppStateType } from "../../redux/reduxStore";
-import { RouteComponentProps, Redirect } from "react-router";
+import { RouteComponentProps } from "react-router";
 
 let useStyles = makeStyles(
   (theme: Theme): StyleRules<string> => ({
@@ -79,31 +79,9 @@ const Folders = ({
   deleteDone,
   addFolder,
   swapTasks,
-  swapFolders,
 }: PropsType) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-  const [curHeadline, setCurHeadline] = useState("");
-  const [curDescription, setCurDescription] = useState("");
-  const [errorHead, setErrorHead] = useState("");
-  const [errorDesc, setErrorDesc] = useState("");
-
-  const handleAddButton = () => {
-    if (curHeadline !== "") {
-      if (curDescription !== "") {
-        addFolder(curHeadline, curDescription);
-        setCurDescription("");
-        setCurHeadline("");
-        setOpen(false);
-        setErrorDesc("");
-        setErrorHead("");
-      } else {
-        setErrorDesc("Field can not be empty");
-      }
-    } else {
-      setErrorHead("Field can not be empty");
-    }
-  };
 
   let currentFolder: number | null = null;
 
@@ -115,7 +93,11 @@ const Folders = ({
 
   if (currentFolder !== null) {
     if (currentFolder >= folders.length || currentFolder < 0)
-      return <Redirect to="folders" />;
+      return (
+        <Typography variant="h2" align="center" color="textPrimary">
+          Incorrect folder id!
+        </Typography>
+      );
     setCurrentFolderById(currentFolder);
     return (
       <div>
@@ -171,15 +153,7 @@ const Folders = ({
         classes={classes}
         open={open}
         setOpen={setOpen}
-        curHeadline={curHeadline}
-        setCurHeadline={setCurHeadline}
-        curDescription={curDescription}
-        setCurDescription={setCurDescription}
-        errorHead={errorHead}
-        errorDesc={errorDesc}
-        setErrorHead={setErrorHead}
-        setErrorDesc={setErrorDesc}
-        handleAddButton={handleAddButton}
+        addFolder={addFolder}
       />
     </div>
   );

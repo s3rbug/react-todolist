@@ -10,3 +10,8 @@ export type FolderType = {
   description: string;
   goals: Array<GoalType>;
 };
+
+export type FormDataType = {
+  headline: string;
+  description: string;
+};
