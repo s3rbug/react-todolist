@@ -11,7 +11,11 @@ export type FolderType = {
   goals: Array<GoalType>;
 };
 
-export type FormDataType = {
+export type FolderFormDataType = {
   headline: string;
   description: string;
+};
+
+export type TaskFormDataType = {
+  goalText: string;
 };

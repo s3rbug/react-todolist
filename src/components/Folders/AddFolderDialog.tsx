@@ -4,7 +4,7 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import SetFolderForm from "./Folder/SetFolderForm";
 import { FoldersStyleType } from "./Folders";
 import { DialogContent } from "@material-ui/core";
-import { FormDataType } from "./../../types/index_d";
+import { FolderFormDataType } from "./../../types/index_d";
 
 type PropsType = {
   classes: FoldersStyleType;
@@ -14,7 +14,7 @@ type PropsType = {
 };
 
 const AddFolderDialog = ({ classes, open, setOpen, addFolder }: PropsType) => {
-  const onSubmit = (formData: FormDataType) => {
+  const onSubmit = (formData: FolderFormDataType) => {
     addFolder(formData.headline, formData.description);
     setOpen(false);
   };

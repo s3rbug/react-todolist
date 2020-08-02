@@ -1,7 +1,7 @@
 import React from "react";
 import { DialogActions, Button } from "@material-ui/core";
 import { InjectedFormProps, reduxForm, Field } from "redux-form";
-import { FormDataType } from "./../../../types/index_d";
+import { FolderFormDataType } from "./../../../types/index_d";
 import { RenderTextField } from "../../../assets/FormRenders";
 import { required, maxLength15 } from "../../../utils/validators";
 
@@ -10,34 +10,30 @@ type PropsType = {
 };
 
 const SetFolderForm: React.FC<
-  InjectedFormProps<FormDataType, PropsType> & PropsType
+  InjectedFormProps<FolderFormDataType, PropsType> & PropsType
 > = (props) => {
   const { handleSubmit, setOpen } = props;
   return (
     <form onSubmit={handleSubmit}>
-      <div>
-        <Field
-          autoFocus
-          fullWidth
-          name="headline"
-          component={RenderTextField}
-          label="Headline"
-          margin="dense"
-          placeholder="Headline"
-          validate={[required, maxLength15]}
-        />
-      </div>
-      <div>
-        <Field
-          fullWidth
-          name="description"
-          component={RenderTextField}
-          label="Description"
-          margin="dense"
-          placeholder="Description"
-          validate={[required, maxLength15]}
-        ></Field>
-      </div>
+      <Field
+        autoFocus
+        fullWidth
+        name="headline"
+        component={RenderTextField}
+        label="Headline"
+        margin="dense"
+        placeholder="Headline"
+        validate={[required, maxLength15]}
+      />
+      <Field
+        fullWidth
+        name="description"
+        component={RenderTextField}
+        label="Description"
+        margin="dense"
+        placeholder="Description"
+        validate={[required, maxLength15]}
+      ></Field>
       <DialogActions>
         <Field
           component={Button}
@@ -56,7 +52,7 @@ const SetFolderForm: React.FC<
   );
 };
 
-const SetFolderReduxForm = reduxForm<FormDataType, PropsType>({
+const SetFolderReduxForm = reduxForm<FolderFormDataType, PropsType>({
   form: "set-folder",
 })(SetFolderForm);
 export default SetFolderReduxForm;
