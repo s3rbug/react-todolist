@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Button from "@material-ui/core/Button";
 import { TaskFormDataType } from "../../../types/index_d";
-import { required, maxLength15 } from "../../../utils/validators";
+import { required, maxLength50 } from "../../../utils/validators";
 
 type PropsType = {
   setOpen: (isOpen: boolean) => void;
@@ -34,7 +34,7 @@ const SetGoalForm: React.FC<
           margin="dense"
           type="text"
           component={RenderTextField}
-          validate={[required, maxLength15]}
+          validate={[required, maxLength50]}
         />
       </DialogContent>
       <DialogActions>

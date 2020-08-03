@@ -3,7 +3,7 @@ import { DialogActions, Button } from "@material-ui/core";
 import { InjectedFormProps, reduxForm, Field } from "redux-form";
 import { FolderFormDataType } from "./../../../types/index_d";
 import { RenderTextField } from "../../../assets/FormRenders";
-import { required, maxLength15 } from "../../../utils/validators";
+import { required, maxLength50 } from "../../../utils/validators";
 
 type PropsType = {
   setOpen: (open: boolean) => void;
@@ -23,7 +23,7 @@ const SetFolderForm: React.FC<
         label="Headline"
         margin="dense"
         placeholder="Headline"
-        validate={[required, maxLength15]}
+        validate={[required, maxLength50]}
       />
       <Field
         fullWidth
@@ -32,7 +32,7 @@ const SetFolderForm: React.FC<
         label="Description"
         margin="dense"
         placeholder="Description"
-        validate={[required, maxLength15]}
+        validate={[required, maxLength50]}
       ></Field>
       <DialogActions>
         <Field

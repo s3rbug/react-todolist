@@ -2,6 +2,7 @@ export type GoalType = {
   id: number;
   text: string;
   checked: boolean;
+  editing: boolean;
 };
 
 export type FolderType = {

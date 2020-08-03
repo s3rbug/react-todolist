@@ -36,6 +36,7 @@ const useStyles = makeStyles(
       position: "relative",
       borderBottom: "1px solid " + theme.palette.action.selected,
       boxShadow: theme.shadows[3],
+      cursor: "default",
     },
     buttons: {
       display: "flex",
@@ -60,6 +61,9 @@ const useStyles = makeStyles(
     icon: {
       color: theme.palette.background.default,
     },
+    edit: {
+      marginLeft: theme.spacing(1),
+    },
   })
 );
 
@@ -72,6 +76,9 @@ type PropsType = {
   addGoal: (newGoalText: string) => void;
   deleteDone: () => void;
   swapTasks: (from: number, to: number) => void;
+  stopEditing: () => void;
+  toggleEditing: (id: number) => void;
+  setGoal: (id: number, goal: string) => void;
   folders: Array<FolderType>;
 };
 
@@ -82,6 +89,9 @@ const ToDoList = ({
   addGoal,
   deleteDone,
   swapTasks,
+  stopEditing,
+  toggleEditing,
+  setGoal,
   folders,
 }: PropsType) => {
   const [open, setOpen] = useState(false);
@@ -134,6 +144,10 @@ const ToDoList = ({
                         classes={classes}
                         toggleCheckbox={toggleCheckbox}
                         toggleChecked={toggleChecked}
+                        toggleEditing={toggleEditing}
+                        stopEditing={stopEditing}
+                        setGoal={setGoal}
+                        id={goal.id}
                       />
                     </DraggableItem>
                   </CSSTransition>

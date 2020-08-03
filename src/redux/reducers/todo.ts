@@ -13,16 +13,19 @@ const initialState = {
           id: 0,
           text: "Watch 1 anime",
           checked: true,
+          editing: false,
         },
         {
           id: 1,
           text: "Watch 2 anime",
           checked: false,
+          editing: false,
         },
         {
           id: 2,
           text: "Watch 3 anime",
           checked: false,
+          editing: false,
         },
       ],
     },
@@ -35,21 +38,25 @@ const initialState = {
           id: 0,
           text: "Watch 4 anime",
           checked: true,
+          editing: false,
         },
         {
           id: 1,
           text: "Watch 5 anime",
           checked: false,
+          editing: false,
         },
         {
           id: 2,
           text: "Watch 7 anime",
           checked: false,
+          editing: false,
         },
         {
           id: 3,
           text: "Watch 9 anime",
           checked: false,
+          editing: false,
         },
       ],
     },
@@ -62,16 +69,19 @@ const initialState = {
           id: 0,
           text: "Watch 4 anime",
           checked: true,
+          editing: false,
         },
         {
           id: 1,
           text: "Watch 5 anime",
           checked: false,
+          editing: false,
         },
         {
           id: 2,
           text: "Watch 7 anime",
           checked: false,
+          editing: false,
         },
       ],
     },
@@ -111,6 +121,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
         id: state.folders[state.currentFolderId].goals.length,
         text: text,
         checked: false,
+        editing: false,
       };
       const newGoals = [...state.folders[state.currentFolderId].goals, newGoal];
       foldersCopy[state.currentFolderId].goals = [...newGoals];
@@ -193,6 +204,38 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       return {
         ...state,
         folders: [...newFolders],
+      };
+    }
+    case constants.STOP_EDITING: {
+      let goalsCopy = [...state.folders[state.currentFolderId].goals];
+      let foldersCopy = [...state.folders];
+      for (let i = 0; i < goalsCopy.length; ++i) {
+        goalsCopy[i].editing = false;
+      }
+      foldersCopy[state.currentFolderId].goals = [...goalsCopy];
+      return {
+        ...state,
+        folders: [...foldersCopy],
+      };
+    }
+    case constants.START_EDITING: {
+      const { id } = action.payload;
+      let goalsCopy = [...state.folders[state.currentFolderId].goals];
+      let foldersCopy = [...state.folders];
+      goalsCopy[id].editing = !goalsCopy[id].editing;
+      foldersCopy[state.currentFolderId].goals = [...goalsCopy];
+      return {
+        ...state,
+        folders: [...foldersCopy],
+      };
+    }
+    case constants.SET_GOAL: {
+      const { id, newGoal } = action.payload;
+      let foldersCopy = [...state.folders];
+      foldersCopy[state.currentFolderId].goals[id].text = newGoal;
+      return {
+        ...state,
+        folders: [...foldersCopy],
       };
     }
     default:

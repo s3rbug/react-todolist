@@ -18,6 +18,9 @@ import {
   addFolder,
   swapTasks,
   swapFolders,
+  toggleEditing,
+  stopEditing,
+  setGoal,
 } from "../../redux/actions/todo";
 import AddFolderDialog from "./AddFolderDialog";
 import { FolderType } from "./../../types/index_d";
@@ -79,6 +82,9 @@ const Folders = ({
   deleteDone,
   addFolder,
   swapTasks,
+  toggleEditing,
+  stopEditing,
+  setGoal,
 }: PropsType) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -108,6 +114,9 @@ const Folders = ({
           addGoal={addGoal}
           deleteDone={deleteDone}
           swapTasks={swapTasks}
+          toggleEditing={toggleEditing}
+          stopEditing={stopEditing}
+          setGoal={setGoal}
           folders={folders}
         />
       </div>
@@ -173,6 +182,9 @@ type MapDispatchPropsType = {
   addFolder: (headline: string, description: string) => void;
   swapTasks: (from: number, to: number) => void;
   swapFolders: (from: number, to: number) => void;
+  toggleEditing: (id: number) => void;
+  stopEditing: () => void;
+  setGoal: (id: number, goal: string) => void;
 };
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
@@ -189,6 +201,9 @@ const mapDispatchToProps: MapDispatchPropsType = {
   addFolder,
   swapTasks,
   swapFolders,
+  toggleEditing,
+  stopEditing,
+  setGoal,
 };
 
 const WrappedFolders = compose(

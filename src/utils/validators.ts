@@ -8,4 +8,4 @@ const maxLength = (length: number) => (value: string) => {
   return "Maximal count of symbols is " + length;
 };
 
-export const maxLength15 = maxLength(15);
+export const maxLength50 = maxLength(50);

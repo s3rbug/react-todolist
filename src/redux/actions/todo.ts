@@ -22,3 +22,11 @@ export const swapTasks = (from: number, to: number) =>
 
 export const swapFolders = (from: number, to: number) =>
   action(constants.SWAP_FOLDERS, { from, to });
+
+export const stopEditing = () => action(constants.STOP_EDITING);
+
+export const toggleEditing = (id: number) =>
+  action(constants.START_EDITING, { id });
+
+export const setGoal = (id: number, newGoal: string) =>
+  action(constants.SET_GOAL, { id, newGoal });
