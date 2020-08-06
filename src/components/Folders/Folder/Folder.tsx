@@ -56,7 +56,6 @@ const Folder = ({ id, headline, description, deleteFolder }: PropsType) => {
   const deleteThisFolder = () => {
     deleteFolder(id);
   };
-
   const shadowOn = () => {
     setShadow(12);
   };
@@ -107,8 +106,8 @@ const Folder = ({ id, headline, description, deleteFolder }: PropsType) => {
           <CardActions className={classes.btnContainer}>
             <Button
               size="large"
-              onClick={handleDeleteButton}
               color="secondary"
+              onClick={handleDeleteButton}
               className={classes.small}
             >
               Delete

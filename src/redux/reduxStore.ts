@@ -1,10 +1,12 @@
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 import todo from "./reducers/todo";
+import ui from "./reducers/ui";
 import { reducer as formReducer } from "redux-form";
 
 const rootReducer = combineReducers({
   todo: todo,
+  ui: ui,
   form: formReducer,
 });
 

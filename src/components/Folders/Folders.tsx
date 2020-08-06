@@ -22,8 +22,9 @@ import {
   stopEditing,
   setGoal,
 } from "../../redux/actions/todo";
+import { setDrawerMode } from "../../redux/actions/ui";
 import AddFolderDialog from "./AddFolderDialog";
-import { FolderType } from "./../../types/index_d";
+import { FolderType, DrawerTypeEnum } from "./../../types/index_d";
 import { AppStateType } from "../../redux/reduxStore";
 import { RouteComponentProps } from "react-router";
 
@@ -85,6 +86,8 @@ const Folders = ({
   toggleEditing,
   stopEditing,
   setGoal,
+  setDrawerMode,
+  drawerMode,
 }: PropsType) => {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
@@ -118,6 +121,8 @@ const Folders = ({
           stopEditing={stopEditing}
           setGoal={setGoal}
           folders={folders}
+          setDrawerMode={setDrawerMode}
+          drawerMode={drawerMode}
         />
       </div>
     );
@@ -171,6 +176,7 @@ const Folders = ({
 type MapStatePropsType = {
   folders: Array<FolderType>;
   currentFolderId: number;
+  drawerMode: DrawerTypeEnum;
 };
 
 type MapDispatchPropsType = {
@@ -185,11 +191,13 @@ type MapDispatchPropsType = {
   toggleEditing: (id: number) => void;
   stopEditing: () => void;
   setGoal: (id: number, goal: string) => void;
+  setDrawerMode: (type: DrawerTypeEnum) => void;
 };
 
 const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
   folders: state.todo.folders,
   currentFolderId: state.todo.currentFolderId,
+  drawerMode: state.ui.drawerMode,
 });
 
 const mapDispatchToProps: MapDispatchPropsType = {
@@ -204,6 +212,7 @@ const mapDispatchToProps: MapDispatchPropsType = {
   toggleEditing,
   stopEditing,
   setGoal,
+  setDrawerMode,
 };
 
 const WrappedFolders = compose(

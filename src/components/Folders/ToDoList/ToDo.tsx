@@ -7,7 +7,7 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { GoalType } from "./../../../types/index_d";
 import { ToDoListStyleType } from "./ToDoList";
 import EditRoundedIcon from "@material-ui/icons/EditRounded";
-import { TextField } from "@material-ui/core";
+import { TextField, IconButton } from "@material-ui/core";
 import DoneIcon from "@material-ui/icons/Done";
 
 type PropsType = {
@@ -43,7 +43,12 @@ const ToDo = ({
       }
     >
       {goal.editing ? (
-        <TextField autoFocus value={goal.text} onChange={changeHandler} />
+        <TextField
+          autoFocus
+          value={goal.text}
+          onChange={changeHandler}
+          className={goal.checked ? classes.checked : classes.notChecked}
+        />
       ) : (
         <span className={goal.checked ? classes.checked : classes.notChecked}>
           {goal.text}
@@ -53,24 +58,24 @@ const ToDo = ({
         <Divider className={classes.divider} />
       </Box>
       {goal.editing ? (
-        <DoneIcon
-          className={classes.edit}
-          color="primary"
-          fontSize="large"
+        <IconButton
           onClick={() => {
             toggleEditing(id);
           }}
-        />
+        >
+          <DoneIcon color="primary" />
+        </IconButton>
       ) : (
-        <EditRoundedIcon
-          className={classes.edit}
+        <IconButton
           onClick={() => {
             if (!goal.editing) {
               stopEditing();
               toggleEditing(id);
             }
           }}
-        />
+        >
+          <EditRoundedIcon fontSize="small" />
+        </IconButton>
       )}
       <ListItemSecondaryAction>
         <Checkbox

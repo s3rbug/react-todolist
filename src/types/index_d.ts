@@ -20,3 +20,8 @@ export type FolderFormDataType = {
 export type TaskFormDataType = {
   goalText: string;
 };
+
+export enum DrawerTypeEnum {
+  Menu = 1,
+  Back,
+}

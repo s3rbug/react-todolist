@@ -1,11 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import Folders from "./components/Folders/Folders";
-import store from "./redux/reduxStore";
+import store, { AppStateType } from "./redux/reduxStore";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
+import { setDrawerMode, setIsLight, setDrawerOpened } from "./redux/actions/ui";
+import { connect } from "react-redux";
+import { DrawerTypeEnum } from "./types/index_d";
+
 //palette.primary.main
 const lightTheme = createMuiTheme({
   palette: {
@@ -29,9 +33,18 @@ const darkTheme = createMuiTheme({
   },
 });
 
-const App = () => {
-  const [isLight, setIsLight] = useState(true);
-  const [drawerOpened, setDrawerOpened] = useState(false);
+type OwnProps = {};
+
+type PropsType = MapDispatchPropsType & MapStatePropsType;
+
+const App = ({
+  isLight,
+  setIsLight,
+  drawerOpened,
+  setDrawerOpened,
+  drawerMode,
+  setDrawerMode,
+}: PropsType) => {
   return (
     <div className="app-wrapper">
       <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
@@ -40,6 +53,8 @@ const App = () => {
           setIsLight={setIsLight}
           open={drawerOpened}
           setOpen={setDrawerOpened}
+          setDrawerMode={setDrawerMode}
+          drawerMode={drawerMode}
         >
           <div>
             <Route path="/folders/:currentFolder?" render={() => <Folders />} />
@@ -58,11 +73,44 @@ const App = () => {
   );
 };
 
+type MapStatePropsType = {
+  drawerMode: DrawerTypeEnum;
+  isLight: boolean;
+  drawerOpened: boolean;
+};
+type MapDispatchPropsType = {
+  setDrawerMode: (type: DrawerTypeEnum) => void;
+  setIsLight: (isLight: boolean) => void;
+  setDrawerOpened: (open: boolean) => void;
+};
+
+const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
+  drawerMode: state.ui.drawerMode,
+  isLight: state.ui.isLight,
+  drawerOpened: state.ui.drawerOpened,
+});
+
+const mapDispatchToProps: MapDispatchPropsType = {
+  setDrawerMode,
+  setIsLight,
+  setDrawerOpened,
+};
+
+const AppWithConnect: any = connect<
+  MapStatePropsType,
+  MapDispatchPropsType,
+  OwnProps,
+  AppStateType
+>(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+
 const MainApp = () => {
   return (
     <BrowserRouter>
       <Provider store={store}>
-        <App />
+        <AppWithConnect />
       </Provider>
     </BrowserRouter>
   );

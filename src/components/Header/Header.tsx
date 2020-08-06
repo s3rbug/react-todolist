@@ -13,10 +13,13 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import ListItemText from "@material-ui/core/ListItemText";
-import { NavLink } from "react-router-dom";
+import { NavLink, RouteComponentProps } from "react-router-dom";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import SunIcon from "@material-ui/icons/Brightness5Outlined";
 import MoonIcon from "@material-ui/icons/Brightness2Outlined";
+import { DrawerTypeEnum } from "../../types/index_d";
+import ArrowBackIcon from "@material-ui/icons/ArrowBack";
+import { withRouter } from "react-router-dom";
 
 const isMobile = {
   Android: () => navigator.userAgent.match(/Android/i),
@@ -82,19 +85,26 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type PropsType = {
+type OwnProps = {
   isLight: boolean;
   setIsLight: (isLight: boolean) => void;
   open: boolean;
   setOpen: (open: boolean) => void;
   children: React.ReactChild;
+  setDrawerMode: (type: DrawerTypeEnum) => void;
+  drawerMode: DrawerTypeEnum;
 };
+
+type PropsType = OwnProps & RouteComponentProps;
 
 const Header = ({
   isLight,
   setIsLight,
   open,
   setOpen,
+  setDrawerMode,
+  drawerMode,
+  history,
   children,
 }: PropsType) => {
   const classes = useStyles();
@@ -112,7 +122,7 @@ const Header = ({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  });
+  }, [drawerWidth]);
 
   const handleDrawer = () => {
     setOpen(!open);
@@ -127,15 +137,30 @@ const Header = ({
       <CssBaseline />
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawer}
-            edge="start"
-            className={classes.menuButton}
-          >
-            <MenuIcon />
-          </IconButton>
+          {drawerMode === DrawerTypeEnum.Back ? (
+            <IconButton
+              color="inherit"
+              aria-label="open back"
+              onClick={() => {
+                history.goBack();
+                setDrawerMode(DrawerTypeEnum.Menu);
+              }}
+              edge="start"
+              className={classes.menuButton}
+            >
+              <ArrowBackIcon />
+            </IconButton>
+          ) : (
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawer}
+              edge="start"
+              className={classes.menuButton}
+            >
+              <MenuIcon />
+            </IconButton>
+          )}
           <Typography variant="h6" noWrap>
             To do list
           </Typography>
@@ -205,4 +230,4 @@ const Header = ({
   );
 };
 
-export default Header;
+export default withRouter(Header);

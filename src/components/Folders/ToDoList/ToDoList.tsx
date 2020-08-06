@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
 import Fab from "@material-ui/core/Fab";
@@ -11,7 +11,7 @@ import DroppableItem from "../../../assets/DroppableItem";
 import AddTaskDialog from "./AddTaskDialog";
 import ToDo from "./ToDo";
 import AlertDialog from "../../../assets/AlertDialog";
-import { FolderType } from "./../../../types/index_d";
+import { FolderType, DrawerTypeEnum } from "./../../../types/index_d";
 import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 const useStyles = makeStyles(
@@ -80,6 +80,8 @@ type PropsType = {
   toggleEditing: (id: number) => void;
   setGoal: (id: number, goal: string) => void;
   folders: Array<FolderType>;
+  setDrawerMode: (type: DrawerTypeEnum) => void;
+  drawerMode: DrawerTypeEnum;
 };
 
 const ToDoList = ({
@@ -93,6 +95,8 @@ const ToDoList = ({
   toggleEditing,
   setGoal,
   folders,
+  setDrawerMode,
+  drawerMode,
 }: PropsType) => {
   const [open, setOpen] = useState(false);
   const [alertOpen, setAlertOpen] = useState(false);
@@ -128,6 +132,13 @@ const ToDoList = ({
   };
 
   const classes = useStyles();
+
+  useEffect(() => {
+    setDrawerMode(DrawerTypeEnum.Back);
+    return () => {
+      setDrawerMode(DrawerTypeEnum.Menu);
+    };
+  }, [setDrawerMode]);
 
   return (
     <div className={classes.root}>
