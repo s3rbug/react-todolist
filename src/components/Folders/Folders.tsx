@@ -1,31 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import ToDoList from "./ToDoList/ToDoList";
 import { makeStyles } from "@material-ui/core/styles";
 import Folder from "./Folder/Folder";
 import { Grid, Theme, StyleRules, Typography } from "@material-ui/core";
-import { connect } from "react-redux";
-import { compose } from "redux";
+import { useDispatch } from "react-redux";
 import { withRouter } from "react-router-dom";
 import { Tooltip } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import Fab from "@material-ui/core/Fab";
 import {
-  setCurrentFolderById,
-  toggleChecked,
-  addGoal,
-  deleteFolder,
-  deleteDone,
-  addFolder,
-  swapTasks,
-  swapFolders,
-  toggleEditing,
-  stopEditing,
-  setGoal,
+  setCurrentFolderByIdAction,
+  toggleCheckedAction,
+  addGoalAction,
+  deleteFolderAction,
+  deleteDoneAction,
+  addFolderAction,
+  swapTasksAction,
+  toggleEditingAction,
+  stopEditingAction,
+  setGoalAction,
 } from "../../redux/actions/todo";
-import { setDrawerMode } from "../../redux/actions/ui";
+import { setDrawerModeAction } from "../../redux/actions/ui";
 import AddFolderDialog from "./AddFolderDialog";
 import { FolderType, DrawerTypeEnum } from "./../../types/index_d";
-import { AppStateType } from "../../redux/reduxStore";
+import { useTypedSelector } from "../../redux/reduxStore";
 import { RouteComponentProps } from "react-router";
 
 let useStyles = makeStyles(
@@ -70,27 +68,57 @@ interface MatchParams {
 
 interface OwnProps extends RouteComponentProps<MatchParams> {}
 
-type PropsType = OwnProps & MapDispatchPropsType & MapStatePropsType;
-
-const Folders = ({
-  folders,
-  match,
-  setCurrentFolderById,
-  currentFolderId,
-  toggleChecked,
-  addGoal,
-  deleteFolder,
-  deleteDone,
-  addFolder,
-  swapTasks,
-  toggleEditing,
-  stopEditing,
-  setGoal,
-  setDrawerMode,
-  drawerMode,
-}: PropsType) => {
+const Folders = ({ match }: OwnProps) => {
   const classes = useStyles();
+
+  const folders = useTypedSelector((state) => state.todo.folders);
+  const currentFolderId = useTypedSelector(
+    (state) => state.todo.currentFolderId
+  );
+  const drawerMode = useTypedSelector((state) => state.ui.drawerMode);
   const [open, setOpen] = useState(false);
+
+  const dispatch = useDispatch();
+  const setCurrentFolderById = (id: number) =>
+    dispatch(setCurrentFolderByIdAction(id));
+  const deleteFolder = useCallback(
+    (id: number) => dispatch(deleteFolderAction(id)),
+    [dispatch]
+  );
+  const deleteDone = useCallback(() => dispatch(deleteDoneAction()), [
+    dispatch,
+  ]);
+  const swapTasks = useCallback(
+    (from: number, to: number) => dispatch(swapTasksAction(from, to)),
+    [dispatch]
+  );
+  const toggleEditing = useCallback(
+    (id: number) => dispatch(toggleEditingAction(id)),
+    [dispatch]
+  );
+  const stopEditing = useCallback(() => dispatch(stopEditingAction()), [
+    dispatch,
+  ]);
+  const addGoal = useCallback((text: string) => dispatch(addGoalAction(text)), [
+    dispatch,
+  ]);
+  const setGoal = useCallback(
+    (id: number, newGoal: string) => dispatch(setGoalAction(id, newGoal)),
+    [dispatch]
+  );
+  const setDrawerMode = useCallback(
+    (mode: DrawerTypeEnum) => dispatch(setDrawerModeAction(mode)),
+    [dispatch]
+  );
+  const addFolder = useCallback(
+    (headline: string, description: string) =>
+      dispatch(addFolderAction(headline, description)),
+    [dispatch]
+  );
+  const toggleChecked = useCallback(
+    (id: number) => dispatch(toggleCheckedAction(id)),
+    [dispatch]
+  );
 
   let currentFolder: number | null = null;
 
@@ -173,54 +201,4 @@ const Folders = ({
   );
 };
 
-type MapStatePropsType = {
-  folders: Array<FolderType>;
-  currentFolderId: number;
-  drawerMode: DrawerTypeEnum;
-};
-
-type MapDispatchPropsType = {
-  setCurrentFolderById: (id: number) => void;
-  toggleChecked: (id: number) => void;
-  addGoal: (text: string) => void;
-  deleteFolder: (id: number) => void;
-  deleteDone: () => void;
-  addFolder: (headline: string, description: string) => void;
-  swapTasks: (from: number, to: number) => void;
-  swapFolders: (from: number, to: number) => void;
-  toggleEditing: (id: number) => void;
-  stopEditing: () => void;
-  setGoal: (id: number, goal: string) => void;
-  setDrawerMode: (type: DrawerTypeEnum) => void;
-};
-
-const mapStateToProps = (state: AppStateType): MapStatePropsType => ({
-  folders: state.todo.folders,
-  currentFolderId: state.todo.currentFolderId,
-  drawerMode: state.ui.drawerMode,
-});
-
-const mapDispatchToProps: MapDispatchPropsType = {
-  setCurrentFolderById,
-  toggleChecked,
-  addGoal,
-  deleteFolder,
-  deleteDone,
-  addFolder,
-  swapTasks,
-  swapFolders,
-  toggleEditing,
-  stopEditing,
-  setGoal,
-  setDrawerMode,
-};
-
-const WrappedFolders = compose(
-  connect<MapStatePropsType, MapDispatchPropsType, OwnProps, AppStateType>(
-    mapStateToProps,
-    mapDispatchToProps
-  ),
-  withRouter
-)(Folders);
-
-export default WrappedFolders as React.ComponentType;
+export default withRouter(Folders);

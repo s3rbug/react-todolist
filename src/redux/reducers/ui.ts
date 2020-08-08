@@ -9,28 +9,31 @@ const initialState = {
   drawerOpened: false,
 };
 
-export type TodosAction = ActionType<typeof actions>;
+export type UiAction = ActionType<typeof actions>;
 type StateType = typeof initialState;
 
-const reducer = (state = initialState, action: TodosAction): StateType => {
+const reducer = (state = initialState, action: UiAction): StateType => {
   switch (action.type) {
     case constants.SET_DRAWER_MODE: {
       const { type } = action.payload;
-      let stateCopy = { ...state };
-      stateCopy.drawerMode = type;
-      return { ...stateCopy };
+      return {
+        ...state,
+        drawerMode: type,
+      };
     }
     case constants.SET_IS_LIGHT: {
       const { isLight } = action.payload;
-      let stateCopy = { ...state };
-      stateCopy.isLight = isLight;
-      return { ...stateCopy };
+      return {
+        ...state,
+        isLight,
+      };
     }
     case constants.SET_DRAWER_OPENED: {
       const { open } = action.payload;
-      let stateCopy = { ...state };
-      stateCopy.drawerOpened = open;
-      return { ...stateCopy };
+      return {
+        ...state,
+        drawerOpened: open,
+      };
     }
     default:
       return state;

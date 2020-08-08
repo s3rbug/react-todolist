@@ -1,6 +1,7 @@
 import { ActionType } from "typesafe-actions";
 import * as actions from "../actions/todo";
 import * as constants from "./../constants/todo";
+import { reduceItem } from "../reduxStore";
 
 const initialState = {
   folders: [
@@ -103,60 +104,66 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
     }
     case constants.TOGGLE_CHECKED: {
       const { id } = action.payload;
-      let foldersCopy = [...state.folders];
-      let currentFolderCopy = { ...state.folders[state.currentFolderId] };
-      currentFolderCopy.goals[id].checked = !currentFolderCopy.goals[id]
-        .checked;
-      foldersCopy[state.currentFolderId] = { ...currentFolderCopy };
-
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => {
+          return {
+            ...folder,
+            goals: folder.goals.map((goal, goalIndex) => {
+              if (goalIndex === id) {
+                return {
+                  ...goal,
+                  checked: !goal.checked,
+                };
+              } else {
+                return goal;
+              }
+            }),
+          };
+        }),
       };
     }
     case constants.ADD_GOAL: {
       const { text } = action.payload;
-      let foldersCopy = [...state.folders];
       const newGoal = {
         id: state.folders[state.currentFolderId].goals.length,
         text: text,
         checked: false,
         editing: false,
       };
-      const newGoals = [...state.folders[state.currentFolderId].goals, newGoal];
-      foldersCopy[state.currentFolderId].goals = [...newGoals];
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => {
+          return {
+            ...folder,
+            goals: [...folder.goals, newGoal],
+          };
+        }),
       };
     }
     case constants.DELETE_FOLDER: {
       const { id } = action.payload;
-      let foldersCopy = [...state.folders];
-      foldersCopy = foldersCopy.filter((el) => {
-        return id !== el.id;
-      });
-      for (let i = id; i < foldersCopy.length; ++i) {
-        --foldersCopy[i].id;
-      }
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: state.folders
+          .filter((el) => id !== el.id)
+          .map((folder, i) => ({ ...folder, id: i })),
       };
     }
     case constants.DELETE_DONE: {
-      let foldersCopy = [...state.folders];
-      let currentGoals = [...state.folders[state.currentFolderId].goals];
-      currentGoals = currentGoals.filter((el) => {
-        return !el.checked;
-      });
-      for (let i = 0; i < currentGoals.length; ++i) {
-        currentGoals[i].id = i;
-      }
-      foldersCopy[state.currentFolderId].goals = [...currentGoals];
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => {
+          return {
+            ...folder,
+            goals: folder.goals
+              .filter((goal) => !goal.checked)
+              .map((goal, i) => ({
+                ...goal,
+                id: i,
+              })),
+          };
+        }),
       };
     }
     case constants.ADD_FOLDER: {
@@ -174,68 +181,91 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
       };
     }
     case constants.SWAP_TASKS: {
-      const { from, to } = action.payload;
-      let foldersCopy = [...state.folders];
-      let newGoals = [...state.folders[state.currentFolderId].goals];
-      const [removed] = newGoals.splice(from, 1);
-      newGoals.splice(to, 0, removed);
-
-      for (let i = 0; i < newGoals.length; ++i) {
-        newGoals[i].id = i;
-      }
-
-      foldersCopy[state.currentFolderId].goals = [...newGoals];
+      let { from, to } = action.payload;
+      if (from === to) return state;
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => ({
+          ...folder,
+          goals: (to > from
+            ? [
+                ...folder.goals.slice(0, from),
+                ...folder.goals.slice(from + 1, to + 1),
+                folder.goals[from],
+                ...folder.goals.slice(to + 1, folder.goals.length),
+              ]
+            : [
+                ...folder.goals.slice(0, to),
+                folder.goals[from],
+                ...folder.goals.slice(to, from),
+                ...folder.goals.slice(from + 1, folder.goals.length),
+              ]
+          ).map((goal, i) => ({
+            ...goal,
+            id: i,
+          })),
+        })),
       };
     }
     case constants.SWAP_FOLDERS: {
-      const { from, to } = action.payload;
-      let newFolders = [...state.folders];
-
-      const [removed] = newFolders.splice(from, 1);
-      newFolders.splice(to, 0, removed);
-
-      for (let i = 0; i < newFolders.length; ++i) {
-        newFolders[i].id = i;
-      }
+      let { from, to } = action.payload;
 
       return {
         ...state,
-        folders: [...newFolders],
+        folders: (to > from
+          ? [
+              ...state.folders.slice(0, from),
+              ...state.folders.slice(from + 1, to + 1),
+              state.folders[from],
+              ...state.folders.slice(to + 1, state.folders.length),
+            ]
+          : [
+              ...state.folders.slice(0, to),
+              state.folders[from],
+              ...state.folders.slice(to, from),
+              ...state.folders.slice(from + 1, state.folders.length),
+            ]
+        ).map((folder, i) => ({ ...folder, id: i })),
       };
     }
     case constants.STOP_EDITING: {
-      let goalsCopy = [...state.folders[state.currentFolderId].goals];
-      let foldersCopy = [...state.folders];
-      for (let i = 0; i < goalsCopy.length; ++i) {
-        goalsCopy[i].editing = false;
-      }
-      foldersCopy[state.currentFolderId].goals = [...goalsCopy];
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => ({
+          ...folder,
+          goals: folder.goals.map((goal) => ({ ...goal, editing: false })),
+        })),
       };
     }
     case constants.START_EDITING: {
       const { id } = action.payload;
-      let goalsCopy = [...state.folders[state.currentFolderId].goals];
-      let foldersCopy = [...state.folders];
-      goalsCopy[id].editing = !goalsCopy[id].editing;
-      foldersCopy[state.currentFolderId].goals = [...goalsCopy];
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => ({
+          ...folder,
+          goals: folder.goals.map((goal, idx) => {
+            if (idx !== id) return goal;
+            return { ...goal, editing: !goal.editing };
+          }),
+        })),
       };
     }
     case constants.SET_GOAL: {
       const { id, newGoal } = action.payload;
-      let foldersCopy = [...state.folders];
-      foldersCopy[state.currentFolderId].goals[id].text = newGoal;
       return {
         ...state,
-        folders: [...foldersCopy],
+        folders: reduceItem(state.folders, state.currentFolderId, (folder) => {
+          return {
+            ...folder,
+            goals: folder.goals.map((goal, goalIdx) => {
+              if (goalIdx !== id) return goal;
+              return {
+                ...goal,
+                text: newGoal,
+              };
+            }),
+          };
+        }),
       };
     }
     default:
