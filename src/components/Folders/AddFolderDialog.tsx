@@ -7,30 +7,30 @@ import { DialogContent } from "@material-ui/core";
 import { FolderFormDataType } from "./../../types/index_d";
 
 type PropsType = {
-  classes: FoldersStyleType;
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  addFolder: (headline: string, description: string) => void;
+    classes: FoldersStyleType;
+    open: boolean;
+    setOpen: (open: boolean) => void;
+    addFolder: (headline: string, description: string) => void;
 };
 
 const AddFolderDialog = ({ classes, open, setOpen, addFolder }: PropsType) => {
-  const onSubmit = (formData: FolderFormDataType) => {
-    addFolder(formData.headline, formData.description);
-    setOpen(false);
-  };
+    const onSubmit = (formData: FolderFormDataType) => {
+        addFolder(formData.headline, formData.description);
+        setOpen(false);
+    };
 
-  return (
-    <Dialog
-      open={open}
-      onClose={() => setOpen(false)}
-      aria-labelledby="form-dialog-folders"
-    >
-      <DialogTitle id="form-dialog-folders">Add new folder</DialogTitle>
-      <DialogContent>
-        <SetFolderForm onSubmit={onSubmit} setOpen={setOpen} />
-      </DialogContent>
-    </Dialog>
-  );
+    return (
+        <Dialog
+            open={open}
+            onClose={() => setOpen(false)}
+            aria-labelledby="form-dialog-folders"
+        >
+            <DialogTitle id="form-dialog-folders">Add new folder</DialogTitle>
+            <DialogContent>
+                <SetFolderForm onSubmit={onSubmit} setOpen={setOpen} />
+            </DialogContent>
+        </Dialog>
+    );
 };
 
 export default AddFolderDialog;
