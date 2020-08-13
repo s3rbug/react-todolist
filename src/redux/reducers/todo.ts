@@ -2,323 +2,397 @@ import { ActionType } from "typesafe-actions";
 import * as actions from "../actions/todo";
 import * as constants from "./../constants/todo";
 import { reduceItem } from "../reduxStore";
+import { TagType } from "../../types/index_d";
 
 const initialState = {
-    folders: [
-        {
-            id: 0,
-            headline: "Anime SUPERgoals",
-            description: "About Anime SUPERgoals",
-            goals: [
-                {
-                    id: 0,
-                    text: "Watch 1 anime",
-                    checked: true,
-                    editing: false,
-                },
-                {
-                    id: 1,
-                    text: "Watch 2 anime",
-                    checked: false,
-                    editing: false,
-                },
-                {
-                    id: 2,
-                    text: "Watch 3 anime",
-                    checked: false,
-                    editing: false,
-                },
-            ],
-        },
-        {
-            id: 1,
-            headline: "SUPERgoals",
-            description: "About this SUPERgoals",
-            goals: [
-                {
-                    id: 0,
-                    text: "Watch 4 anime",
-                    checked: true,
-                    editing: false,
-                },
-                {
-                    id: 1,
-                    text: "Watch 5 anime",
-                    checked: false,
-                    editing: false,
-                },
-                {
-                    id: 2,
-                    text: "Watch 7 anime",
-                    checked: false,
-                    editing: false,
-                },
-                {
-                    id: 3,
-                    text: "Watch 9 anime",
-                    checked: false,
-                    editing: false,
-                },
-            ],
-        },
-        {
-            id: 2,
-            headline: "Goals2457",
-            description: "About this SUPERgoals",
-            goals: [
-                {
-                    id: 0,
-                    text: "Watch 4 anime",
-                    checked: true,
-                    editing: false,
-                },
-                {
-                    id: 1,
-                    text: "Watch 5 anime",
-                    checked: false,
-                    editing: false,
-                },
-                {
-                    id: 2,
-                    text: "Watch 7 anime",
-                    checked: false,
-                    editing: false,
-                },
-            ],
-        },
-    ],
-    currentFolderId: 0,
+	folders: [
+		{
+			id: 0,
+			headline: "Purchasing",
+			description: "What should i buy in the store",
+			goals: [
+				{
+					id: 0,
+					text: "onion",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: true,
+					editing: false,
+				},
+				{
+					id: 1,
+					text: "carrot",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+				{
+					id: 2,
+					text: "cucumber",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+			],
+		},
+		{
+			id: 1,
+			headline: "Goals",
+			description: "About this SUPERgoals",
+			goals: [
+				{
+					id: 0,
+					text: "Watch 4 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: true,
+					editing: false,
+				},
+				{
+					id: 1,
+					text: "Watch 5 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+				{
+					id: 2,
+					text: "Watch 7 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+				{
+					id: 3,
+					text: "Watch 9 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+			],
+		},
+		{
+			id: 2,
+			headline: "Headline",
+			description: "About this SUPERgoals",
+			goals: [
+				{
+					id: 0,
+					text: "Watch 4 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: true,
+					editing: false,
+				},
+				{
+					id: 1,
+					text: "Watch 5 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+				{
+					id: 2,
+					text: "Watch 7 anime",
+					note: "don't forget to smile",
+					tag: undefined as undefined | number,
+					checked: false,
+					editing: false,
+				},
+			],
+		},
+	],
+	tags: [
+		{ name: "important", color: "yellow" },
+		{ name: "work", color: "blue" },
+	] as Array<TagType>,
 };
 
 type StateType = typeof initialState;
 export type TodosAction = ActionType<typeof actions>;
 
 const reducer = (state = initialState, action: TodosAction): StateType => {
-    switch (action.type) {
-        case constants.SET_CURRENT_FOLDER: {
-            const { id } = action.payload;
-            return {
-                ...state,
-                currentFolderId: id,
-            };
-        }
-        case constants.TOGGLE_CHECKED: {
-            const { id } = action.payload;
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => {
-                        return {
-                            ...folder,
-                            goals: folder.goals.map((goal, goalIndex) => {
-                                if (goalIndex === id) {
-                                    return {
-                                        ...goal,
-                                        checked: !goal.checked,
-                                    };
-                                } else {
-                                    return goal;
-                                }
-                            }),
-                        };
-                    }
-                ),
-            };
-        }
-        case constants.ADD_GOAL: {
-            const { text } = action.payload;
-            const newGoal = {
-                id: state.folders[state.currentFolderId].goals.length,
-                text: text,
-                checked: false,
-                editing: false,
-            };
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => {
-                        return {
-                            ...folder,
-                            goals: [...folder.goals, newGoal],
-                        };
-                    }
-                ),
-            };
-        }
-        case constants.DELETE_FOLDER: {
-            const { id } = action.payload;
-            return {
-                ...state,
-                folders: state.folders
-                    .filter((el) => id !== el.id)
-                    .map((folder, i) => ({ ...folder, id: i })),
-            };
-        }
-        case constants.DELETE_DONE: {
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => {
-                        return {
-                            ...folder,
-                            goals: folder.goals
-                                .filter((goal) => !goal.checked)
-                                .map((goal, i) => ({
-                                    ...goal,
-                                    id: i,
-                                })),
-                        };
-                    }
-                ),
-            };
-        }
-        case constants.ADD_FOLDER: {
-            const { description, headline } = action.payload;
+	switch (action.type) {
+		case constants.TOGGLE_CHECKED: {
+			const { id, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => {
+					return {
+						...folder,
+						goals: folder.goals.map((goal, goalIndex) => {
+							if (goalIndex === id) {
+								return {
+									...goal,
+									checked: !goal.checked,
+								};
+							} else {
+								return goal;
+							}
+						}),
+					};
+				}),
+			};
+		}
+		case constants.ADD_GOAL: {
+			const { text, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => {
+					return {
+						...folder,
+						goals: [
+							...folder.goals,
+							{
+								id: state.folders[folderId].goals.length,
+								text: text,
+								note: "",
+								tag: undefined as undefined | number,
+								checked: false,
+								editing: false,
+							},
+						],
+					};
+				}),
+			};
+		}
+		case constants.DELETE_FOLDER: {
+			const { id } = action.payload;
+			return {
+				...state,
+				folders: state.folders
+					.filter((el) => id !== el.id)
+					.map((folder, i) => ({ ...folder, id: i })),
+			};
+		}
+		case constants.DELETE_DONE: {
+			const { folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => {
+					return {
+						...folder,
+						goals: folder.goals
+							.filter((goal) => !goal.checked)
+							.map((goal, i) => ({
+								...goal,
+								id: i,
+							})),
+					};
+				}),
+			};
+		}
+		case constants.ADD_FOLDER: {
+			const { description, headline } = action.payload;
 
-            const newFolder = {
-                id: state.folders.length,
-                headline: headline,
-                description: description,
-                goals: [],
-            };
-            return {
-                ...state,
-                folders: [...state.folders, newFolder],
-            };
-        }
-        case constants.SWAP_TASKS: {
-            let { from, to } = action.payload;
-            if (from === to) return state;
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => ({
-                        ...folder,
-                        goals: (to > from
-                            ? [
-                                  ...folder.goals.slice(0, from),
-                                  ...folder.goals.slice(from + 1, to + 1),
-                                  folder.goals[from],
-                                  ...folder.goals.slice(
-                                      to + 1,
-                                      folder.goals.length
-                                  ),
-                              ]
-                            : [
-                                  ...folder.goals.slice(0, to),
-                                  folder.goals[from],
-                                  ...folder.goals.slice(to, from),
-                                  ...folder.goals.slice(
-                                      from + 1,
-                                      folder.goals.length
-                                  ),
-                              ]
-                        ).map((goal, i) => ({
-                            ...goal,
-                            id: i,
-                        })),
-                    })
-                ),
-            };
-        }
-        case constants.SWAP_FOLDERS: {
-            let { from, to } = action.payload;
+			const newFolder = {
+				id: state.folders.length,
+				headline: headline,
+				description: description,
+				goals: [],
+			};
+			return {
+				...state,
+				folders: [...state.folders, newFolder],
+			};
+		}
+		case constants.SWAP_TASKS: {
+			let { from, to, fromFolderId, toFolderId } = action.payload;
 
-            return {
-                ...state,
-                folders: (to > from
-                    ? [
-                          ...state.folders.slice(0, from),
-                          ...state.folders.slice(from + 1, to + 1),
-                          state.folders[from],
-                          ...state.folders.slice(to + 1, state.folders.length),
-                      ]
-                    : [
-                          ...state.folders.slice(0, to),
-                          state.folders[from],
-                          ...state.folders.slice(to, from),
-                          ...state.folders.slice(
-                              from + 1,
-                              state.folders.length
-                          ),
-                      ]
-                ).map((folder, i) => ({ ...folder, id: i })),
-            };
-        }
-        case constants.STOP_EDITING: {
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => ({
-                        ...folder,
-                        goals: folder.goals.map((goal) => ({
-                            ...goal,
-                            editing: false,
-                        })),
-                    })
-                ),
-            };
-        }
-        case constants.START_EDITING: {
-            const { id } = action.payload;
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => ({
-                        ...folder,
-                        goals: folder.goals.map((goal, idx) => {
-                            if (idx !== id) return goal;
-                            return { ...goal, editing: !goal.editing };
-                        }),
-                    })
-                ),
-            };
-        }
-        case constants.SET_GOAL: {
-            const { id, newGoal } = action.payload;
-            return {
-                ...state,
-                folders: reduceItem(
-                    state.folders,
-                    state.currentFolderId,
-                    (folder) => {
-                        return {
-                            ...folder,
-                            goals: folder.goals.map((goal, goalIdx) => {
-                                if (goalIdx !== id) return goal;
-                                return {
-                                    ...goal,
-                                    text: newGoal,
-                                };
-                            }),
-                        };
-                    }
-                ),
-            };
-        }
-        case constants.DELETE_CURRENT_FOLDER: {
-            return {
-                ...state,
-                folders: state.folders
-                    .filter((folder) => folder.id !== state.currentFolderId)
-                    .map((folder, i) => ({ ...folder, id: i })),
-            };
-        }
-        default:
-            return state;
-    }
+			if (fromFolderId === toFolderId) {
+				return {
+					...state,
+					folders: reduceItem(state.folders, fromFolderId, (folder) => ({
+						...folder,
+						goals: (to > from
+							? [
+									...folder.goals.slice(0, from),
+									...folder.goals.slice(from + 1, to + 1),
+									folder.goals[from],
+									...folder.goals.slice(to + 1, folder.goals.length),
+							  ]
+							: [
+									...folder.goals.slice(0, to),
+									folder.goals[from],
+									...folder.goals.slice(to, from),
+									...folder.goals.slice(from + 1, folder.goals.length),
+							  ]
+						).map((goal, i) => ({
+							...goal,
+							id: i,
+						})),
+					})),
+				};
+			}
+			return {
+				...state,
+				folders: state.folders.map((folder, folderId) => {
+					if (folderId === fromFolderId) {
+						return {
+							...folder,
+							goals: [
+								...folder.goals.slice(0, from),
+								...folder.goals.slice(from + 1, folder.goals.length),
+							].map((folder, i) => ({ ...folder, id: i })),
+						};
+					}
+					if (folderId === toFolderId) {
+						return {
+							...folder,
+							goals: [
+								...folder.goals.slice(0, to),
+								state.folders[fromFolderId].goals[from],
+								...folder.goals.slice(to, state.folders.length + 1),
+							].map((folder, i) => ({ ...folder, id: i })),
+						};
+					}
+					return folder;
+				}),
+			};
+		}
+		case constants.SWAP_FOLDERS: {
+			let { from, to } = action.payload;
+
+			return {
+				...state,
+				folders: (to > from
+					? [
+							...state.folders.slice(0, from),
+							...state.folders.slice(from + 1, to + 1),
+							state.folders[from],
+							...state.folders.slice(to + 1, state.folders.length),
+					  ]
+					: [
+							...state.folders.slice(0, to),
+							state.folders[from],
+							...state.folders.slice(to, from),
+							...state.folders.slice(from + 1, state.folders.length),
+					  ]
+				).map((folder, i) => ({ ...folder, id: i })),
+			};
+		}
+		case constants.START_EDITING: {
+			const { id, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => ({
+					...folder,
+					goals: folder.goals.map((goal, idx) => {
+						if (idx !== id) return goal;
+						return { ...goal, editing: !goal.editing };
+					}),
+				})),
+			};
+		}
+		case constants.SET_GOAL: {
+			const { id, newGoal, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => ({
+					...folder,
+					goals: folder.goals.map((goal, goalIdx) => {
+						if (goalIdx !== id) return goal;
+						return {
+							...goal,
+							text: newGoal,
+						};
+					}),
+				})),
+			};
+		}
+		case constants.DELETE_CURRENT_FOLDER: {
+			const { folderId } = action.payload;
+			return {
+				...state,
+				folders: state.folders
+					.filter((folder) => folder.id !== folderId)
+					.map((folder, i) => ({ ...folder, id: i })),
+			};
+		}
+		case constants.SET_NOTE: {
+			const { id, newNote, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => ({
+					...folder,
+					goals: folder.goals.map((goal, i) => {
+						if (i === id) return { ...goal, note: newNote };
+						else return goal;
+					}),
+				})),
+			};
+		}
+		case constants.DELETE_TASK: {
+			const { taskId, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => ({
+					...folder,
+					goals: folder.goals
+						.filter((goal) => goal.id !== taskId)
+						.map((goal, i) => ({ ...goal, id: i })),
+				})),
+			};
+		}
+		case constants.SET_TAG: {
+			const { taskId, tagId, folderId } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => ({
+					...folder,
+					goals: folder.goals.map((goal) => {
+						if (goal.id === taskId)
+							return {
+								...goal,
+								tag: tagId,
+							};
+						else return goal;
+					}),
+				})),
+			};
+		}
+		case constants.DELETE_TAG: {
+			const { tagId } = action.payload;
+			return {
+				...state,
+				folders: state.folders.map((folder) => {
+					return {
+						...folder,
+						goals: folder.goals.map((goal) => {
+							if (goal.tag === undefined || goal.tag < tagId) return goal;
+							if (goal.tag === tagId)
+								return {
+									...goal,
+									tag: undefined as number | undefined,
+								};
+							if (goal.tag > tagId)
+								return {
+									...goal,
+									tag: (goal.tag - 1) as number | undefined,
+								};
+							return goal;
+						}),
+					};
+				}),
+				tags: state.tags.filter((tag, id) => id !== tagId),
+			};
+		}
+		case constants.ADD_TAG: {
+			const { name, color } = action.payload;
+			return {
+				...state,
+				tags: [...state.tags, { name, color }],
+			};
+		}
+		default:
+			return state;
+	}
 };
 
 export default reducer;

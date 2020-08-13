@@ -1,27 +1,38 @@
+import { TodosAction } from "./../redux/reducers/todo";
+import { UiAction } from "./../redux/reducers/ui";
 export type GoalType = {
-    id: number;
-    text: string;
-    checked: boolean;
-    editing: boolean;
+	id: number;
+	text: string;
+	note: string;
+	tag: number | undefined;
+	checked: boolean;
+	editing: boolean;
 };
 
 export type FolderType = {
-    id: number;
-    headline: string;
-    description: string;
-    goals: Array<GoalType>;
+	id: number;
+	headline: string;
+	description: string;
+	goals: Array<GoalType>;
 };
 
 export type FolderFormDataType = {
-    headline: string;
-    description: string;
+	headline: string;
+	description: string;
 };
 
 export type TaskFormDataType = {
-    goalText: string;
+	goal: string;
 };
 
 export enum DrawerTypeEnum {
-    Menu = 1,
-    Back,
+	Menu = 1,
+	Back,
 }
+
+export type TagType = {
+	name: string;
+	color: string;
+};
+
+export type MyActionType = UiAction | TodosAction;

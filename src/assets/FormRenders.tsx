@@ -1,5 +1,5 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
+import { TextField, IconButton } from "@material-ui/core";
 
 export const RenderTextField = ({
     label,
@@ -22,3 +22,25 @@ export const RenderTextField = ({
         {...custom}
     />
 );
+
+type IconProps = {
+    color: string | undefined;
+};
+
+type RenderIconButtonType = {
+    Icon: React.FC<IconProps>;
+    props: object;
+    iconColor?: string;
+};
+
+export const RenderIconButton = ({
+    Icon,
+    iconColor,
+    ...props
+}: RenderIconButtonType) => {
+    return (
+        <IconButton {...props}>
+            <Icon color={iconColor} />
+        </IconButton>
+    );
+};
