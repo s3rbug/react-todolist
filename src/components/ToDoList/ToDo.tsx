@@ -16,9 +16,7 @@ import { combineStyles } from "../../utils/helpers";
 const useStyles = (color: string) =>
 	makeStyles(
 		(theme: Theme): StyleRules<string> => ({
-			root: {
-				background: theme.palette.background.paper,
-			},
+			root: {},
 			item: {
 				width: "100%",
 				height: "100%",
@@ -28,7 +26,10 @@ const useStyles = (color: string) =>
 				boxShadow: theme.shadows[3],
 				cursor: "default",
 				zIndex: 0,
-				borderLeft: "4px solid " + color,
+				borderLeft:
+					color === theme.palette.background.paper
+						? "none"
+						: "4px solid " + color,
 			},
 			checked: {
 				textDecoration: "line-through",

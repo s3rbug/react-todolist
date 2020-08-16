@@ -12,6 +12,7 @@ const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
 		bold: {
 			fontWeight: "bold",
+			color: "white",
 		},
 		cancel: {
 			color: theme.palette.action.active,

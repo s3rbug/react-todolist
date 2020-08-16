@@ -4,7 +4,7 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import { reduxForm, InjectedFormProps, Field } from "redux-form";
 import { TaskFormDataType } from "../../types/index_d";
 import { RenderTextField, RenderIconButton } from "../../assets/FormRenders";
-import { maxLength15, required } from "../../utils/validators";
+import { maxLength30, required } from "../../utils/validators";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -48,7 +48,7 @@ const AddGoal: React.FC<
 				margin="dense"
 				type="text"
 				component={RenderTextField}
-				validate={[required, maxLength15]}
+				validate={[required, maxLength30]}
 				variant="outlined"
 			/>
 			<Field

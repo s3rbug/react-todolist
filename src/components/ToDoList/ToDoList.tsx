@@ -1,13 +1,15 @@
 import React from "react";
 import List from "@material-ui/core/List";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme, StyleRules, Typography } from "@material-ui/core";
+import { Theme, StyleRules, Typography, useTheme } from "@material-ui/core";
 import DraggableItem from "../../assets/DraggableItem";
 import DroppableItem from "../../assets/DroppableItem";
 import ToDo from "./ToDo";
 import { TaskFormDataType, FolderType, TagType } from "../../types/index_d";
 import AddGoal from "./AddGoal";
 import { useTypedSelector } from "../../redux/reduxStore";
+import { DraggingStyle, NotDraggingStyle } from "react-beautiful-dnd";
+import FolderLabel from "./FolderLabel";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -64,6 +66,7 @@ const ToDoList = ({
 	tags,
 }: PropsType) => {
 	const classes = useStyles();
+	const theme = useTheme();
 
 	const currentFolder: FolderType = useTypedSelector(
 		(state) => state.todo.folders[folderId]
@@ -77,8 +80,19 @@ const ToDoList = ({
 		formData.goal = "";
 	};
 
+	const getItemStyle = (
+		isDragging: boolean,
+		draggableStyle: DraggingStyle | NotDraggingStyle | undefined
+	) => ({
+		background: isDragging
+			? theme.palette.divider
+			: theme.palette.background.paper,
+		...draggableStyle,
+	});
+
 	return (
 		<div className={classes.root}>
+			<FolderLabel folderId={folderId} headline={currentFolder.headline} />
 			<div className={classes.paper}>
 				<div className={classes.goals}>
 					<Typography align="center" variant="h4">
@@ -92,6 +106,7 @@ const ToDoList = ({
 										id={goal.id}
 										key={"Goal-id: " + goal.id + " Folder-id: " + folderId}
 										adding={folderId.toString()}
+										getItemStyle={getItemStyle}
 									>
 										<ToDo
 											setGoal={setGoal}

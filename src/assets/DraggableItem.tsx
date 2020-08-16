@@ -1,11 +1,21 @@
 import React from "react";
-import { Draggable, DraggableProvided } from "react-beautiful-dnd";
+import {
+	Draggable,
+	DraggableProvided,
+	DraggableStateSnapshot,
+	NotDraggingStyle,
+	DraggingStyle,
+} from "react-beautiful-dnd";
 
 type DraggableItemPropsType = {
 	id: number;
 	className?: string;
 	children: React.ReactChild;
 	adding: string;
+	getItemStyle?: (
+		isDragging: boolean,
+		draggableProps: DraggingStyle | NotDraggingStyle | undefined
+	) => object;
 };
 
 const DraggableItem = ({
@@ -13,14 +23,20 @@ const DraggableItem = ({
 	id,
 	className,
 	children,
+	getItemStyle,
 }: DraggableItemPropsType) => {
 	return (
 		<Draggable draggableId={"item-" + adding + id} index={id}>
-			{(provided: DraggableProvided) => (
+			{(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
 				<div
 					ref={provided.innerRef}
 					{...provided.draggableProps}
 					{...provided.dragHandleProps}
+					style={
+						getItemStyle
+							? getItemStyle(snapshot.isDragging, provided.draggableProps.style)
+							: undefined
+					}
 					className={className}
 				>
 					{children}

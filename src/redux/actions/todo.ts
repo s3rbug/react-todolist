@@ -49,3 +49,6 @@ export const deleteTagAction = (tagId: number) =>
 
 export const addTagAction = (name: string, color: string) =>
 	action(constants.ADD_TAG, { name, color });
+
+export const editTagAction = (tagId: number, newName: string) =>
+	action(constants.EDIT_TAG, { tagId, newName });

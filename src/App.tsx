@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 import { setIsLightAction, setDrawerOpenedAction } from "./redux/actions/ui";
 import Folders from "./components/Folders";
-import { addTagAction } from "./redux/actions/todo";
+import { addTagAction, editTagAction } from "./redux/actions/todo";
 
 const lightTheme = createMuiTheme({
 	palette: {
@@ -47,6 +47,8 @@ const App = () => {
 
 	const isLight = useTypedSelector((state) => state.ui.isLight);
 	const drawerOpened = useTypedSelector((state) => state.ui.drawerOpened);
+	const folders = useTypedSelector((state) => state.todo.folders);
+	const tags = useTypedSelector((state) => state.todo.tags);
 
 	const addTag = useCallback(
 		(name: string, color: string) => dispatch(addTagAction(name, color)),
@@ -58,16 +60,23 @@ const App = () => {
 	);
 	const setDrawerOpened = (open: boolean) =>
 		dispatch(setDrawerOpenedAction(open));
+	const editTag = useCallback(
+		(tagId: number, newName: string) => dispatch(editTagAction(tagId, newName)),
+		[dispatch]
+	);
 
 	return (
 		<div className="app-wrapper">
 			<ThemeProvider theme={isLight ? lightTheme : darkTheme}>
 				<Header
+					tags={tags}
 					isLight={isLight}
 					setIsLight={setIsLight}
 					open={drawerOpened}
 					setOpen={setDrawerOpened}
 					addTag={addTag}
+					folders={folders}
+					editTag={editTag}
 				>
 					<Switch>
 						<Route path="/folders/" render={() => <Folders />} />

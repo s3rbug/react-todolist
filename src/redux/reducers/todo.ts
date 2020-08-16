@@ -109,7 +109,7 @@ const initialState = {
 		},
 	],
 	tags: [
-		{ name: "important", color: "yellow" },
+		{ name: "important", color: "hotpink" },
 		{ name: "work", color: "blue" },
 	] as Array<TagType>,
 };
@@ -388,6 +388,16 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 			return {
 				...state,
 				tags: [...state.tags, { name, color }],
+			};
+		}
+		case constants.EDIT_TAG: {
+			const { tagId, newName } = action.payload;
+			return {
+				...state,
+				tags: reduceItem(state.tags, tagId, (tag) => ({
+					...tag,
+					name: newName,
+				})),
 			};
 		}
 		default:

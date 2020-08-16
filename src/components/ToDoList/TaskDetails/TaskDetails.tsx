@@ -79,7 +79,7 @@ const TaskDetails = ({
 		if (goal.text !== "") setOpen(false);
 	};
 	const handleTaskChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value.length <= 20) setGoal(goal.id, e.target.value, folderId);
+		if (e.target.value.length <= 30) setGoal(goal.id, e.target.value, folderId);
 	};
 	const handleNoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value.length <= 40) setNote(goal.id, e.target.value, folderId);
@@ -88,8 +88,16 @@ const TaskDetails = ({
 		deleteTask(goal.id, folderId);
 		handleClose();
 	};
+	const handleKeys = (e: React.KeyboardEvent) => {
+		if (e.key === "Enter") handleClose();
+	};
 	return (
-		<Dialog open={open} onClose={handleClose} aria-labelledby="add-task-dialog">
+		<Dialog
+			open={open}
+			onClose={handleClose}
+			aria-labelledby="add-task-dialog"
+			onKeyDown={handleKeys}
+		>
 			<DialogTitle id="task-dialog-title">
 				<Input
 					className={classes.taskInput}

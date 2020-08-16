@@ -15,6 +15,10 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import FoldersTreeView from "./FoldersTreeView";
+import { FolderType, TagType } from "../../types/index_d";
+import { Switch } from "@material-ui/core";
+import AddTagDialog from "./Dialogs/AddTagDialog";
+import EditTagDialog from "./Dialogs/EditTagDialog";
 
 const isMobile = {
 	Android: () => navigator.userAgent.match(/Android/i),
@@ -87,25 +91,43 @@ const useStyles = makeStyles(
 			paddingRight: theme.spacing(1.5),
 			paddingLeft: theme.spacing(3),
 		},
+		bottom: {
+			height: "100%",
+		},
+		switcher: {
+			height: "100%",
+			display: "flex",
+			alignItems: "flex-end",
+		},
+		switcherText: {
+			flexGrow: 1,
+			textAlign: "right",
+		},
 	})
 );
 
 type PropsType = {
+	folders: FolderType[];
+	tags: ReadonlyArray<TagType>;
 	isLight: boolean;
 	setIsLight: (isLight: boolean) => void;
 	open: boolean;
 	setOpen: (open: boolean) => void;
 	children: React.ReactChild;
 	addTag: (name: string, color: string) => void;
+	editTag: (tagId: number, newName: string) => void;
 };
 
 const Header = ({
 	isLight,
 	open,
+	folders,
 	setIsLight,
 	setOpen,
 	addTag,
+	editTag,
 	children,
+	tags,
 }: PropsType) => {
 	const classes = useStyles();
 	const theme = useTheme();
@@ -113,6 +135,18 @@ const Header = ({
 	const [drawerWidth, setDrawerWidth] = useState(
 		window.innerWidth * (isMobile.any() ? 0.5 : 0.2)
 	);
+
+	const [addTagOpened, setAddTagOpened] = useState(false);
+	const [editTagOpened, setEditTagOpened] = useState(false);
+	const [editTagId, setEditTagId] = useState(0);
+	const [editTagName, setEditTagName] = useState("");
+
+	const openAddTag = () => {
+		setAddTagOpened(!addTagOpened);
+	};
+	const openEditTag = () => {
+		setEditTagOpened(!editTagOpened);
+	};
 
 	useEffect(() => {
 		const handleResize = () => {
@@ -131,6 +165,10 @@ const Header = ({
 
 	const toggleTheme = () => {
 		setIsLight(!isLight);
+	};
+
+	const handleSwitcher = (e: React.ChangeEvent<HTMLInputElement>) => {
+		setIsLight(!e.target.checked);
 	};
 
 	return (
@@ -179,7 +217,37 @@ const Header = ({
 						)}
 					</IconButton>
 				</div>
-				<FoldersTreeView addTag={addTag} toggleTheme={toggleTheme} />
+				<FoldersTreeView
+					tags={tags}
+					folders={folders}
+					addTag={addTag}
+					toggleTheme={toggleTheme}
+					isLight={isLight}
+					openAddTag={openAddTag}
+					openEditTag={openEditTag}
+					setEditTagName={setEditTagName}
+					setEditTagId={setEditTagId}
+				/>
+				<div className={classes.bottom}>
+					<div className={classes.switcher}>
+						<Typography variant="h5" className={classes.switcherText}>
+							Dark theme
+						</Typography>
+						<Switch onChange={handleSwitcher} name="checkedB" color="primary" />
+					</div>
+				</div>
+				<AddTagDialog
+					setOpen={setAddTagOpened}
+					open={addTagOpened}
+					addTag={addTag}
+				/>
+				<EditTagDialog
+					setOpen={setEditTagOpened}
+					open={editTagOpened}
+					editTag={editTag}
+					tagId={editTagId}
+					tagName={editTagName}
+				/>
 			</Drawer>
 
 			<main
