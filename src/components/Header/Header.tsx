@@ -15,12 +15,15 @@ import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import FoldersTreeView from "./FoldersTreeView";
-import { FolderType, TagType } from "../../types/index_d";
-import { Switch } from "@material-ui/core";
 import AddTagDialog from "./Dialogs/AddTagDialog";
 import EditTagDialog from "./Dialogs/EditTagDialog";
 import SetFolderDialog from "./Dialogs/SetFolderDialog";
 import EditFolderDialog from "./Dialogs/EditFolderDialog";
+import SunIcon from "@material-ui/icons/Brightness7";
+import MoonIcon from "@material-ui/icons/Brightness4";
+import { useDispatch } from "react-redux";
+import { addTagAction } from "../../redux/actions/todo";
+import { setIsLightAction } from "../../redux/actions/ui";
 
 const isMobile = {
     Android: () => navigator.userAgent.match(/Android/i),
@@ -100,43 +103,36 @@ const useStyles = makeStyles(
             height: "100%",
             display: "flex",
             alignItems: "flex-end",
+            justifyContent: "flex-end",
         },
         switcherText: {
             flexGrow: 1,
             textAlign: "right",
         },
+        moon: {
+            "&:hover": {
+                color: theme.palette.grey[800],
+            },
+        },
+        sun: {
+            "&:hover": {
+                color: "#fff59d",
+            },
+        },
     })
 );
 
 type PropsType = {
-    folders: FolderType[];
-    tags: ReadonlyArray<TagType>;
     isLight: boolean;
-    setIsLight: (isLight: boolean) => void;
     open: boolean;
     setOpen: (open: boolean) => void;
     children: React.ReactChild;
-    addTag: (name: string, color: string) => void;
-    editTag: (tagId: number, newName: string) => void;
-    addFolder: (headline: string) => void;
-    editFolder: (newHeadline: string, folderId: number) => void;
 };
 
-const Header = ({
-    isLight,
-    open,
-    folders,
-    addFolder,
-    setIsLight,
-    setOpen,
-    addTag,
-    editTag,
-    editFolder,
-    children,
-    tags,
-}: PropsType) => {
+const Header = ({ isLight, open, setOpen, children }: PropsType) => {
     const classes = useStyles();
     const theme = useTheme();
+    const dispatch = useDispatch();
 
     const [drawerWidth, setDrawerWidth] = useState(
         window.innerWidth * (isMobile.any() ? 0.5 : 0.2)
@@ -150,6 +146,10 @@ const Header = ({
     const [editTagId, setEditTagId] = useState(0);
     const [currentFolderId, setCurrentFolderId] = useState(0);
     const [editTagName, setEditTagName] = useState("");
+
+    const addTag = (name: string, color: string) =>
+        dispatch(addTagAction(name, color));
+    const setIsLight = (light: boolean) => dispatch(setIsLightAction(light));
 
     const openAddTag = () => {
         setAddTagOpened(true);
@@ -188,8 +188,8 @@ const Header = ({
         setIsLight(!isLight);
     };
 
-    const handleSwitcher = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setIsLight(!e.target.checked);
+    const handleToggleTheme = () => {
+        setIsLight(!isLight);
     };
 
     return (
@@ -239,8 +239,6 @@ const Header = ({
                     </IconButton>
                 </div>
                 <FoldersTreeView
-                    tags={tags}
-                    folders={folders}
                     addTag={addTag}
                     toggleTheme={toggleTheme}
                     isLight={isLight}
@@ -255,17 +253,13 @@ const Header = ({
                 />
                 <div className={classes.bottom}>
                     <div className={classes.switcher}>
-                        <Typography
-                            variant="h5"
-                            className={classes.switcherText}
-                        >
-                            Dark theme
-                        </Typography>
-                        <Switch
-                            onChange={handleSwitcher}
-                            name="checkedB"
-                            color="primary"
-                        />
+                        <IconButton onClick={handleToggleTheme}>
+                            {isLight ? (
+                                <MoonIcon className={classes.moon} />
+                            ) : (
+                                <SunIcon className={classes.sun} />
+                            )}
+                        </IconButton>
                     </div>
                 </div>
                 <AddTagDialog
@@ -276,20 +270,17 @@ const Header = ({
                 <EditTagDialog
                     setOpen={setEditTagOpened}
                     open={editTagOpened}
-                    editTag={editTag}
                     tagId={editTagId}
                     tagName={editTagName}
                 />
                 <SetFolderDialog
                     open={folderSetOpened}
                     setOpen={setFolderSetOpened}
-                    addFolder={addFolder}
                 />
                 <EditFolderDialog
                     headline={headline}
                     open={editFolderOpened}
                     setOpen={setEditFolderOpened}
-                    editFolder={editFolder}
                     folderId={currentFolderId}
                 />
             </Drawer>

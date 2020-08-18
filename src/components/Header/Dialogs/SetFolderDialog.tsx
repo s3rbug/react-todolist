@@ -7,15 +7,20 @@ import {
     DialogActions,
 } from "@material-ui/core";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
+import { useDispatch } from "react-redux";
+import { addFolderAction } from "../../../redux/actions/todo";
 
 type PropsType = {
     open: boolean;
     setOpen: (open: boolean) => void;
-    addFolder: (headline: string) => void;
 };
 
-const SetFolderDialog = ({ open, setOpen, addFolder }: PropsType) => {
+const SetFolderDialog = ({ open, setOpen }: PropsType) => {
     const [headline, setHeadline] = useState("");
+    const dispatch = useDispatch();
+    const addFolder = (folderName: string) =>
+        dispatch(addFolderAction(folderName));
+
     const handleClose = () => {
         setOpen(false);
     };
@@ -30,11 +35,11 @@ const SetFolderDialog = ({ open, setOpen, addFolder }: PropsType) => {
     return (
         <Dialog open={open} onClose={handleClose}>
             <DialogTitle>
-                <span style={{ fontSize: "1.2em" }}>Add folder</span>
+                <span style={{ fontSize: "1.6em" }}>Add folder</span>
             </DialogTitle>
             <DialogContent>
                 <Input
-                    style={{ fontSize: "1.5em" }}
+                    style={{ fontSize: "1.3em" }}
                     placeholder="Folder name"
                     value={headline}
                     autoFocus

@@ -22,7 +22,7 @@ export type FolderFormDataType = {
 };
 
 export type TaskFormDataType = {
-    goal: string;
+    goalText: string;
 };
 
 export enum DrawerTypeEnum {

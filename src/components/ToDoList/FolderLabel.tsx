@@ -12,6 +12,9 @@ import {
 } from "@material-ui/core";
 import FolderIcon from "@material-ui/icons/FolderOutlined";
 import { FolderType } from "../../types/index_d";
+import { useTypedSelector } from "../../redux/reduxStore";
+import { useDispatch } from "react-redux";
+import { setCurrentFoldersAction } from "../../redux/actions/todo";
 
 const useStyles = makeStyles(
     (theme: Theme): StyleRules<string> => ({
@@ -48,21 +51,20 @@ type PropsType = {
     headline: string;
     folders: ReadonlyArray<FolderType>;
     folderId: number;
-    foldersCount: number;
-    setCurrentFolders: (from: number, folderId: number) => void;
 };
 
-const FolderLabel = ({
-    headline,
-    folders,
-    folderId,
-    setCurrentFolders,
-    foldersCount,
-}: PropsType) => {
+const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
     const classes = useStyles();
     const theme = useTheme();
+    const dispatch = useDispatch();
     const [anchorEl, setAnchorEl] = useState(null);
     const [tooltipOpened, setTooltipOpened] = useState(false);
+
+    const setCurrentFolders = (from: number, folderId: number) =>
+        dispatch(setCurrentFoldersAction(from, folderId));
+
+    const foldersCount = useTypedSelector((state) => state.todo.folders.length);
+
     const handleTooltipClose = () => {
         setTooltipOpened(false);
     };
@@ -88,7 +90,7 @@ const FolderLabel = ({
                     placement="right"
                     open={tooltipOpened}
                     onClose={handleTooltipClose}
-                    title="There is no active folders left!"
+                    title="There is no active folders left"
                 >
                     <FolderIcon
                         onClick={handleClick}

@@ -1,24 +1,27 @@
-import React from "react";
-import { FolderType, TagType } from "../../types/index_d";
+import React, { useState } from "react";
 import {
     Theme,
     makeStyles,
     StyleRules,
     Typography,
     IconButton,
+    List,
+    ListItem,
+    ListItemText,
+    Collapse,
+    ListItemSecondaryAction,
+    ListItemIcon,
 } from "@material-ui/core";
-import TreeView from "@material-ui/lab/TreeView";
-import TreeItem from "@material-ui/lab/TreeItem";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
-import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import EditIcon from "@material-ui/icons/EditRounded";
 import AddIcon from "@material-ui/icons/Add";
+import { combineStyles } from "../../utils/helpers";
+import MoreIcon from "@material-ui/icons/ExpandMore";
+import LessIcon from "@material-ui/icons/ChevronRight";
+import { useTypedSelector } from "../../redux/reduxStore";
 
 type PropsType = {
     toggleTheme: () => void;
     addTag: (name: string, color: string) => void;
-    folders: ReadonlyArray<FolderType>;
-    tags: ReadonlyArray<TagType>;
     isLight: boolean;
     openAddTag: () => void;
     openEditTag: () => void;
@@ -37,25 +40,42 @@ const useStyles = makeStyles(
             flexGrow: 1,
         },
         labelIcon: {
-            marginRight: theme.spacing(1),
+            //marginRight: theme.spacing(1),
         },
         labelRoot: {
             display: "flex",
             alignItems: "left",
-            padding: theme.spacing(0.5, 0),
         },
         iconButton: {
-            padding: "10px",
+            "&:hover": {
+                color: theme.palette.primary.main,
+            },
         },
-        root: {},
+        iconAddButton: {
+            "&:hover": {
+                color: theme.palette.primary.light,
+            },
+        },
+        root: {
+            padding: 0,
+        },
+        listItem: {
+            height: "50px",
+            paddingLeft: 0,
+        },
+        bottomListItem: {
+            paddingLeft: "40px",
+        },
+        moreIcon: {
+            minWidth: 0,
+            marginRight: "5px",
+        },
     })
 );
 
 const FoldersTreeView = ({
     toggleTheme,
     addTag,
-    folders,
-    tags,
     isLight,
     openAddTag,
     openEditTag,
@@ -68,23 +88,29 @@ const FoldersTreeView = ({
 }: PropsType) => {
     //const theme = useTheme();
     const classes = useStyles();
+    const [foldersOpened, setFoldersOpened] = useState(false);
+    const [tagsOpened, setTagsOpened] = useState(false);
+
+    const tags = useTypedSelector((state) => state.todo.tags);
+    const folders = useTypedSelector((state) => state.todo.folders);
+
+    const toggleFoldersOpen = () => {
+        setFoldersOpened(!foldersOpened);
+    };
+    const toggleTagsOpened = () => {
+        setTagsOpened(!tagsOpened);
+    };
     return (
-        <TreeView
-            className={classes.root}
-            defaultCollapseIcon={
-                <IconButton className={classes.clickable}>
-                    <ExpandMoreIcon />
-                </IconButton>
-            }
-            defaultExpandIcon={
-                <IconButton className={classes.clickable}>
-                    <ChevronRightIcon />
-                </IconButton>
-            }
-        >
-            <TreeItem
-                nodeId="Folders"
-                label={
+        <List className={classes.root}>
+            <ListItem
+                button
+                onClick={toggleFoldersOpen}
+                className={classes.listItem}
+            >
+                <ListItemIcon className={classes.moreIcon}>
+                    {foldersOpened ? <MoreIcon /> : <LessIcon />}
+                </ListItemIcon>
+                <ListItemText>
                     <div className={classes.labelRoot}>
                         <Typography
                             variant="h5"
@@ -96,21 +122,36 @@ const FoldersTreeView = ({
                         >
                             Folders
                         </Typography>
-                        <IconButton
-                            onClick={openSetFolder}
-                            className={classes.iconButton}
-                        >
-                            <AddIcon style={{ fontSize: "1em" }} />
-                        </IconButton>
                     </div>
-                }
-            >
+                </ListItemText>
+                <ListItemSecondaryAction>
+                    {foldersOpened ? (
+                        <IconButton
+                            className={classes.iconAddButton}
+                            onClick={openSetFolder}
+                        >
+                            <AddIcon
+                                style={{
+                                    fontSize: "1.2em",
+                                }}
+                            />
+                        </IconButton>
+                    ) : (
+                        <></>
+                    )}
+                </ListItemSecondaryAction>
+            </ListItem>
+            <Collapse in={foldersOpened}>
                 {folders.map((folder) => {
                     return (
-                        <TreeItem
+                        <ListItem
                             key={"tree-item-node-" + folder.id}
-                            nodeId={"tree-item-node-" + folder.id}
-                            label={
+                            className={combineStyles([
+                                classes.bottomListItem,
+                                classes.listItem,
+                            ])}
+                        >
+                            <ListItemText>
                                 <div className={classes.labelRoot}>
                                     <Typography
                                         variant="h6"
@@ -118,27 +159,33 @@ const FoldersTreeView = ({
                                     >
                                         {folder.headline}
                                     </Typography>
-                                    <IconButton
-                                        className={classes.iconButton}
-                                        onClick={() => {
-                                            setHeadline(folder.headline);
-                                            setCurrentFolderId(folder.id);
-                                            openEditFolder();
-                                        }}
-                                    >
-                                        <EditIcon
-                                            style={{ fontSize: "0.8em" }}
-                                        />
-                                    </IconButton>
                                 </div>
-                            }
-                        />
+                            </ListItemText>
+                            <ListItemSecondaryAction>
+                                <IconButton
+                                    className={classes.iconButton}
+                                    onClick={() => {
+                                        setHeadline(folder.headline);
+                                        setCurrentFolderId(folder.id);
+                                        openEditFolder();
+                                    }}
+                                >
+                                    <EditIcon style={{ fontSize: "0.8em" }} />
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        </ListItem>
                     );
                 })}
-            </TreeItem>
-            <TreeItem
-                nodeId="Tags"
-                label={
+            </Collapse>
+            <ListItem
+                button
+                onClick={toggleTagsOpened}
+                className={classes.listItem}
+            >
+                <ListItemIcon className={classes.moreIcon}>
+                    {tagsOpened ? <MoreIcon /> : <LessIcon />}
+                </ListItemIcon>
+                <ListItemText>
                     <div className={classes.labelRoot}>
                         <Typography
                             variant="h5"
@@ -150,20 +197,32 @@ const FoldersTreeView = ({
                         >
                             Tags
                         </Typography>
-                        <IconButton className={classes.iconButton}>
-                            <AddIcon
-                                onClick={openAddTag}
-                                style={{ fontSize: "1em" }}
-                            />
-                        </IconButton>
                     </div>
-                }
-            >
+                </ListItemText>
+                <ListItemSecondaryAction>
+                    {tagsOpened ? (
+                        <IconButton
+                            className={classes.iconAddButton}
+                            onClick={openAddTag}
+                        >
+                            <AddIcon style={{ fontSize: "1.2em" }} />
+                        </IconButton>
+                    ) : (
+                        <></>
+                    )}
+                </ListItemSecondaryAction>
+            </ListItem>
+            <Collapse in={tagsOpened}>
                 {tags.map((tag, id) => {
                     return (
-                        <TreeItem
+                        <ListItem
                             key={"tree-item-node-" + tag.name}
-                            label={
+                            className={combineStyles([
+                                classes.bottomListItem,
+                                classes.listItem,
+                            ])}
+                        >
+                            <ListItemText>
                                 <div className={classes.labelRoot}>
                                     <Typography
                                         variant="h6"
@@ -172,24 +231,25 @@ const FoldersTreeView = ({
                                     >
                                         {"#" + tag.name}
                                     </Typography>
-                                    <IconButton className={classes.iconButton}>
-                                        <EditIcon
-                                            onClick={() => {
-                                                openEditTag();
-                                                setEditTagId(id);
-                                                setEditTagName(tag.name);
-                                            }}
-                                            style={{ fontSize: "0.8em" }}
-                                        />
-                                    </IconButton>
                                 </div>
-                            }
-                            nodeId={"tags-item-node-" + tag.name}
-                        />
+                            </ListItemText>
+                            <ListItemSecondaryAction>
+                                <IconButton
+                                    onClick={() => {
+                                        openEditTag();
+                                        setEditTagId(id);
+                                        setEditTagName(tag.name);
+                                    }}
+                                    className={classes.iconButton}
+                                >
+                                    <EditIcon style={{ fontSize: "0.8em" }} />
+                                </IconButton>
+                            </ListItemSecondaryAction>
+                        </ListItem>
                     );
                 })}
-            </TreeItem>
-        </TreeView>
+            </Collapse>
+        </List>
     );
 };
 

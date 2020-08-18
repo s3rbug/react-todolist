@@ -2,13 +2,11 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 import todo from "./reducers/todo";
 import ui from "./reducers/ui";
-import { reducer as formReducer } from "redux-form";
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 const rootReducer = combineReducers({
-	todo: todo,
-	ui: ui,
-	form: formReducer,
+    todo: todo,
+    ui: ui,
 });
 
 type RootReducerType = typeof rootReducer;
@@ -21,18 +19,18 @@ export const useTypedSelector: TypedUseSelectorHook<AppStateType> = useSelector;
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // required for Redux extension
 
 let store = createStore(
-	rootReducer,
-	composeEnhancers(applyMiddleware(thunkMiddleware))
+    rootReducer,
+    composeEnhancers(applyMiddleware(thunkMiddleware))
 );
 
 export const reduceItem = <T>(
-	array: ReadonlyArray<T>,
-	index: number,
-	reducer: (value: T) => T
+    array: ReadonlyArray<T>,
+    index: number,
+    reducer: (value: T) => T
 ): T[] => [
-	...array.slice(0, index),
-	reducer(array[index]),
-	...array.slice(index + 1),
+    ...array.slice(0, index),
+    reducer(array[index]),
+    ...array.slice(index + 1),
 ];
 
 export default store;

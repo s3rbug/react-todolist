@@ -1,18 +1,12 @@
-import React, { useCallback } from "react";
+import React from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import store, { useTypedSelector } from "./redux/reduxStore";
 import { Provider, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { setIsLightAction, setDrawerOpenedAction } from "./redux/actions/ui";
+import { setDrawerOpenedAction } from "./redux/actions/ui";
 import Folders from "./components/Folders";
-import {
-    addTagAction,
-    editTagAction,
-    addFolderAction,
-    editFolderAction,
-} from "./redux/actions/todo";
 
 const lightTheme = createMuiTheme({
     palette: {
@@ -52,48 +46,17 @@ const App = () => {
 
     const isLight = useTypedSelector((state) => state.ui.isLight);
     const drawerOpened = useTypedSelector((state) => state.ui.drawerOpened);
-    const folders = useTypedSelector((state) => state.todo.folders);
-    const tags = useTypedSelector((state) => state.todo.tags);
 
-    const addTag = useCallback(
-        (name: string, color: string) => dispatch(addTagAction(name, color)),
-        [dispatch]
-    );
-    const setIsLight = useCallback(
-        (light: boolean) => dispatch(setIsLightAction(light)),
-        [dispatch]
-    );
     const setDrawerOpened = (open: boolean) =>
         dispatch(setDrawerOpenedAction(open));
-    const editTag = useCallback(
-        (tagId: number, newName: string) =>
-            dispatch(editTagAction(tagId, newName)),
-        [dispatch]
-    );
-    const addFolder = useCallback(
-        (headline: string) => dispatch(addFolderAction(headline)),
-        [dispatch]
-    );
-    const editFolder = useCallback(
-        (newHeadline: string, folderId: number) =>
-            dispatch(editFolderAction(newHeadline, folderId)),
-        [dispatch]
-    );
 
     return (
         <div className="app-wrapper">
             <ThemeProvider theme={isLight ? lightTheme : darkTheme}>
                 <Header
-                    tags={tags}
                     isLight={isLight}
-                    setIsLight={setIsLight}
                     open={drawerOpened}
                     setOpen={setDrawerOpened}
-                    addTag={addTag}
-                    editFolder={editFolder}
-                    folders={folders}
-                    editTag={editTag}
-                    addFolder={addFolder}
                 >
                     <Switch>
                         <Route path="/folders/" render={() => <Folders />} />

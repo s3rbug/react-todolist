@@ -5,11 +5,13 @@ import { Theme, StyleRules, Typography, useTheme } from "@material-ui/core";
 import DraggableItem from "../../assets/DraggableItem";
 import DroppableItem from "../../assets/DroppableItem";
 import ToDo from "./ToDo";
-import { TaskFormDataType, FolderType, TagType } from "../../types/index_d";
+import { FolderType } from "../../types/index_d";
 import AddGoal from "./AddGoal";
 import { useTypedSelector } from "../../redux/reduxStore";
 import { DraggingStyle, NotDraggingStyle } from "react-beautiful-dnd";
 import FolderLabel from "./FolderLabel";
+import { useDispatch } from "react-redux";
+import { toggleCheckedAction } from "../../redux/actions/todo";
 
 const useStyles = makeStyles(
     (theme: Theme): StyleRules<string> => ({
@@ -28,9 +30,8 @@ const useStyles = makeStyles(
         paper: {
             height: "80%",
             boxShadow: theme.shadows[6],
-            width: "90%",
-            margin: "3%",
-            marginBottom: "0",
+            width: "100%",
+            marginTop: "10px",
             display: "flex",
             flexDirection: "column",
             background: theme.palette.background.paper,
@@ -43,47 +44,24 @@ const useStyles = makeStyles(
 );
 
 interface PropsType {
-    addGoal: (goalText: string, folderId: number) => void;
-    toggleChecked: (id: number, folderId: number) => void;
-    setGoal: (id: number, newGoal: string, folderId: number) => void;
-    setNote: (id: number, newNote: string, folderId: number) => void;
-    deleteTask: (id: number, folderId: number) => void;
-    setTag: (tagId: number, goalId: number, folderId: number) => void;
-    deleteTag: (tagId: number) => void;
-    setCurrentFolders: (from: number, folderId: number) => void;
-    tags: Array<TagType>;
-    folders: ReadonlyArray<FolderType>;
-    foldersCount: number;
     folderId: number;
 }
 
-const ToDoList = ({
-    addGoal,
-    toggleChecked,
-    setGoal,
-    setNote,
-    deleteTask,
-    setTag,
-    deleteTag,
-    setCurrentFolders,
-    folderId,
-    foldersCount,
-    folders,
-    tags,
-}: PropsType) => {
+const ToDoList = ({ folderId }: PropsType) => {
     const classes = useStyles();
     const theme = useTheme();
 
+    const dispatch = useDispatch();
+    const folders = useTypedSelector((state) => state.todo.folders);
     const currentFolder: FolderType = useTypedSelector(
         (state) => state.todo.folders[folderId]
     );
+
+    const toggleChecked = (id: number, folderId: number) =>
+        dispatch(toggleCheckedAction(id, folderId));
+
     const toggleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.value) toggleChecked(parseInt(e.target.value), folderId);
-    };
-
-    const onGoalSubmit = (formData: TaskFormDataType) => {
-        addGoal(formData.goal, folderId);
-        formData.goal = "";
     };
 
     const getItemStyle = (
@@ -99,11 +77,9 @@ const ToDoList = ({
     return (
         <div className={classes.root}>
             <FolderLabel
-                setCurrentFolders={setCurrentFolders}
                 folders={folders}
                 folderId={folderId}
                 headline={currentFolder.headline}
-                foldersCount={foldersCount}
             />
             <div className={classes.paper}>
                 <div className={classes.goals}>
@@ -126,15 +102,9 @@ const ToDoList = ({
                                         getItemStyle={getItemStyle}
                                     >
                                         <ToDo
-                                            setGoal={setGoal}
-                                            goal={goal}
                                             toggleCheckbox={toggleCheckbox}
-                                            setNote={setNote}
-                                            deleteTask={deleteTask}
-                                            setTag={setTag}
-                                            tags={tags}
-                                            deleteTag={deleteTag}
                                             folderId={folderId}
+                                            goal={goal}
                                         />
                                     </DraggableItem>
                                 );
@@ -142,10 +112,7 @@ const ToDoList = ({
                         </List>
                     </DroppableItem>
                 </div>
-                <AddGoal
-                    form={"add-goal-form" + folderId}
-                    onSubmit={onGoalSubmit}
-                />
+                <AddGoal folderId={folderId} />
             </div>
         </div>
     );
