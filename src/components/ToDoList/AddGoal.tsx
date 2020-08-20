@@ -25,7 +25,7 @@ const useStyles = makeStyles(
         },
         textField: {
             marginRight: "10px",
-            width: "90%",
+            flexGrow: 1,
         },
         sendButton: {
             border: "1px solid darkgrey",
@@ -33,7 +33,6 @@ const useStyles = makeStyles(
             height: "40px",
             width: "40px",
             padding: "7px",
-            flexGrow: 1,
         },
         icon: {
             alignSelf: "center",
@@ -57,18 +56,19 @@ const AddGoal = ({ folderId }: PropsType) => {
                 opacity: 0,
                 transform: "translateY(-10px)",
                 immediate: false,
-                config: { tension: 350 },
+                config: { tension: 400 },
             },
             {
                 opacity: 0,
                 transform: "translateY(10px)",
                 immediate: true,
+                config: { tension: 40000 },
             },
             {
                 opacity: 1,
                 transform: "translateY(0)",
                 immediate: false,
-                config: { tension: 350 },
+                config: { tension: 500 },
             },
         ],
         onRest: () => {
@@ -76,13 +76,13 @@ const AddGoal = ({ folderId }: PropsType) => {
         },
     });
 
-    const onSubmit = (data: TaskFormDataType, e: any) => {
+    const onSubmit = (data: TaskFormDataType) => {
         addGoal(data.goalText, folderId);
-        reset();
+        setValue("goalText", "");
         if (!errors.goalText?.message) setMoving(true);
     };
 
-    const { register, handleSubmit, errors, reset } = useForm<
+    const { register, handleSubmit, errors, setValue } = useForm<
         TaskFormDataType
     >();
     return (
@@ -99,7 +99,7 @@ const AddGoal = ({ folderId }: PropsType) => {
                 type="text"
                 variant="outlined"
                 inputRef={register({
-                    required: "This field is required",
+                    required: "Goal can not be empty",
                     maxLength: {
                         value: 30,
                         message: "Max goal length is 30",
@@ -107,6 +107,11 @@ const AddGoal = ({ folderId }: PropsType) => {
                 })}
                 error={!!errors.goalText}
                 helperText={errors.goalText?.message}
+                inputProps={{
+                    form: {
+                        autocomplete: "off",
+                    },
+                }}
             />
 
             <IconButton

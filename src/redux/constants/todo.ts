@@ -17,3 +17,4 @@ export const ADD_TAG = "todo/ADD_TAG";
 export const EDIT_TAG = "todo/EDIT_TAG";
 export const EDIT_FOLDER = "todo/EDIT_FOLDER";
 export const SET_CURRENT_FOLDERS = "todo/SET_CURRENT_FOLDERS";
+export const SWAP_CURRENT_FOLDERS = "todo/SWAP_CURRENT_FOLDERS";

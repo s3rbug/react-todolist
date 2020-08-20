@@ -20,6 +20,7 @@ const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
     const editFolder = (newName: string, folderIdEdit: number) =>
         dispatch(editFolderAction(newName, folderIdEdit));
     const handleClose = () => {
+        setNewHeadline(headline);
         setOpen(false);
     };
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

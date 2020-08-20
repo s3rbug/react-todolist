@@ -53,10 +53,11 @@ const useStyles = makeStyles(
                 easing: theme.transitions.easing.sharp,
                 duration: theme.transitions.duration.leavingScreen,
             }),
-            background: theme.palette.type === "dark" ? "#3700B3" : "#3F51B5",
+            background: "#3F51B5",
         },
         menuButton: {
             marginRight: theme.spacing(2),
+            color: "white",
         },
         hide: {
             display: "none",
@@ -90,7 +91,7 @@ const useStyles = makeStyles(
         trashCan: {
             color: "white",
         },
-        title: { flexGrow: 1 },
+        title: { flexGrow: 1, color: "white" },
         trashCanContainer: {},
         toolbar: {
             paddingRight: theme.spacing(1.5),

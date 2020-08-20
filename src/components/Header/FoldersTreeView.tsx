@@ -132,7 +132,7 @@ const FoldersTreeView = ({
                         >
                             <AddIcon
                                 style={{
-                                    fontSize: "1.2em",
+                                    fontSize: "1em",
                                 }}
                             />
                         </IconButton>
@@ -205,7 +205,7 @@ const FoldersTreeView = ({
                             className={classes.iconAddButton}
                             onClick={openAddTag}
                         >
-                            <AddIcon style={{ fontSize: "1.2em" }} />
+                            <AddIcon style={{ fontSize: "1em" }} />
                         </IconButton>
                     ) : (
                         <></>

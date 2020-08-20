@@ -18,20 +18,18 @@ const useStyles = makeStyles(
         root: {
             width: "100%",
             height: "100%",
-            paddingLeft: "10px",
-            paddingRight: "10px",
+            paddingLeft: "30px",
+            paddingRight: "30px",
         },
         list: {
-            width: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
         },
         paper: {
-            height: "80%",
             boxShadow: theme.shadows[6],
-            width: "100%",
             marginTop: "10px",
+            marginBottom: "10px",
             display: "flex",
             flexDirection: "column",
             background: theme.palette.background.paper,

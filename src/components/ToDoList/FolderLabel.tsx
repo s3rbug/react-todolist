@@ -12,9 +12,11 @@ import {
 } from "@material-ui/core";
 import FolderIcon from "@material-ui/icons/FolderOutlined";
 import { FolderType } from "../../types/index_d";
-import { useTypedSelector } from "../../redux/reduxStore";
 import { useDispatch } from "react-redux";
-import { setCurrentFoldersAction } from "../../redux/actions/todo";
+import {
+    setCurrentFoldersAction,
+    swapCurrentFoldersAction,
+} from "../../redux/actions/todo";
 
 const useStyles = makeStyles(
     (theme: Theme): StyleRules<string> => ({
@@ -62,8 +64,8 @@ const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
 
     const setCurrentFolders = (from: number, folderId: number) =>
         dispatch(setCurrentFoldersAction(from, folderId));
-
-    const foldersCount = useTypedSelector((state) => state.todo.folders.length);
+    const swapCurrentFolders = (from: number, to: number) =>
+        dispatch(swapCurrentFoldersAction(from, to));
 
     const handleTooltipClose = () => {
         setTooltipOpened(false);
@@ -72,8 +74,7 @@ const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
         setAnchorEl(null);
     };
     const handleClick = (event: any) => {
-        if (foldersCount !== 3) setAnchorEl(event.currentTarget);
-        else setTooltipOpened(true);
+        setAnchorEl(event.currentTarget);
     };
     return (
         <div className={classes.test}>
@@ -97,40 +98,36 @@ const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
                         className={classes.icon}
                     />
                 </Tooltip>
-                {
-                    <Menu
-                        id="simple-menu"
-                        anchorEl={anchorEl}
-                        keepMounted
-                        open={Boolean(anchorEl)}
-                        onClose={handleClose}
-                    >
-                        {folders.map((folder, id) => {
-                            if (folder.shown)
-                                return (
-                                    <div
-                                        key={
-                                            folder.headline + folder.id + "menu"
-                                        }
-                                    />
-                                );
-                            else
-                                return (
-                                    <MenuItem
-                                        key={
-                                            folder.headline + folder.id + "menu"
-                                        }
-                                        onClick={() => {
-                                            setCurrentFolders(folderId, id);
-                                            handleClose();
-                                        }}
-                                    >
-                                        {folder.headline}
-                                    </MenuItem>
-                                );
-                        })}
-                    </Menu>
-                }
+                <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                >
+                    {folders.map((folder, id) => {
+                        if (id === folderId)
+                            return (
+                                <div
+                                    key={folder.headline + folder.id + "menu"}
+                                />
+                            );
+                        else
+                            return (
+                                <MenuItem
+                                    key={folder.headline + folder.id + "menu"}
+                                    onClick={() => {
+                                        if (folder.shown)
+                                            swapCurrentFolders(folderId, id);
+                                        else setCurrentFolders(folderId, id);
+                                        handleClose();
+                                    }}
+                                >
+                                    {folder.headline}
+                                </MenuItem>
+                            );
+                    })}
+                </Menu>
             </div>
         </div>
     );

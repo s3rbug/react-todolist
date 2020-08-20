@@ -1,5 +1,5 @@
 import React from "react";
-import { Theme, StyleRules, makeStyles } from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import ToDoList from "./ToDoList/ToDoList";
 import { useTypedSelector } from "../redux/reduxStore";
 import { useDispatch } from "react-redux";
@@ -7,16 +7,10 @@ import { swapTasksAction } from "../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { getIntSecondPart } from "../utils/helpers";
 
-const useStyles = makeStyles(
-    (theme: Theme): StyleRules<string> => ({
-        root: {
-            display: "flex",
-        },
-    })
-);
+//const useStyles = makeStyles((theme: Theme): StyleRules<string> => ({}));
 
 const Folders = () => {
-    const classes = useStyles();
+    //const classes = useStyles();
     const dispatch = useDispatch();
     const swapTasks = (
         from: number,
@@ -41,13 +35,25 @@ const Folders = () => {
         );
     };
     return (
-        <div className={classes.root}>
+        <Grid container direction="row" justify="flex-start">
             <DragDropContext onDragEnd={onDragEnd}>
-                <ToDoList folderId={currentFolders[0]} />
-                <ToDoList folderId={currentFolders[1]} />
-                <ToDoList folderId={currentFolders[2]} />
+                <Grid item xs={12} sm={6} md={4}>
+                    <div>
+                        <ToDoList folderId={currentFolders[0]} />
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <div>
+                        <ToDoList folderId={currentFolders[1]} />
+                    </div>
+                </Grid>
+                <Grid item xs={12} sm={6} md={4}>
+                    <div>
+                        <ToDoList folderId={currentFolders[2]} />
+                    </div>
+                </Grid>
             </DragDropContext>
-        </div>
+        </Grid>
     );
 };
 

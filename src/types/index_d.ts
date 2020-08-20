@@ -25,6 +25,11 @@ export type TaskFormDataType = {
     goalText: string;
 };
 
+export type TaskDetailsFormType = {
+    goalText: string;
+    noteText: string;
+};
+
 export enum DrawerTypeEnum {
     Menu = 1,
     Back,

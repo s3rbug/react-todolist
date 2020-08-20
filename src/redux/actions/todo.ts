@@ -58,3 +58,6 @@ export const editFolderAction = (newHeadline: string, folderId: number) =>
 
 export const setCurrentFoldersAction = (from: number, folderId: number) =>
     action(constants.SET_CURRENT_FOLDERS, { from, folderId });
+
+export const swapCurrentFoldersAction = (from: number, to: number) =>
+    action(constants.SWAP_CURRENT_FOLDERS, { from, to });

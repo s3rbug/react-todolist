@@ -435,7 +435,6 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
         }
         case constants.SET_CURRENT_FOLDERS: {
             const { from, folderId } = action.payload;
-            //console.log("from", from, "folderId", folderId);
             return {
                 ...state,
                 folders: state.folders.map((folder) => {
@@ -446,6 +445,17 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
                 }),
                 currentFolders: state.currentFolders.map((id) => {
                     if (id === from) return folderId;
+                    return id;
+                }),
+            };
+        }
+        case constants.SWAP_CURRENT_FOLDERS: {
+            const { from, to } = action.payload;
+            return {
+                ...state,
+                currentFolders: state.currentFolders.map((id) => {
+                    if (id === from) return to;
+                    if (id === to) return from;
                     return id;
                 }),
             };

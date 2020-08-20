@@ -25,15 +25,14 @@ const darkTheme = createMuiTheme({
     palette: {
         type: "dark",
         primary: {
-            main: "#E87509",
-            dark: "#C04D09",
+            main: "#2196F3",
         },
         success: {
-            main: "#558B2F",
-            dark: "#33691E",
+            main: "#2a9d8f",
+            dark: "#028090",
         },
         secondary: {
-            main: "#FF69B4",
+            main: "#e63946",
         },
         action: {
             disabledBackground: "#121212",
