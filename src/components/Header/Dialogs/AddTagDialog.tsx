@@ -98,10 +98,10 @@ const AddTagDialog = ({ open, setOpen, addTag }: PropsType) => {
 					style={{ borderLeft: "4px solid " + color }}
 				>
 					<span
-						className={combineStyles([
+						className={combineStyles(
 							checked ? classes.checked : "",
-							classes.notSelectable,
-						])}
+							classes.notSelectable
+						)}
 					>
 						Example text
 					</span>
