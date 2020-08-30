@@ -104,6 +104,7 @@ const TaskDetails = ({
 	const handleClose = () => {
 		setOpen(false);
 		setNewTagId(undefined);
+		setDeletedTags(tags.map(() => false));
 	};
 	const deleteCurrentTask = () => {
 		deleteTask(goal.id, folderId);
