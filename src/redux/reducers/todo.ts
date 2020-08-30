@@ -86,7 +86,7 @@ const initialState = {
 					id: 0,
 					text: "Watch 4 anime",
 					note: "don't forget to smile",
-					tag: undefined as undefined | number,
+					tag: 0 as undefined | number,
 					checked: true,
 					editing: false,
 				},
@@ -260,40 +260,6 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 					}
 					return folder;
 				}),
-			};
-		}
-		case constants.SWAP_FOLDERS: {
-			let { from, to } = action.payload;
-
-			return {
-				...state,
-				folders: (to > from
-					? [
-							...state.folders.slice(0, from),
-							...state.folders.slice(from + 1, to + 1),
-							state.folders[from],
-							...state.folders.slice(to + 1, state.folders.length),
-					  ]
-					: [
-							...state.folders.slice(0, to),
-							state.folders[from],
-							...state.folders.slice(to, from),
-							...state.folders.slice(from + 1, state.folders.length),
-					  ]
-				).map((folder, i) => ({ ...folder, id: i })),
-			};
-		}
-		case constants.START_EDITING: {
-			const { id, folderId } = action.payload;
-			return {
-				...state,
-				folders: reduceItem(state.folders, folderId, (folder) => ({
-					...folder,
-					goals: folder.goals.map((goal, idx) => {
-						if (idx !== id) return goal;
-						return { ...goal, editing: !goal.editing };
-					}),
-				})),
 			};
 		}
 		case constants.SET_GOAL: {

@@ -17,11 +17,9 @@ const Folders = () => {
 	) => dispatch(swapTasksAction(from, to, fromFolderId, toFolderId));
 	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
 	const onDragEnd = (result: DropResult) => {
-		console.log(result.destination);
 		if (!result.destination) {
 			return;
 		}
-
 		swapTasks(
 			result.source.index,
 			result.destination.index,

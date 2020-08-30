@@ -61,8 +61,11 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 		dispatch(setNoteAction(id, newNote, folderId));
 	const deleteTask = (id: number, folderId: number) =>
 		dispatch(deleteTaskAction(id, folderId));
-	const setTag = (taskId: number, tagId: number, folderId: number) =>
-		dispatch(setTagAction(taskId, tagId, folderId));
+	const setTag = (
+		taskId: number,
+		tagId: number | undefined,
+		folderId: number
+	) => dispatch(setTagAction(taskId, tagId, folderId));
 	const deleteTag = (tagId: number) => dispatch(deleteTagAction(tagId));
 
 	const currentColor =

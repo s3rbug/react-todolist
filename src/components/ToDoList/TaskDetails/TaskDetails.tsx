@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
 	Dialog,
 	DialogActions,
@@ -22,9 +22,6 @@ import { useForm } from "react-hook-form";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
-		root: {
-			padding: "100px",
-		},
 		buttons: {
 			display: "flex",
 			width: "100%",
@@ -43,15 +40,14 @@ const useStyles = makeStyles(
 			fontSize: "1.3em",
 		},
 		notesLabel: {
-			marginTop: "15px",
-			marginBottom: "5px",
-		},
-		createdLabel: {
-			marginTop: "5px",
+			marginTop: theme.spacing(1),
 			marginBottom: "5px",
 		},
 		cancel: {
 			flexGrow: 1,
+		},
+		dialogTitle: {
+			paddingBottom: theme.spacing(1),
 		},
 		chip: {
 			fontSize: "1em",
@@ -63,6 +59,7 @@ const useStyles = makeStyles(
 			marginBottom: "5px",
 			color: theme.palette.text.secondary,
 			boxSizing: "border-box",
+			transition: "all .5s",
 		},
 	})
 );
@@ -74,7 +71,7 @@ type PropsType = {
 	setGoal: (id: number, text: string, folderId: number) => void;
 	setNote: (id: number, newNote: string, folderId: number) => void;
 	deleteTask: (id: number, folderId: number) => void;
-	setTag: (taskId: number, tagId: number, folderId: number) => void;
+	setTag: (taskId: number, tagId: number | undefined, folderId: number) => void;
 	tags: ReadonlyArray<TagType>;
 	deleteTag: (tagId: number) => void;
 	folderId: number;
@@ -95,20 +92,32 @@ const TaskDetails = ({
 	const classes = useStyles();
 	const theme = useTheme();
 	const [newTagId, setNewTagId] = useState<number | undefined>(goal.tag);
+	const [deletedTags, setDeletedTags] = useState<boolean[]>([]);
+	useEffect(() => {
+		console.log("useEffect");
+		setDeletedTags(tags.map(() => false));
+		return () => {
+			setDeletedTags(tags.map(() => false));
+		};
+	}, [tags]);
 	const { register, handleSubmit, errors } = useForm<TaskDetailsFormType>();
 	const handleClose = () => {
-		setNewTagId(undefined);
 		setOpen(false);
+		setNewTagId(undefined);
 	};
 	const deleteCurrentTask = () => {
 		deleteTask(goal.id, folderId);
 		handleClose();
 	};
 	const onSubmit = (data: TaskDetailsFormType) => {
+		setOpen(false);
 		setGoal(goal.id, data.goalText, folderId);
 		setNote(goal.id, data.noteText, folderId);
 		if (newTagId !== undefined) setTag(goal.id, newTagId, folderId);
-		setOpen(false);
+		deletedTags.map((tagDeleted, deletedTagId) => {
+			if (tagDeleted) deleteTag(deletedTagId);
+			return false;
+		});
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
@@ -116,7 +125,7 @@ const TaskDetails = ({
 				key={"task-details-" + goal.id + "-folder-" + folderId}
 				onSubmit={handleSubmit(onSubmit)}
 			>
-				<DialogTitle id="task-dialog-title">
+				<DialogTitle className={classes.dialogTitle}>
 					<TextField
 						inputRef={register({
 							required: "Goal can not be empty",
@@ -140,26 +149,39 @@ const TaskDetails = ({
 				<DialogContent>
 					<div>
 						{tags.map((tag, tagId) => {
-							return (
-								<Chip
-									key={"tags-" + tag.name + tag.color}
-									label={tag.name}
-									className={classes.chip}
-									style={{
-										borderColor:
-											tagId === newTagId
-												? tags[newTagId].color
-												: theme.palette.action.disabled,
-										borderWidth: tagId === newTagId ? "3.3px" : "2px",
-										background:
-											tagId === newTagId
-												? tags[newTagId].color + "48" // #48 - 0.3 opacity
-												: theme.palette.chip,
-									}}
-									onDelete={() => deleteTag(tagId)}
-									onClick={() => setNewTagId(tagId)}
-								/>
-							);
+							if (deletedTags[tagId])
+								return <span key={"tags-" + tag.name + tag.color}></span>;
+							else
+								return (
+									<Chip
+										key={"tags-" + tag.name + tag.color}
+										label={tag.name}
+										className={classes.chip}
+										style={{
+											borderColor:
+												tagId === newTagId
+													? tags[newTagId].color
+													: theme.palette.action.disabled,
+											borderWidth: tagId === newTagId ? "3.3px" : "2px",
+											background:
+												tagId === newTagId
+													? tags[newTagId].color + "48" // #48 - 0.3 opacity
+													: theme.palette.chip,
+										}}
+										onDelete={() => {
+											setDeletedTags([
+												...deletedTags.map((tagDeleted, deletedTagId) => {
+													if (!tagDeleted) return deletedTagId === tagId;
+													return true;
+												}),
+											]);
+										}}
+										onClick={() => {
+											if (tagId === newTagId) setNewTagId(undefined);
+											else setNewTagId(tagId);
+										}}
+									/>
+								);
 						})}
 					</div>
 					<div className={classes.notes}>
