@@ -8,7 +8,9 @@ import {
 } from "@material-ui/core";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
 import { useDispatch } from "react-redux";
-import { addFolderAction } from "../../../redux/actions/todo";
+import { useTypedSelector } from "../../../redux/reduxStore";
+import { GoalType } from "../../../types/index_d";
+import { addFolder } from "../../../redux/middleware/todo";
 
 type PropsType = {
 	open: boolean;
@@ -18,9 +20,7 @@ type PropsType = {
 const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 	const [headline, setHeadline] = useState("");
 	const dispatch = useDispatch();
-	const addFolder = (folderName: string) =>
-		dispatch(addFolderAction(folderName));
-
+	const folders = useTypedSelector((state) => state.todo.folders);
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -28,7 +28,14 @@ const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 		if (e.target.value.length <= 15) setHeadline(e.target.value);
 	};
 	const handleAddFolder = () => {
-		addFolder(headline);
+		dispatch(
+			addFolder({
+				id: folders.length,
+				headline: headline,
+				shown: false,
+				goals: [] as GoalType[],
+			})
+		);
 		setHeadline("");
 		handleClose();
 	};

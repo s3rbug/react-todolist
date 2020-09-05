@@ -1,0 +1,10 @@
+{
+	"name": "json-server",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"local": "json-server --watch --host 192.168.0.11 db.json -p 3001 -d 2000",
+		"localFast": "json-server --watch --host 192.168.0.11 db.json -p 3001 -d 1"
+	}
+}

@@ -1,12 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import Header from "./components/Header/Header";
 import store, { useTypedSelector } from "./redux/reduxStore";
 import { Provider, useDispatch } from "react-redux";
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { setDrawerOpenedAction } from "./redux/actions/ui";
 import Folders from "./components/Folders";
+import { setUi } from "./redux/middleware/ui";
 
 const lightTheme = createMuiTheme({
 	palette: {
@@ -44,13 +44,11 @@ const darkTheme = createMuiTheme({
 
 const App = () => {
 	const dispatch = useDispatch();
-
+	const [drawerOpened, setDrawerOpened] = useState(false);
 	const isLight = useTypedSelector((state) => state.ui.isLight);
-	const drawerOpened = useTypedSelector((state) => state.ui.drawerOpened);
-
-	const setDrawerOpened = (open: boolean) =>
-		dispatch(setDrawerOpenedAction(open));
-
+	useEffect(() => {
+		dispatch(setUi());
+	}, [dispatch]);
 	return (
 		<div className="app-wrapper">
 			<ThemeProvider theme={isLight ? lightTheme : darkTheme}>

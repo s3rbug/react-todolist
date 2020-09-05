@@ -1,0 +1,153 @@
+{
+  "folders": [
+    {
+      "id": 0,
+      "headline": "Purchasing",
+      "shown": true,
+      "goals": [
+        {
+          "id": 0,
+          "text": "onion",
+          "note": "don't forget to smile, dickhead",
+          "tag": 1,
+          "checked": false,
+          "editing": false
+        },
+        {
+          "id": 1,
+          "text": "2",
+          "note": "don't forget to smile",
+          "tag": 1,
+          "checked": false
+        },
+        {
+          "id": 2,
+          "text": "cucumber",
+          "note": "don't forget to smile",
+          "tag": 0,
+          "checked": false
+        },
+        {
+          "id": 3,
+          "text": "3123",
+          "note": "",
+          "checked": false
+        }
+      ]
+    },
+    {
+      "id": 1,
+      "headline": "Goals",
+      "shown": false,
+      "goals": [
+        {
+          "id": 0,
+          "text": "4",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": true
+        },
+        {
+          "id": 1,
+          "text": "Watch 5 anime",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": false
+        },
+        {
+          "id": 2,
+          "text": "Watch 7 anime",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": false,
+          "editing": false
+        },
+        {
+          "id": 3,
+          "text": "Watch 9 anime",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": false
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "headline": "Headline",
+      "shown": true,
+      "goals": [
+        {
+          "id": 0,
+          "text": "Watch 4 anime",
+          "note": "don't forget to smile",
+          "tag": 0,
+          "checked": true
+        },
+        {
+          "id": 1,
+          "text": "Watch 5 anime",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": false
+        },
+        {
+          "id": 2,
+          "text": "Watch 7 anime",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": false
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "headline": "Testing",
+      "shown": true,
+      "goals": [
+        {
+          "id": 0,
+          "text": "test",
+          "note": "don't forget to smile",
+          "tag": 0,
+          "checked": true
+        },
+        {
+          "id": 1,
+          "text": "555",
+          "note": "don't forget to smile",
+          "tag": null,
+          "checked": false
+        }
+      ]
+    }
+  ],
+  "tags": [
+    {
+      "id": 0,
+      "name": "important",
+      "color": "#FF69B4"
+    },
+    {
+      "id": 1,
+      "name": "work",
+      "color": "#0000FF"
+    }
+  ],
+  "currentFolders": [
+    {
+      "folder": 0,
+      "id": 0
+    },
+    {
+      "folder": 3,
+      "id": 1
+    },
+    {
+      "folder": 2,
+      "id": 2
+    }
+  ],
+  "ui": {
+    "isLight": false
+  }
+}

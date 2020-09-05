@@ -6,17 +6,16 @@ import {
 	Drawer,
 	IconButton,
 } from "@material-ui/core";
-import { isMobile, useTypedSelector } from "../../redux/reduxStore";
+import { useTypedSelector } from "../../redux/reduxStore";
 import FoldersTreeView from "./FoldersTreeView";
 import AddTagDialog from "./Dialogs/AddTagDialog";
 import EditTagDialog from "./Dialogs/EditTagDialog";
 import AddFolderDialog from "./Dialogs/AddFolderDialog";
 import { useDispatch } from "react-redux";
-import { addTagAction } from "../../redux/actions/todo";
-import { setIsLightAction } from "../../redux/actions/ui";
 import SunIcon from "@material-ui/icons/Brightness7";
 import MoonIcon from "@material-ui/icons/Brightness4";
 import EditFolderDialog from "./Dialogs/EditFolderDialog";
+import { setIsLight } from "../../redux/middleware/ui";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -71,10 +70,7 @@ const HeaderDrawer = ({ open }: PropsType) => {
 	const [editTagName, setEditTagName] = useState("");
 
 	const isLight = useTypedSelector((state) => state.ui.isLight);
-
-	const addTag = (name: string, color: string) =>
-		dispatch(addTagAction(name, color));
-	const setIsLight = (light: boolean) => dispatch(setIsLightAction(light));
+	// const setIsLight = (light: boolean) => dispatch(setIsLightAction(light));
 
 	const openAddTag = () => {
 		setAddTagOpened(true);
@@ -90,14 +86,14 @@ const HeaderDrawer = ({ open }: PropsType) => {
 	};
 
 	const toggleTheme = () => {
-		setIsLight(!isLight);
+		dispatch(setIsLight(!isLight));
 	};
 
 	return (
 		<Drawer
 			className={classes.drawer}
 			style={{
-				width: isMobile.any() ? "50vw" : "20vw",
+				width: "300px",
 			}}
 			variant="persistent"
 			anchor="left"
@@ -109,7 +105,7 @@ const HeaderDrawer = ({ open }: PropsType) => {
 			<div
 				className={classes.drawerHeader}
 				style={{
-					width: isMobile.any() ? "50vw" : "20vw",
+					width: "300px",
 				}}
 			/>
 			<FoldersTreeView
@@ -133,11 +129,7 @@ const HeaderDrawer = ({ open }: PropsType) => {
 					</IconButton>
 				</div>
 			</div>
-			<AddTagDialog
-				setOpen={setAddTagOpened}
-				open={addTagOpened}
-				addTag={addTag}
-			/>
+			<AddTagDialog setOpen={setAddTagOpened} open={addTagOpened} />
 			<EditTagDialog
 				setOpen={setEditTagOpened}
 				open={editTagOpened}

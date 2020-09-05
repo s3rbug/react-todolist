@@ -1,126 +1,29 @@
-import { setDrawerModeAction } from "./../actions/ui";
+import { TodoStateType, FolderIdType } from "./../../types/index_d";
 import { ActionType } from "typesafe-actions";
 import * as actions from "../actions/todo";
 import * as constants from "./../constants/todo";
 import { reduceItem } from "../reduxStore";
-import { TagType } from "../../types/index_d";
+import { TagType, FolderType } from "../../types/index_d";
 
 const initialState = {
-	folders: [
-		{
-			id: 0,
-			headline: "Purchasing",
-			shown: true,
-			goals: [
-				{
-					id: 0,
-					text: "onion",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: true,
-					editing: false,
-				},
-				{
-					id: 1,
-					text: "carrot",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-				{
-					id: 2,
-					text: "cucumber",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-			],
-		},
-		{
-			id: 1,
-			headline: "Goals",
-			shown: true,
-			goals: [
-				{
-					id: 0,
-					text: "Watch 4 anime",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: true,
-					editing: false,
-				},
-				{
-					id: 1,
-					text: "Watch 5 anime",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-				{
-					id: 2,
-					text: "Watch 7 anime",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-				{
-					id: 3,
-					text: "Watch 9 anime",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-			],
-		},
-		{
-			id: 2,
-			headline: "Headline",
-			shown: true,
-			goals: [
-				{
-					id: 0,
-					text: "Watch 4 anime",
-					note: "don't forget to smile",
-					tag: 0 as undefined | number,
-					checked: true,
-					editing: false,
-				},
-				{
-					id: 1,
-					text: "Watch 5 anime",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-				{
-					id: 2,
-					text: "Watch 7 anime",
-					note: "don't forget to smile",
-					tag: undefined as undefined | number,
-					checked: false,
-					editing: false,
-				},
-			],
-		},
-	],
-	tags: [
-		{ name: "important", color: "#FF69B4" },
-		{ name: "work", color: "#0000FF" },
-	] as Array<TagType>,
-	currentFolders: [0, 1, 2] as number[],
-};
+	folders: [] as Array<FolderType>,
+	tags: [] as Array<TagType>,
+	currentFolders: [] as FolderIdType[],
+} as TodoStateType;
 
-type StateType = typeof initialState;
 export type TodosAction = ActionType<typeof actions>;
 
-const reducer = (state = initialState, action: TodosAction): StateType => {
+const reducer = (state = initialState, action: TodosAction): TodoStateType => {
 	switch (action.type) {
+		case constants.SET_TODO: {
+			const { todo } = action.payload;
+			return {
+				...state,
+				folders: todo.folders,
+				tags: todo.tags,
+				currentFolders: todo.currentFolders,
+			};
+		}
 		case constants.TOGGLE_CHECKED: {
 			const { id, folderId } = action.payload;
 			return {
@@ -129,14 +32,12 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 					return {
 						...folder,
 						goals: folder.goals.map((goal, goalIndex) => {
-							if (goalIndex === id) {
+							if (goalIndex === id)
 								return {
 									...goal,
 									checked: !goal.checked,
 								};
-							} else {
-								return goal;
-							}
+							else return goal;
 						}),
 					};
 				}),
@@ -155,9 +56,8 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 								id: state.folders[folderId].goals.length,
 								text: text,
 								note: "",
-								tag: undefined as undefined | number,
+								tag: undefined as number | undefined | null,
 								checked: false,
-								editing: false,
 							},
 						],
 					};
@@ -196,7 +96,6 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 			const newFolder = {
 				id: state.folders.length,
 				headline: headline,
-				setDrawerModeAction,
 				shown: false,
 				goals: [],
 			};
@@ -337,7 +236,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 					return {
 						...folder,
 						goals: folder.goals.map((goal) => {
-							if (goal.tag === undefined || goal.tag < tagId) return goal;
+							if (!goal.tag || goal.tag < tagId) return goal;
 							if (goal.tag === tagId)
 								return {
 									...goal,
@@ -359,7 +258,10 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 			const { name, color } = action.payload;
 			return {
 				...state,
-				tags: [...state.tags, { name, color }],
+				tags: [
+					...state.tags,
+					{ id: state.tags.length, name, color } as TagType,
+				],
 			};
 		}
 		case constants.EDIT_TAG: {
@@ -382,7 +284,7 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 				})),
 			};
 		}
-		case constants.SET_CURRENT_FOLDERS: {
+		case constants.SWAP_WITH_NOT_SHOWN: {
 			const { from, folderId } = action.payload;
 			return {
 				...state,
@@ -391,9 +293,10 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 					if (folder.id === folderId) return { ...folder, shown: true };
 					return folder;
 				}),
-				currentFolders: state.currentFolders.map((id) => {
-					if (id === from) return folderId;
-					return id;
+				currentFolders: state.currentFolders.map((currentFolder) => {
+					if (currentFolder.folder === from)
+						return { ...currentFolder, folder: folderId };
+					return currentFolder;
 				}),
 			};
 		}
@@ -401,10 +304,53 @@ const reducer = (state = initialState, action: TodosAction): StateType => {
 			const { from, to } = action.payload;
 			return {
 				...state,
-				currentFolders: state.currentFolders.map((id) => {
-					if (id === from) return to;
-					if (id === to) return from;
-					return id;
+				currentFolders: state.currentFolders.map((currentFolder) => {
+					if (currentFolder.folder === from)
+						return {
+							...currentFolder,
+							folder: to,
+						};
+					if (currentFolder.folder === to)
+						return {
+							...currentFolder,
+							folder: from,
+						};
+					return currentFolder;
+				}),
+			};
+		}
+		case constants.SET_CURRENT_FOLDERS: {
+			const { currentFolders } = action.payload;
+			return {
+				...state,
+				folders: state.folders.map((folder) => {
+					if (
+						currentFolders.some(
+							(currentFolder) => currentFolder.folder === folder.id
+						)
+					)
+						return { ...folder, shown: true };
+					return { ...folder, shown: false };
+				}),
+				currentFolders: [...currentFolders],
+			};
+		}
+		case constants.SET_FOLDER: {
+			const { folderId, newFolder } = action.payload;
+			return {
+				...state,
+				folders: reduceItem(state.folders, folderId, (folder) => ({
+					...newFolder,
+				})),
+			};
+		}
+		case constants.SET_CURRENT_FOLDER: {
+			const { from, to } = action.payload;
+			return {
+				...state,
+				currentFolders: state.currentFolders.map((current) => {
+					if (current.folder === from) return { ...current, folder: to };
+					return current;
 				}),
 			};
 		}

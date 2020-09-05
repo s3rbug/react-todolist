@@ -1,5 +1,11 @@
+import { FolderType, FolderIdType } from "./../../types/index_d";
+import { TodoStateType } from "../../types/index_d";
+//import { TodoStateType } from "./../reducers/todo";
 import { action } from "typesafe-actions";
 import * as constants from "./../constants/todo";
+
+export const setTodoAction = (todo: TodoStateType) =>
+	action(constants.SET_TODO, { todo });
 
 export const toggleCheckedAction = (id: number, folderId: number) =>
 	action(constants.TOGGLE_CHECKED, { id, folderId });
@@ -37,7 +43,7 @@ export const deleteTaskAction = (taskId: number, folderId: number) =>
 
 export const setTagAction = (
 	taskId: number,
-	tagId: number | undefined,
+	tagId: number | undefined | null,
 	folderId: number
 ) => action(constants.SET_TAG, { taskId, tagId, folderId });
 
@@ -53,8 +59,17 @@ export const editTagAction = (tagId: number, newName: string) =>
 export const editFolderAction = (newHeadline: string, folderId: number) =>
 	action(constants.EDIT_FOLDER, { newHeadline, folderId });
 
-export const setCurrentFoldersAction = (from: number, folderId: number) =>
-	action(constants.SET_CURRENT_FOLDERS, { from, folderId });
+export const swapWithNotShownAction = (from: number, folderId: number) =>
+	action(constants.SWAP_WITH_NOT_SHOWN, { from, folderId });
 
 export const swapCurrentFoldersAction = (from: number, to: number) =>
 	action(constants.SWAP_CURRENT_FOLDERS, { from, to });
+
+export const setCurrentFoldersAction = (currentFolders: FolderIdType[]) =>
+	action(constants.SET_CURRENT_FOLDERS, { currentFolders });
+
+export const setFolderAction = (newFolder: FolderType, folderId: number) =>
+	action(constants.SET_FOLDER, { newFolder, folderId });
+
+export const setCurrentFolderAction = (from: number, to: number) =>
+	action(constants.SET_CURRENT_FOLDER, { from, to });

@@ -2,7 +2,9 @@ import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogActions, Input } from "@material-ui/core";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
 import { useDispatch } from "react-redux";
-import { editFolderAction } from "../../../redux/actions/todo";
+import { useTypedSelector } from "../../../redux/reduxStore";
+import { editFolder } from "../../../redux/middleware/todo";
+import { FolderType } from "../../../types/index_d";
 
 type PropsType = {
 	headline: string;
@@ -14,11 +16,12 @@ type PropsType = {
 const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
 	const dispatch = useDispatch();
 	const [newHeadline, setNewHeadline] = useState(headline);
+	const currentFolder = useTypedSelector(
+		(state) => state.todo.folders[folderId]
+	);
 	useEffect(() => {
 		setNewHeadline(headline);
 	}, [headline]);
-	const editFolder = (newName: string, folderIdEdit: number) =>
-		dispatch(editFolderAction(newName, folderIdEdit));
 	const handleClose = () => {
 		setNewHeadline(headline);
 		setOpen(false);
@@ -27,7 +30,9 @@ const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
 		if (e.target.value.length <= 15) setNewHeadline(e.target.value);
 	};
 	const handleSave = () => {
-		editFolder(newHeadline, folderId);
+		dispatch(
+			editFolder({ ...currentFolder } as FolderType, newHeadline, folderId)
+		);
 		handleClose();
 	};
 	return (
@@ -37,6 +42,7 @@ const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
 					style={{ fontSize: "1.6em" }}
 					value={newHeadline}
 					onChange={handleChange}
+					autoFocus
 				/>
 			</DialogTitle>
 			<DialogActions>

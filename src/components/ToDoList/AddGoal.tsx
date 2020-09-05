@@ -11,9 +11,9 @@ import { TaskFormDataType } from "../../types/index_d";
 import { useSpring, animated } from "react-spring";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
-import { addGoalAction } from "../../redux/actions/todo";
 import BorderlessInput from "../../assets/BorderlessInput";
 import { useCombinedRefs } from "../../utils/helpers";
+import { addGoal } from "../../redux/middleware/todo";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -77,8 +77,6 @@ const AddGoal = ({ folderId }: PropsType) => {
 	const dispatch = useDispatch();
 	const theme = useTheme();
 	const textField = useRef<null | HTMLInputElement>(null);
-	const addGoal = (newGoal: string, folderId: number) =>
-		dispatch(addGoalAction(newGoal, folderId));
 	const [moving, setMoving] = useState(false);
 	const [focused, setFocused] = useState(false);
 	const props = useSpring({
@@ -151,7 +149,7 @@ const AddGoal = ({ folderId }: PropsType) => {
 	}
 
 	const onSubmit = (data: TaskFormDataType) => {
-		addGoal(data.goalText, folderId);
+		dispatch(addGoal(data.goalText, folderId));
 		textField.current?.focus();
 		setValue("goalText", "");
 		if (!errors.goalText?.message) setMoving(true);

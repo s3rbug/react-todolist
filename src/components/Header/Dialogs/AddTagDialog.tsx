@@ -14,6 +14,9 @@ import {
 import { ColorResult, HuePicker } from "react-color";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
 import { combineStyles } from "../../../utils/helpers";
+import { addTag } from "../../../redux/middleware/todo";
+import { useDispatch } from "react-redux";
+import { useTypedSelector } from "../../../redux/reduxStore";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -42,51 +45,46 @@ const useStyles = makeStyles(
 		title: {
 			width: "400px",
 		},
-		picker: {
-			width: "400px",
-		},
 	})
 );
 
 type PropsType = {
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	addTag: (name: string, color: string) => void;
 };
 
-const AddTagDialog = ({ open, setOpen, addTag }: PropsType) => {
+const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	const classes = useStyles();
+	const dispatch = useDispatch();
 	const theme = useTheme();
 	const [checked, setChecked] = useState(false);
 	const [color, setColor] = useState(theme.palette.primary.main);
-	const [tagName, setTagName] = useState("New tag");
+	const [tagName, setTagName] = useState("new tag");
+	const tags = useTypedSelector((state) => state.todo.tags);
 	const handleClose = () => {
 		setOpen(false);
 	};
 	const toggleCheckbox = () => {
 		setChecked(!checked);
 	};
-	const handleChangeComplete = (
-		newColor: ColorResult,
-		event: React.ChangeEvent<HTMLInputElement>
-	) => {
-		console.log(newColor, event);
+	const handleChangeComplete = (newColor: ColorResult) => {
 		setColor(newColor.hex);
 	};
 	const handleChange = (newColor: ColorResult) => {
 		setColor(newColor.hex);
 	};
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setTagName(e.target.value);
+		if (e.target.value.length <= 15) setTagName(e.target.value);
 	};
 	const handleAddTag = () => {
-		addTag(tagName, color);
+		dispatch(addTag(tagName, color, tags.length));
 		setOpen(false);
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle className={classes.title}>
 				<Input
+					autoFocus
 					value={tagName}
 					style={{ fontSize: "1.6em" }}
 					onChange={handleInputChange}
@@ -115,7 +113,7 @@ const AddTagDialog = ({ open, setOpen, addTag }: PropsType) => {
 					</div>
 				</div>
 				<HuePicker
-					className={classes.picker}
+					width={"100%"}
 					color={color}
 					onChangeComplete={handleChangeComplete}
 					onChange={handleChange}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
 	Dialog,
 	DialogActions,
@@ -19,6 +19,8 @@ import {
 } from "../../../assets/Buttons";
 import Chip from "@material-ui/core/Chip";
 import { useForm } from "react-hook-form";
+import { saveTaskDetails } from "../../../redux/middleware/todo";
+import { useDispatch } from "react-redux";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -68,10 +70,9 @@ type PropsType = {
 	open: boolean;
 	setOpen: (isOpen: boolean) => void;
 	goal: GoalType;
-	setGoal: (id: number, text: string, folderId: number) => void;
 	setNote: (id: number, newNote: string, folderId: number) => void;
 	deleteTask: (id: number, folderId: number) => void;
-	setTag: (taskId: number, tagId: number | undefined, folderId: number) => void;
+	//setTag: (taskId: number, tagId: number | undefined, folderId: number) => void;
 	tags: ReadonlyArray<TagType>;
 	deleteTag: (tagId: number) => void;
 	folderId: number;
@@ -83,28 +84,18 @@ const TaskDetails = ({
 	tags,
 	folderId,
 	setOpen,
-	setGoal,
 	setNote,
 	deleteTask,
-	setTag,
 	deleteTag,
 }: PropsType) => {
 	const classes = useStyles();
+	const dispatch = useDispatch();
 	const theme = useTheme();
-	const [newTagId, setNewTagId] = useState<number | undefined>(goal.tag);
-	const [deletedTags, setDeletedTags] = useState<boolean[]>([]);
-	useEffect(() => {
-		console.log("useEffect");
-		setDeletedTags(tags.map(() => false));
-		return () => {
-			setDeletedTags(tags.map(() => false));
-		};
-	}, [tags]);
+	const [newTagId, setNewTagId] = useState<number | undefined | null>(goal.tag);
 	const { register, handleSubmit, errors } = useForm<TaskDetailsFormType>();
 	const handleClose = () => {
 		setOpen(false);
-		setNewTagId(undefined);
-		setDeletedTags(tags.map(() => false));
+		setNewTagId(null);
 	};
 	const deleteCurrentTask = () => {
 		deleteTask(goal.id, folderId);
@@ -112,13 +103,12 @@ const TaskDetails = ({
 	};
 	const onSubmit = (data: TaskDetailsFormType) => {
 		setOpen(false);
-		setGoal(goal.id, data.goalText, folderId);
-		setNote(goal.id, data.noteText, folderId);
-		if (newTagId !== undefined) setTag(goal.id, newTagId, folderId);
-		deletedTags.map((tagDeleted, deletedTagId) => {
-			if (tagDeleted) deleteTag(deletedTagId);
-			return false;
-		});
+		// dispatch(setGoal(goal.id, data.goalText, folderId));
+		// setNote(goal.id, data.noteText, folderId);
+		// dispatch(setTag(goal.id, newTagId, folderId));
+		dispatch(
+			saveTaskDetails(goal.id, data.goalText, data.noteText, newTagId, folderId)
+		);
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
@@ -150,39 +140,28 @@ const TaskDetails = ({
 				<DialogContent>
 					<div>
 						{tags.map((tag, tagId) => {
-							if (deletedTags[tagId])
-								return <span key={"tags-" + tag.name + tag.color}></span>;
-							else
-								return (
-									<Chip
-										key={"tags-" + tag.name + tag.color}
-										label={tag.name}
-										className={classes.chip}
-										style={{
-											borderColor:
-												tagId === newTagId
-													? tags[newTagId].color
-													: theme.palette.action.disabled,
-											borderWidth: tagId === newTagId ? "3.3px" : "2px",
-											background:
-												tagId === newTagId
-													? tags[newTagId].color + "48" // #48 - 0.3 opacity
-													: theme.palette.chip,
-										}}
-										onDelete={() => {
-											setDeletedTags([
-												...deletedTags.map((tagDeleted, deletedTagId) => {
-													if (!tagDeleted) return deletedTagId === tagId;
-													return true;
-												}),
-											]);
-										}}
-										onClick={() => {
-											if (tagId === newTagId) setNewTagId(undefined);
-											else setNewTagId(tagId);
-										}}
-									/>
-								);
+							return (
+								<Chip
+									key={"tags-" + tag.name + tag.color}
+									label={tag.name}
+									className={classes.chip}
+									style={{
+										borderColor:
+											tagId === newTagId
+												? tags[newTagId].color
+												: theme.palette.action.disabled,
+										borderWidth: tagId === newTagId ? "3.3px" : "2px",
+										background:
+											tagId === newTagId
+												? tags[newTagId].color + "48" // #48 - 0.3 opacity
+												: theme.palette.chip,
+									}}
+									onClick={() => {
+										if (tagId === newTagId) setNewTagId(null);
+										else setNewTagId(tagId);
+									}}
+								/>
+							);
 						})}
 					</div>
 					<div className={classes.notes}>

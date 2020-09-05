@@ -1,11 +1,16 @@
-import React from "react";
+import React, { useEffect, useCallback } from "react";
 import { Grid } from "@material-ui/core";
 import ToDoList from "./ToDoList/ToDoList";
 import { useTypedSelector } from "../redux/reduxStore";
 import { useDispatch } from "react-redux";
-import { swapTasksAction } from "../redux/actions/todo";
+import {
+	swapTasksAction,
+	setCurrentFoldersAction,
+} from "../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { getIntSecondPart } from "../utils/helpers";
+import { setTodo } from "../redux/middleware/todo";
+import { FolderIdType } from "../types/index_d";
 
 const Folders = () => {
 	const dispatch = useDispatch();
@@ -15,6 +20,11 @@ const Folders = () => {
 		fromFolderId: number,
 		toFolderId: number
 	) => dispatch(swapTasksAction(from, to, fromFolderId, toFolderId));
+	const setCurrentFolders = useCallback(
+		(currentFolders: FolderIdType[]) =>
+			dispatch(setCurrentFoldersAction(currentFolders)),
+		[dispatch]
+	);
 	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
 	const onDragEnd = (result: DropResult) => {
 		if (!result.destination) {
@@ -23,28 +33,31 @@ const Folders = () => {
 		swapTasks(
 			result.source.index,
 			result.destination.index,
-			getIntSecondPart(result.source.droppableId, "-"),
+			getIntSecondPart(result.source.droppableId, "-"), // get number after '-' symbol
 			getIntSecondPart(result.destination.droppableId, "-")
 		);
 	};
+	useEffect(() => {
+		dispatch(setTodo());
+	}, [dispatch, setCurrentFolders]);
 	return (
 		<Grid container direction="row" justify="flex-start">
 			<DragDropContext onDragEnd={onDragEnd}>
-				<Grid item xs={12} sm={6} md={4}>
-					<div>
-						<ToDoList folderId={currentFolders[0]} />
-					</div>
-				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<div>
-						<ToDoList folderId={currentFolders[1]} />
-					</div>
-				</Grid>
-				<Grid item xs={12} sm={6} md={4}>
-					<div>
-						<ToDoList folderId={currentFolders[2]} />
-					</div>
-				</Grid>
+				{currentFolders.map((folder) => {
+					return (
+						<Grid
+							key={"todolist-folder-id-" + folder.id}
+							item
+							xs={12}
+							sm={6}
+							md={4}
+						>
+							<div>
+								<ToDoList folderId={folder.folder} />
+							</div>
+						</Grid>
+					);
+				})}
 			</DragDropContext>
 		</Grid>
 	);

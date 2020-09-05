@@ -1,3 +1,4 @@
+export const SET_TODO = "todo/SET_TODO";
 export const TOGGLE_CHECKED = "todo/TOGGLE_CHECKED";
 export const ADD_GOAL = "todo/ADD_GOAL";
 export const DELETE_FOLDER = "todo/DELETE_FOLDER";
@@ -14,5 +15,8 @@ export const DELETE_TAG = "todo/DELETE_TAG";
 export const ADD_TAG = "todo/ADD_TAG";
 export const EDIT_TAG = "todo/EDIT_TAG";
 export const EDIT_FOLDER = "todo/EDIT_FOLDER";
-export const SET_CURRENT_FOLDERS = "todo/SET_CURRENT_FOLDERS";
+export const SWAP_WITH_NOT_SHOWN = "todo/SWAP_WITH_NOT_SHOWN";
 export const SWAP_CURRENT_FOLDERS = "todo/SWAP_CURRENT_FOLDERS";
+export const SET_CURRENT_FOLDERS = "todo/SET_CURRENT_FOLDERS";
+export const SET_FOLDER = "todo/SET_FOLDER";
+export const SET_CURRENT_FOLDER = "todo/SET_CURRENT_FOLDER";

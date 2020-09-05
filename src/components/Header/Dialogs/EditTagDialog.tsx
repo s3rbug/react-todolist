@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, Input, DialogActions } from "@material-ui/core";
-import { ApplyDialogButton, CancelDialogButton } from "../../../assets/Buttons";
+import {
+	ApplyDialogButton,
+	CancelDialogButton,
+	DeleteDialogButton,
+} from "../../../assets/Buttons";
 import { useDispatch } from "react-redux";
-import { editTagAction } from "../../../redux/actions/todo";
+import { deleteTagAction } from "../../../redux/actions/todo";
+import { editTag } from "../../../redux/middleware/todo";
+import { useTypedSelector } from "../../../redux/reduxStore";
 
 type PropsType = {
 	open: boolean;
@@ -15,8 +21,10 @@ const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 	const [newName, setNewName] = useState("");
 	const dispatch = useDispatch();
 
-	const editTag = (tagId: number, newName: string) =>
-		dispatch(editTagAction(tagId, newName));
+	// const editTag = (tagId: number, newName: string) =>
+	// 	dispatch(editTagAction(tagId, newName));
+	const deleteTag = (tagId: number) => dispatch(deleteTagAction(tagId));
+	const tag = useTypedSelector((state) => state.todo.tags[tagId]);
 
 	useEffect(() => {
 		setNewName(tagName);
@@ -26,22 +34,29 @@ const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 		setOpen(false);
 	};
 	const handleEdit = () => {
-		editTag(tagId, newName);
+		dispatch(editTag(tagId, newName, tag.color));
 		handleClose();
 	};
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		setNewName(e.target.value);
+		if (e.target.value.length <= 15) setNewName(e.target.value);
+	};
+	const handleDelete = () => {
+		handleClose();
+		deleteTag(tagId);
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>
 				<Input
+					autoFocus
 					onChange={handleChange}
 					value={newName}
 					style={{ fontSize: "1.6em" }}
 				/>
 			</DialogTitle>
-			<DialogActions>
+			<DialogActions style={{ paddingLeft: "24px" }}>
+				<DeleteDialogButton onClick={handleDelete}>Delete</DeleteDialogButton>
+				<div style={{ flexGrow: 1 }}></div>
 				<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
 				<ApplyDialogButton onClick={handleEdit}>Save</ApplyDialogButton>
 			</DialogActions>

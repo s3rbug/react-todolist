@@ -36,8 +36,9 @@ const useStyles = makeStyles(
 			padding: 0,
 		},
 		labelText: {
-			fontWeight: "inherit",
+			fontWeight: "bold",
 			flexGrow: 1,
+			fontSize: "23px",
 		},
 		labelRoot: {
 			display: "flex",
@@ -60,6 +61,7 @@ const useStyles = makeStyles(
 			paddingLeft: 0,
 			maxWidth: "300px",
 			overflow: "hidden",
+			paddingRight: 0,
 		},
 		bottomListItem: {
 			paddingLeft: "30px",
@@ -68,6 +70,13 @@ const useStyles = makeStyles(
 			minWidth: 0,
 			marginRight: "5px",
 			marginLeft: "5px",
+		},
+		iconMargin: {
+			marginLeft: "10%",
+		},
+		bottomLabel: {
+			fontStyle: "italic",
+			fontSize: "1.1em",
 		},
 	})
 );
@@ -118,7 +127,10 @@ const FoldersTreeView = ({
 				<ListItemSecondaryAction>
 					{foldersOpened ? (
 						<IconButton
-							className={classes.iconAddButton}
+							className={combineStyles(
+								classes.iconAddButton,
+								classes.iconMargin
+							)}
 							onClick={openSetFolder}
 						>
 							<AddIcon
@@ -144,14 +156,17 @@ const FoldersTreeView = ({
 						>
 							<ListItemText>
 								<div className={classes.labelRoot}>
-									<Typography variant="h6" className={classes.labelText}>
+									<Typography variant="h6" className={classes.bottomLabel}>
 										{folder.headline}
 									</Typography>
 								</div>
 							</ListItemText>
 							<ListItemSecondaryAction>
 								<IconButton
-									className={classes.iconEditButton}
+									className={combineStyles(
+										classes.iconEditButton,
+										classes.iconMargin
+									)}
 									onClick={() => {
 										setHeadline(folder.headline);
 										setCurrentFolderId(folder.id);
@@ -185,7 +200,13 @@ const FoldersTreeView = ({
 				</ListItemText>
 				<ListItemSecondaryAction>
 					{tagsOpened ? (
-						<IconButton className={classes.iconAddButton} onClick={openAddTag}>
+						<IconButton
+							className={combineStyles(
+								classes.iconAddButton,
+								classes.iconMargin
+							)}
+							onClick={openAddTag}
+						>
 							<AddIcon style={{ fontSize: "1em" }} />
 						</IconButton>
 					) : (
@@ -207,8 +228,8 @@ const FoldersTreeView = ({
 								<div className={classes.labelRoot}>
 									<Typography
 										variant="h6"
-										className={classes.labelText}
 										style={{ color: tag.color }}
+										className={classes.bottomLabel}
 									>
 										{"#" + tag.name}
 									</Typography>
@@ -221,7 +242,10 @@ const FoldersTreeView = ({
 										setEditTagId(id);
 										setEditTagName(tag.name);
 									}}
-									className={classes.iconEditButton}
+									className={combineStyles(
+										classes.iconEditButton,
+										classes.iconMargin
+									)}
 								>
 									<EditIcon style={{ fontSize: "0.8em" }} />
 								</IconButton>

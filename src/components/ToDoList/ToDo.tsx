@@ -8,8 +8,6 @@ import { Theme, makeStyles, StyleRules, Tooltip } from "@material-ui/core";
 import { combineStyles } from "../../utils/helpers";
 import { useDispatch } from "react-redux";
 import {
-	setGoalAction,
-	setTagAction,
 	deleteTaskAction,
 	setNoteAction,
 	deleteTagAction,
@@ -55,21 +53,16 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 
 	const tags = useTypedSelector((state) => state.todo.tags);
 
-	const setGoal = (id: number, text: string, folderId: number) =>
-		dispatch(setGoalAction(id, text, folderId));
 	const setNote = (id: number, newNote: string, folderId: number) =>
 		dispatch(setNoteAction(id, newNote, folderId));
 	const deleteTask = (id: number, folderId: number) =>
 		dispatch(deleteTaskAction(id, folderId));
-	const setTag = (
-		taskId: number,
-		tagId: number | undefined,
-		folderId: number
-	) => dispatch(setTagAction(taskId, tagId, folderId));
 	const deleteTag = (tagId: number) => dispatch(deleteTagAction(tagId));
 
 	const currentColor =
-		goal.tag === undefined ? undefined : tags[goal.tag].color;
+		goal.tag === undefined || goal.tag === null
+			? undefined
+			: tags[goal.tag].color;
 	const classes = useStyles();
 	const handleClick = () => {
 		setOpen(true);
@@ -85,7 +78,11 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 				}}
 			>
 				<Tooltip
-					title={goal.tag === undefined ? "" : tags[goal.tag].name}
+					title={
+						goal.tag === null || goal.tag === undefined
+							? ""
+							: tags[goal.tag].name
+					}
 					placement="right"
 					arrow
 				>
@@ -112,10 +109,8 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 				open={open}
 				setOpen={setOpen}
 				goal={goal}
-				setGoal={setGoal}
 				setNote={setNote}
 				deleteTask={deleteTask}
-				setTag={setTag}
 				tags={tags}
 				deleteTag={deleteTag}
 				folderId={folderId}
