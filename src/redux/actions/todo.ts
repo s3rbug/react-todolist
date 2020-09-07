@@ -73,3 +73,5 @@ export const setFolderAction = (newFolder: FolderType, folderId: number) =>
 
 export const setCurrentFolderAction = (from: number, to: number) =>
 	action(constants.SET_CURRENT_FOLDER, { from, to });
+
+export const loadLocalAction = () => action(constants.LOAD_LOCAL);

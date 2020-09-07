@@ -11,13 +11,15 @@ import {
 	Collapse,
 	ListItemSecondaryAction,
 	ListItemIcon,
+	Fade,
 } from "@material-ui/core";
-import EditIcon from "@material-ui/icons/EditRounded";
 import AddIcon from "@material-ui/icons/Add";
-import { combineStyles } from "../../utils/helpers";
+import { combineStyles, useAnimatedExpand } from "../../utils/helpers";
 import MoreIcon from "@material-ui/icons/ExpandMore";
-import LessIcon from "@material-ui/icons/ChevronRight";
 import { useTypedSelector } from "../../redux/reduxStore";
+import FolderOpenIcon from "@material-ui/icons/FolderOpen";
+import TagIcon from "@material-ui/icons/LocalOfferOutlined";
+import { animated } from "react-spring";
 
 type PropsType = {
 	openAddTag: () => void;
@@ -36,19 +38,13 @@ const useStyles = makeStyles(
 			padding: 0,
 		},
 		labelText: {
-			fontWeight: "bold",
 			flexGrow: 1,
-			fontSize: "23px",
+			fontSize: "25px",
+			fontFamily: "Arial",
 		},
 		labelRoot: {
 			display: "flex",
 			alignItems: "left",
-		},
-		iconEditButton: {
-			"&:hover": {
-				color: theme.palette.primary.main,
-			},
-			padding: 0,
 		},
 		iconAddButton: {
 			"&:hover": {
@@ -64,19 +60,26 @@ const useStyles = makeStyles(
 			paddingRight: 0,
 		},
 		bottomListItem: {
-			paddingLeft: "30px",
+			paddingLeft: "20px",
 		},
 		expandIcon: {
 			minWidth: 0,
-			marginRight: "5px",
+			marginRight: "7px",
 			marginLeft: "5px",
+		},
+		mediaIcon: {
+			minWidth: 0,
+			marginRight: "15px",
 		},
 		iconMargin: {
 			marginLeft: "10%",
 		},
 		bottomLabel: {
-			fontStyle: "italic",
+			fontFamily: "Kumbh Sans, Arial",
 			fontSize: "1.1em",
+		},
+		addIcon: {
+			fontSize: "1em",
 		},
 	})
 );
@@ -97,6 +100,8 @@ const FoldersTreeView = ({
 
 	const tags = useTypedSelector((state) => state.todo.tags);
 	const folders = useTypedSelector((state) => state.todo.folders);
+	const foldersExpandAnimation = useAnimatedExpand(foldersOpened);
+	const tagsExpandAnimation = useAnimatedExpand(tagsOpened);
 
 	const toggleFoldersOpen = () => {
 		setFoldersOpened(!foldersOpened);
@@ -108,7 +113,9 @@ const FoldersTreeView = ({
 		<List className={classes.root}>
 			<ListItem button onClick={toggleFoldersOpen} className={classes.listItem}>
 				<ListItemIcon className={classes.expandIcon}>
-					{foldersOpened ? <MoreIcon /> : <LessIcon />}
+					<animated.div style={foldersExpandAnimation}>
+						<MoreIcon />
+					</animated.div>
 				</ListItemIcon>
 				<ListItemText>
 					<div className={classes.labelRoot}>
@@ -125,22 +132,18 @@ const FoldersTreeView = ({
 					</div>
 				</ListItemText>
 				<ListItemSecondaryAction>
-					{foldersOpened ? (
-						<IconButton
-							className={combineStyles(
-								classes.iconAddButton,
-								classes.iconMargin
-							)}
-							onClick={openSetFolder}
-						>
-							<AddIcon
-								style={{
-									fontSize: "1em",
-								}}
-							/>
-						</IconButton>
-					) : (
-						<></>
+					{foldersOpened && (
+						<Fade in={foldersOpened} timeout={500}>
+							<IconButton
+								className={combineStyles(
+									classes.iconAddButton,
+									classes.iconMargin
+								)}
+								onClick={openSetFolder}
+							>
+								<AddIcon className={classes.addIcon} />
+							</IconButton>
+						</Fade>
 					)}
 				</ListItemSecondaryAction>
 			</ListItem>
@@ -148,12 +151,21 @@ const FoldersTreeView = ({
 				{folders.map((folder) => {
 					return (
 						<ListItem
+							button
+							onClick={() => {
+								setHeadline(folder.headline);
+								setCurrentFolderId(folder.id);
+								openEditFolder();
+							}}
 							key={"tree-item-node-" + folder.id}
 							className={combineStyles(
 								classes.bottomListItem,
 								classes.listItem
 							)}
 						>
+							<ListItemIcon className={classes.mediaIcon}>
+								<FolderOpenIcon />
+							</ListItemIcon>
 							<ListItemText>
 								<div className={classes.labelRoot}>
 									<Typography variant="h6" className={classes.bottomLabel}>
@@ -161,28 +173,15 @@ const FoldersTreeView = ({
 									</Typography>
 								</div>
 							</ListItemText>
-							<ListItemSecondaryAction>
-								<IconButton
-									className={combineStyles(
-										classes.iconEditButton,
-										classes.iconMargin
-									)}
-									onClick={() => {
-										setHeadline(folder.headline);
-										setCurrentFolderId(folder.id);
-										openEditFolder();
-									}}
-								>
-									<EditIcon style={{ fontSize: "0.8em" }} />
-								</IconButton>
-							</ListItemSecondaryAction>
 						</ListItem>
 					);
 				})}
 			</Collapse>
 			<ListItem button onClick={toggleTagsOpened} className={classes.listItem}>
 				<ListItemIcon className={classes.expandIcon}>
-					{tagsOpened ? <MoreIcon /> : <LessIcon />}
+					<animated.div style={tagsExpandAnimation}>
+						<MoreIcon />
+					</animated.div>
 				</ListItemIcon>
 				<ListItemText>
 					<div className={classes.labelRoot}>
@@ -200,15 +199,17 @@ const FoldersTreeView = ({
 				</ListItemText>
 				<ListItemSecondaryAction>
 					{tagsOpened ? (
-						<IconButton
-							className={combineStyles(
-								classes.iconAddButton,
-								classes.iconMargin
-							)}
-							onClick={openAddTag}
-						>
-							<AddIcon style={{ fontSize: "1em" }} />
-						</IconButton>
+						<Fade in={tagsOpened} timeout={300}>
+							<IconButton
+								className={combineStyles(
+									classes.iconAddButton,
+									classes.iconMargin
+								)}
+								onClick={openAddTag}
+							>
+								<AddIcon className={classes.addIcon} />
+							</IconButton>
+						</Fade>
 					) : (
 						<></>
 					)}
@@ -219,11 +220,20 @@ const FoldersTreeView = ({
 					return (
 						<ListItem
 							key={"tree-item-node-" + tag.name}
+							button
+							onClick={() => {
+								openEditTag();
+								setEditTagId(id);
+								setEditTagName(tag.name);
+							}}
 							className={combineStyles(
 								classes.bottomListItem,
 								classes.listItem
 							)}
 						>
+							<ListItemIcon className={classes.mediaIcon}>
+								<TagIcon />
+							</ListItemIcon>
 							<ListItemText>
 								<div className={classes.labelRoot}>
 									<Typography
@@ -235,21 +245,6 @@ const FoldersTreeView = ({
 									</Typography>
 								</div>
 							</ListItemText>
-							<ListItemSecondaryAction>
-								<IconButton
-									onClick={() => {
-										openEditTag();
-										setEditTagId(id);
-										setEditTagName(tag.name);
-									}}
-									className={combineStyles(
-										classes.iconEditButton,
-										classes.iconMargin
-									)}
-								>
-									<EditIcon style={{ fontSize: "0.8em" }} />
-								</IconButton>
-							</ListItemSecondaryAction>
 						</ListItem>
 					);
 				})}

@@ -9,6 +9,7 @@ const initialState = {
 	folders: [] as Array<FolderType>,
 	tags: [] as Array<TagType>,
 	currentFolders: [] as FolderIdType[],
+	arrowMoving: [] as boolean[],
 } as TodoStateType;
 
 export type TodosAction = ActionType<typeof actions>;
@@ -92,7 +93,6 @@ const reducer = (state = initialState, action: TodosAction): TodoStateType => {
 		}
 		case constants.ADD_FOLDER: {
 			const { headline } = action.payload;
-
 			const newFolder = {
 				id: state.folders.length,
 				headline: headline,
@@ -354,9 +354,163 @@ const reducer = (state = initialState, action: TodosAction): TodoStateType => {
 				}),
 			};
 		}
+		case constants.LOAD_LOCAL: {
+			return {
+				...localState,
+			};
+		}
 		default:
 			return state;
 	}
 };
+
+const localState = {
+	folders: [
+		{
+			id: 0,
+			headline: "Purchasing",
+			shown: false,
+			goals: [
+				{
+					id: 0,
+					text: "onion",
+					note: "don't forget to smile",
+					tag: 1,
+					checked: false,
+				},
+				{
+					id: 1,
+					text: "2",
+					note: "don't forget to sing",
+					tag: 1,
+					checked: false,
+				},
+				{
+					id: 2,
+					text: "cucumber",
+					note: "don't forget to eat",
+					tag: 0,
+					checked: false,
+				},
+				{
+					id: 3,
+					text: "3123",
+					note: "",
+					checked: false,
+				},
+			],
+		},
+		{
+			id: 1,
+			headline: "Goals",
+			shown: true,
+			goals: [
+				{
+					id: 0,
+					text: "4",
+					note: "don't forget to dance",
+					tag: null,
+					checked: true,
+				},
+				{
+					id: 1,
+					text: "Watch 5 anime",
+					note: "don't forget to chill",
+					tag: 0,
+					checked: false,
+				},
+				{
+					id: 2,
+					text: "Watch 7 anime",
+					note: "don't forget to forget",
+					tag: null,
+					checked: false,
+				},
+				{
+					id: 3,
+					text: "Watch 9 anime",
+					note: "don't forget to tu",
+					tag: null,
+					checked: false,
+				},
+			],
+		},
+		{
+			id: 2,
+			headline: "Headline",
+			shown: true,
+			goals: [
+				{
+					id: 0,
+					text: "Watch 4 anime",
+					note: "don't forget to smile",
+					tag: 0,
+					checked: true,
+				},
+				{
+					id: 1,
+					text: "Watch 5 anime",
+					note: "don't forget to smile",
+					tag: null,
+					checked: false,
+				},
+				{
+					id: 2,
+					text: "Watch 7 anime",
+					note: "don't forget to smile",
+					tag: null,
+					checked: false,
+				},
+			],
+		},
+		{
+			id: 3,
+			headline: "Testing",
+			shown: true,
+			goals: [
+				{
+					id: 0,
+					text: "test",
+					note: "don't forget to smile",
+					tag: 0,
+					checked: true,
+				},
+				{
+					id: 1,
+					text: "555",
+					note: "don't forget to smile",
+					tag: 0,
+					checked: false,
+				},
+			],
+		},
+	],
+	tags: [
+		{
+			id: 0,
+			name: "important",
+			color: "#FF69B4",
+		},
+		{
+			id: 1,
+			name: "work",
+			color: "#0000FF",
+		},
+	],
+	currentFolders: [
+		{
+			folder: 1,
+			id: 0,
+		},
+		{
+			folder: 3,
+			id: 1,
+		},
+		{
+			folder: 2,
+			id: 2,
+		},
+	],
+} as TodoStateType;
 
 export default reducer;

@@ -10,3 +10,6 @@ export const setIsLightAction = (isLight: boolean) =>
 
 export const setIsLoadingAction = (isLoading: boolean) =>
 	action(constants.SET_IS_LOADING, { isLoading });
+
+export const setIsServerlessAction = (serverless: boolean) =>
+	action(constants.SET_IS_SERVERLESS, { serverless });

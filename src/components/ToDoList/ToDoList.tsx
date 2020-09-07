@@ -12,6 +12,7 @@ import { DraggingStyle, NotDraggingStyle } from "react-beautiful-dnd";
 import FolderLabel from "./FolderLabel";
 import { useDispatch } from "react-redux";
 import { toggleChecked } from "../../redux/middleware/todo";
+import { toggleCheckedAction } from "../../redux/actions/todo";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -52,10 +53,14 @@ const ToDoList = ({ folderId }: PropsType) => {
 	const currentFolder: FolderType = useTypedSelector(
 		(state) => state.todo.folders[folderId]
 	);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 
 	const toggleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value)
-			dispatch(toggleChecked(parseInt(e.target.value), folderId));
+		if (e.target.value) {
+			if (serverless)
+				dispatch(toggleCheckedAction(parseInt(e.target.value), folderId));
+			else dispatch(toggleChecked(parseInt(e.target.value), folderId));
+		}
 	};
 
 	const getItemStyle = (

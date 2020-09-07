@@ -18,6 +18,10 @@ import {
 	swapWithNotShown,
 } from "../../redux/middleware/todo";
 import { useTypedSelector } from "../../redux/reduxStore";
+import {
+	swapCurrentFoldersAction,
+	swapWithNotShownAction,
+} from "../../redux/actions/todo";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -64,10 +68,7 @@ const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
 	const [tooltipOpened, setTooltipOpened] = useState(false);
 
 	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
-	// const swapWithNotShown = (from: number, folderId: number) =>
-	// 	dispatch(swapWithNotShownAction(from, folderId));
-	// const swapCurrentFolders = (from: number, to: number) =>
-	// 	dispatch(swapCurrentFoldersAction(from, to));
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 
 	const handleTooltipClose = () => {
 		setTooltipOpened(false);
@@ -113,37 +114,45 @@ const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
 									key={folder.headline + folder.id + "menu"}
 									onClick={() => {
 										if (folder.shown) {
-											let from = 0,
-												to = 0;
-											for (let i = 0; i < currentFolders.length; ++i) {
-												if (currentFolders[i].folder === folderId) {
-													from = i;
-													break;
+											if (serverless) {
+												dispatch(swapCurrentFoldersAction(folderId, id));
+											} else {
+												let from = 0,
+													to = 0;
+												for (let i = 0; i < currentFolders.length; ++i) {
+													if (currentFolders[i].folder === folderId) {
+														from = i;
+														break;
+													}
 												}
-											}
-											for (let i = 0; i < currentFolders.length; ++i) {
-												if (currentFolders[i].folder === id) {
-													to = i;
-													break;
+												for (let i = 0; i < currentFolders.length; ++i) {
+													if (currentFolders[i].folder === id) {
+														to = i;
+														break;
+													}
 												}
+												dispatch(
+													swapCurrentFolders(
+														from,
+														to,
+														currentFolders[to].folder,
+														currentFolders[from].folder
+													)
+												);
 											}
-											dispatch(
-												swapCurrentFolders(
-													from,
-													to,
-													currentFolders[to].folder,
-													currentFolders[from].folder
-												)
-											);
 										} else {
-											let pos = 0;
-											for (let i = 0; i < currentFolders.length; ++i) {
-												if (currentFolders[i].folder === folderId) {
-													pos = i;
-													break;
+											if (serverless) {
+												dispatch(swapWithNotShownAction(folderId, id));
+											} else {
+												let pos = 0;
+												for (let i = 0; i < currentFolders.length; ++i) {
+													if (currentFolders[i].folder === folderId) {
+														pos = i;
+														break;
+													}
 												}
+												dispatch(swapWithNotShown(folderId, id, pos));
 											}
-											dispatch(swapWithNotShown(folderId, id, pos));
 										}
 										handleClose();
 									}}

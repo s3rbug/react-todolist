@@ -46,17 +46,21 @@ const App = () => {
 	const dispatch = useDispatch();
 	const [drawerOpened, setDrawerOpened] = useState(false);
 	const isLight = useTypedSelector((state) => state.ui.isLight);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	useEffect(() => {
-		dispatch(setUi());
-	}, [dispatch]);
+		if (!serverless) {
+			dispatch(setUi());
+		}
+	}, [dispatch, serverless]);
 	return (
 		<div className="app-wrapper">
 			<ThemeProvider theme={isLight ? lightTheme : darkTheme}>
 				<Header open={drawerOpened} setOpen={setDrawerOpened}>
 					<Switch>
-						<Route path="/folders/" render={() => <Folders />} />
-						<Route exact path="/" render={() => <Folders />} />
-						<Route exact path="/react-todolist" render={() => <Folders />} />
+						<Route
+							path="/react-todolist/:serverless?"
+							render={() => <Folders />}
+						/>
 					</Switch>
 				</Header>
 			</ThemeProvider>

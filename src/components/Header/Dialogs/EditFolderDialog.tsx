@@ -5,6 +5,7 @@ import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../../redux/reduxStore";
 import { editFolder } from "../../../redux/middleware/todo";
 import { FolderType } from "../../../types/index_d";
+import { editFolderAction } from "../../../redux/actions/todo";
 
 type PropsType = {
 	headline: string;
@@ -19,6 +20,7 @@ const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
 	const currentFolder = useTypedSelector(
 		(state) => state.todo.folders[folderId]
 	);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	useEffect(() => {
 		setNewHeadline(headline);
 	}, [headline]);
@@ -30,9 +32,11 @@ const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
 		if (e.target.value.length <= 15) setNewHeadline(e.target.value);
 	};
 	const handleSave = () => {
-		dispatch(
-			editFolder({ ...currentFolder } as FolderType, newHeadline, folderId)
-		);
+		if (serverless) dispatch(editFolderAction(newHeadline, folderId));
+		else
+			dispatch(
+				editFolder({ ...currentFolder } as FolderType, newHeadline, folderId)
+			);
 		handleClose();
 	};
 	return (

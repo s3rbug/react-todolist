@@ -7,11 +7,7 @@ import TaskDetails from "./TaskDetails/TaskDetails";
 import { Theme, makeStyles, StyleRules, Tooltip } from "@material-ui/core";
 import { combineStyles } from "../../utils/helpers";
 import { useDispatch } from "react-redux";
-import {
-	deleteTaskAction,
-	setNoteAction,
-	deleteTagAction,
-} from "../../redux/actions/todo";
+import { deleteTaskAction } from "../../redux/actions/todo";
 import { useTypedSelector } from "../../redux/reduxStore";
 
 const useStyles = makeStyles(
@@ -33,11 +29,6 @@ const useStyles = makeStyles(
 		notSelectable: {
 			userSelect: "none",
 		},
-		checkbox: {
-			// "&:hover": {
-			// 	color: theme.palette.primary.main,
-			// },
-		},
 	})
 );
 
@@ -53,11 +44,8 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 
 	const tags = useTypedSelector((state) => state.todo.tags);
 
-	const setNote = (id: number, newNote: string, folderId: number) =>
-		dispatch(setNoteAction(id, newNote, folderId));
 	const deleteTask = (id: number, folderId: number) =>
 		dispatch(deleteTaskAction(id, folderId));
-	const deleteTag = (tagId: number) => dispatch(deleteTagAction(tagId));
 
 	const currentColor =
 		goal.tag === undefined || goal.tag === null
@@ -109,10 +97,8 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 				open={open}
 				setOpen={setOpen}
 				goal={goal}
-				setNote={setNote}
 				deleteTask={deleteTask}
 				tags={tags}
-				deleteTag={deleteTag}
 				folderId={folderId}
 			/>
 		</div>

@@ -6,7 +6,7 @@ import {
 	DeleteDialogButton,
 } from "../../../assets/Buttons";
 import { useDispatch } from "react-redux";
-import { deleteTagAction } from "../../../redux/actions/todo";
+import { deleteTagAction, editTagAction } from "../../../redux/actions/todo";
 import { editTag } from "../../../redux/middleware/todo";
 import { useTypedSelector } from "../../../redux/reduxStore";
 
@@ -20,12 +20,9 @@ type PropsType = {
 const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 	const [newName, setNewName] = useState("");
 	const dispatch = useDispatch();
-
-	// const editTag = (tagId: number, newName: string) =>
-	// 	dispatch(editTagAction(tagId, newName));
 	const deleteTag = (tagId: number) => dispatch(deleteTagAction(tagId));
 	const tag = useTypedSelector((state) => state.todo.tags[tagId]);
-
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	useEffect(() => {
 		setNewName(tagName);
 	}, [tagName]);
@@ -34,7 +31,8 @@ const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 		setOpen(false);
 	};
 	const handleEdit = () => {
-		dispatch(editTag(tagId, newName, tag.color));
+		if (serverless) dispatch(editTagAction(tagId, newName));
+		else dispatch(editTag(tagId, newName, tag.color));
 		handleClose();
 	};
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -42,7 +40,10 @@ const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 	};
 	const handleDelete = () => {
 		handleClose();
-		deleteTag(tagId);
+		if (serverless) deleteTag(tagId);
+		else {
+			// TODO
+		}
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>

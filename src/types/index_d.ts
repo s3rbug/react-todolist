@@ -42,6 +42,7 @@ export type TodoStateType = {
 export type UiStateType = {
 	isLight: boolean;
 	isPageLoading: boolean;
+	serverless: boolean;
 };
 
 export type FolderFormDataType = {

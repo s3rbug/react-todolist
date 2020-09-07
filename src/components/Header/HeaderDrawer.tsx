@@ -1,21 +1,10 @@
 import React, { useState } from "react";
-import {
-	Theme,
-	makeStyles,
-	StyleRules,
-	Drawer,
-	IconButton,
-} from "@material-ui/core";
-import { useTypedSelector } from "../../redux/reduxStore";
+import { Theme, makeStyles, StyleRules, Drawer } from "@material-ui/core";
 import FoldersTreeView from "./FoldersTreeView";
 import AddTagDialog from "./Dialogs/AddTagDialog";
 import EditTagDialog from "./Dialogs/EditTagDialog";
 import AddFolderDialog from "./Dialogs/AddFolderDialog";
-import { useDispatch } from "react-redux";
-import SunIcon from "@material-ui/icons/Brightness7";
-import MoonIcon from "@material-ui/icons/Brightness4";
 import EditFolderDialog from "./Dialogs/EditFolderDialog";
-import { setIsLight } from "../../redux/middleware/ui";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -31,25 +20,6 @@ const useStyles = makeStyles(
 			...theme.mixins.toolbar,
 			justifyContent: "flex-end",
 		},
-		fullHeight: {
-			height: "100%",
-		},
-		switcher: {
-			height: "100%",
-			display: "flex",
-			alignItems: "flex-end",
-			justifyContent: "flex-end",
-		},
-		moon: {
-			"&:hover": {
-				color: theme.palette.grey[800],
-			},
-		},
-		sun: {
-			"&:hover": {
-				color: "#fff59d",
-			},
-		},
 	})
 );
 
@@ -59,7 +29,6 @@ type PropsType = {
 
 const HeaderDrawer = ({ open }: PropsType) => {
 	const classes = useStyles();
-	const dispatch = useDispatch();
 	const [addTagOpened, setAddTagOpened] = useState(false);
 	const [editTagOpened, setEditTagOpened] = useState(false);
 	const [folderSetOpened, setFolderSetOpened] = useState(false);
@@ -68,9 +37,6 @@ const HeaderDrawer = ({ open }: PropsType) => {
 	const [editTagId, setEditTagId] = useState(0);
 	const [currentFolderId, setCurrentFolderId] = useState(0);
 	const [editTagName, setEditTagName] = useState("");
-
-	const isLight = useTypedSelector((state) => state.ui.isLight);
-	// const setIsLight = (light: boolean) => dispatch(setIsLightAction(light));
 
 	const openAddTag = () => {
 		setAddTagOpened(true);
@@ -83,10 +49,6 @@ const HeaderDrawer = ({ open }: PropsType) => {
 	};
 	const openEditFolder = () => {
 		setEditFolderOpened(true);
-	};
-
-	const toggleTheme = () => {
-		dispatch(setIsLight(!isLight));
 	};
 
 	return (
@@ -118,17 +80,6 @@ const HeaderDrawer = ({ open }: PropsType) => {
 				setHeadline={setHeadline}
 				setCurrentFolderId={setCurrentFolderId}
 			/>
-			<div className={classes.fullHeight}>
-				<div className={classes.switcher}>
-					<IconButton onClick={toggleTheme}>
-						{isLight ? (
-							<MoonIcon className={classes.moon} />
-						) : (
-							<SunIcon className={classes.sun} />
-						)}
-					</IconButton>
-				</div>
-			</div>
 			<AddTagDialog setOpen={setAddTagOpened} open={addTagOpened} />
 			<EditTagDialog
 				setOpen={setEditTagOpened}

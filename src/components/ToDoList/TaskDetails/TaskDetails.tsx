@@ -21,6 +21,12 @@ import Chip from "@material-ui/core/Chip";
 import { useForm } from "react-hook-form";
 import { saveTaskDetails } from "../../../redux/middleware/todo";
 import { useDispatch } from "react-redux";
+import { useTypedSelector } from "../../../redux/reduxStore";
+import {
+	setTagAction,
+	setNoteAction,
+	setGoalAction,
+} from "../../../redux/actions/todo";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -70,11 +76,8 @@ type PropsType = {
 	open: boolean;
 	setOpen: (isOpen: boolean) => void;
 	goal: GoalType;
-	setNote: (id: number, newNote: string, folderId: number) => void;
 	deleteTask: (id: number, folderId: number) => void;
-	//setTag: (taskId: number, tagId: number | undefined, folderId: number) => void;
 	tags: ReadonlyArray<TagType>;
-	deleteTag: (tagId: number) => void;
 	folderId: number;
 };
 
@@ -84,13 +87,12 @@ const TaskDetails = ({
 	tags,
 	folderId,
 	setOpen,
-	setNote,
 	deleteTask,
-	deleteTag,
 }: PropsType) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
 	const theme = useTheme();
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const [newTagId, setNewTagId] = useState<number | undefined | null>(goal.tag);
 	const { register, handleSubmit, errors } = useForm<TaskDetailsFormType>();
 	const handleClose = () => {
@@ -103,12 +105,20 @@ const TaskDetails = ({
 	};
 	const onSubmit = (data: TaskDetailsFormType) => {
 		setOpen(false);
-		// dispatch(setGoal(goal.id, data.goalText, folderId));
-		// setNote(goal.id, data.noteText, folderId);
-		// dispatch(setTag(goal.id, newTagId, folderId));
-		dispatch(
-			saveTaskDetails(goal.id, data.goalText, data.noteText, newTagId, folderId)
-		);
+		if (serverless) {
+			dispatch(setTagAction(goal.id, newTagId, folderId));
+			dispatch(setNoteAction(goal.id, data.noteText, folderId));
+			dispatch(setGoalAction(goal.id, data.goalText, folderId));
+		} else
+			dispatch(
+				saveTaskDetails(
+					goal.id,
+					data.goalText,
+					data.noteText,
+					newTagId,
+					folderId
+				)
+			);
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>

@@ -9,6 +9,12 @@ import MenuIcon from "@material-ui/icons/Menu";
 import { useTypedSelector } from "../../redux/reduxStore";
 import HeaderDrawer from "./HeaderDrawer";
 import { LinearProgress } from "@material-ui/core";
+import SunIcon from "@material-ui/icons/Brightness7";
+import MoonIcon from "@material-ui/icons/Brightness4";
+import { useDispatch } from "react-redux";
+import { setIsLightAction } from "../../redux/actions/ui";
+import { setIsLight } from "../../redux/middleware/ui";
+import GithubIcon from "@material-ui/icons/GitHub";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -47,18 +53,11 @@ const useStyles = makeStyles(
 		},
 		title: { flexGrow: 1, color: "white" },
 		toolbar: {
-			paddingRight: theme.spacing(1.5),
+			paddingRight: theme.spacing(2),
 			paddingLeft: theme.spacing(3),
 		},
-		moon: {
-			"&:hover": {
-				color: theme.palette.grey[800],
-			},
-		},
-		sun: {
-			"&:hover": {
-				color: "#fff59d",
-			},
+		icon: {
+			color: "white",
 		},
 		loader: {
 			background: theme.palette.primary.light,
@@ -78,10 +77,18 @@ type PropsType = {
 
 const Header = ({ open, setOpen, children }: PropsType) => {
 	const classes = useStyles();
+	const dispatch = useDispatch();
 	const isPageLoading = useTypedSelector((state) => state.ui.isPageLoading);
+	const isLight = useTypedSelector((state) => state.ui.isLight);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 
 	const toggleDrawerOpened = () => {
 		setOpen(!open);
+	};
+
+	const toggleTheme = () => {
+		if (serverless) dispatch(setIsLightAction(!isLight));
+		else dispatch(setIsLight(!isLight));
 	};
 
 	return (
@@ -103,6 +110,22 @@ const Header = ({ open, setOpen, children }: PropsType) => {
 					<Typography variant="h6" noWrap className={classes.title}>
 						To do list
 					</Typography>
+					<a
+						target="_blank"
+						rel="noopener noreferrer"
+						href="https://github.com/s3rbug/react-todolist"
+					>
+						<IconButton>
+							<GithubIcon className={classes.icon} />
+						</IconButton>
+					</a>
+					<IconButton onClick={toggleTheme}>
+						{isLight ? (
+							<MoonIcon className={classes.icon} />
+						) : (
+							<SunIcon className={classes.icon} />
+						)}
+					</IconButton>
 				</Toolbar>
 				{isPageLoading && <LinearProgress className={classes.loader} />}
 			</AppBar>

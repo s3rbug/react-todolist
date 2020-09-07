@@ -20,3 +20,4 @@ export const SWAP_CURRENT_FOLDERS = "todo/SWAP_CURRENT_FOLDERS";
 export const SET_CURRENT_FOLDERS = "todo/SET_CURRENT_FOLDERS";
 export const SET_FOLDER = "todo/SET_FOLDER";
 export const SET_CURRENT_FOLDER = "todo/SET_CURRENT_FOLDER";
+export const LOAD_LOCAL = "todo/LOAD_LOCAL";

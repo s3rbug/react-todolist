@@ -11,6 +11,7 @@ import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../../redux/reduxStore";
 import { GoalType } from "../../../types/index_d";
 import { addFolder } from "../../../redux/middleware/todo";
+import { addFolderAction } from "../../../redux/actions/todo";
 
 type PropsType = {
 	open: boolean;
@@ -21,6 +22,7 @@ const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 	const [headline, setHeadline] = useState("");
 	const dispatch = useDispatch();
 	const folders = useTypedSelector((state) => state.todo.folders);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -28,14 +30,18 @@ const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 		if (e.target.value.length <= 15) setHeadline(e.target.value);
 	};
 	const handleAddFolder = () => {
-		dispatch(
-			addFolder({
-				id: folders.length,
-				headline: headline,
-				shown: false,
-				goals: [] as GoalType[],
-			})
-		);
+		if (serverless) {
+			dispatch(addFolderAction(headline));
+		} else {
+			dispatch(
+				addFolder({
+					id: folders.length,
+					headline: headline,
+					shown: false,
+					goals: [] as GoalType[],
+				})
+			);
+		}
 		setHeadline("");
 		handleClose();
 	};

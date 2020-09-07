@@ -14,6 +14,8 @@ import { useDispatch } from "react-redux";
 import BorderlessInput from "../../assets/BorderlessInput";
 import { useCombinedRefs } from "../../utils/helpers";
 import { addGoal } from "../../redux/middleware/todo";
+import { addGoalAction } from "../../redux/actions/todo";
+import { useTypedSelector } from "../../redux/reduxStore";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -77,6 +79,7 @@ const AddGoal = ({ folderId }: PropsType) => {
 	const dispatch = useDispatch();
 	const theme = useTheme();
 	const textField = useRef<null | HTMLInputElement>(null);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const [moving, setMoving] = useState(false);
 	const [focused, setFocused] = useState(false);
 	const props = useSpring({
@@ -149,7 +152,8 @@ const AddGoal = ({ folderId }: PropsType) => {
 	}
 
 	const onSubmit = (data: TaskFormDataType) => {
-		dispatch(addGoal(data.goalText, folderId));
+		if (serverless) dispatch(addGoalAction(data.goalText, folderId));
+		else dispatch(addGoal(data.goalText, folderId));
 		textField.current?.focus();
 		setValue("goalText", "");
 		if (!errors.goalText?.message) setMoving(true);

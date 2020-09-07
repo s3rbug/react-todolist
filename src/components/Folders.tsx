@@ -1,18 +1,24 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import ToDoList from "./ToDoList/ToDoList";
 import { useTypedSelector } from "../redux/reduxStore";
 import { useDispatch } from "react-redux";
-import {
-	swapTasksAction,
-	setCurrentFoldersAction,
-} from "../redux/actions/todo";
+import { swapTasksAction, loadLocalAction } from "../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { getIntSecondPart } from "../utils/helpers";
 import { setTodo } from "../redux/middleware/todo";
-import { FolderIdType } from "../types/index_d";
+import { RouteComponentProps, withRouter } from "react-router-dom";
+import { setIsServerlessAction, setIsLoadingAction } from "../redux/actions/ui";
 
-const Folders = () => {
+interface RouterProps {
+	serverless: string;
+}
+
+interface PropsType extends RouteComponentProps<RouterProps> {
+	// own props here
+}
+
+const Folders = ({ match }: PropsType) => {
 	const dispatch = useDispatch();
 	const swapTasks = (
 		from: number,
@@ -20,11 +26,6 @@ const Folders = () => {
 		fromFolderId: number,
 		toFolderId: number
 	) => dispatch(swapTasksAction(from, to, fromFolderId, toFolderId));
-	const setCurrentFolders = useCallback(
-		(currentFolders: FolderIdType[]) =>
-			dispatch(setCurrentFoldersAction(currentFolders)),
-		[dispatch]
-	);
 	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
 	const onDragEnd = (result: DropResult) => {
 		if (!result.destination) {
@@ -38,8 +39,14 @@ const Folders = () => {
 		);
 	};
 	useEffect(() => {
-		dispatch(setTodo());
-	}, [dispatch, setCurrentFolders]);
+		if (match.params.serverless === "serverless") {
+			dispatch(loadLocalAction());
+			dispatch(setIsLoadingAction(false));
+		} else {
+			dispatch(setTodo());
+			dispatch(setIsServerlessAction(false));
+		}
+	}, [dispatch, match.params.serverless]);
 	return (
 		<Grid container direction="row" justify="flex-start">
 			<DragDropContext onDragEnd={onDragEnd}>
@@ -63,4 +70,4 @@ const Folders = () => {
 	);
 };
 
-export default Folders;
+export default withRouter(Folders);

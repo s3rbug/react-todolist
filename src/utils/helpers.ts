@@ -1,3 +1,4 @@
+import { useSpring, config } from "react-spring";
 import { useCallback, Ref } from "react";
 
 export const combineStyles = (...styles: Array<string | undefined>) => {
@@ -38,3 +39,33 @@ export const useCombinedRefs = <T extends any>(
 			}),
 		[refs]
 	);
+
+export const useAnimatedExpand = (isAnimated: boolean) => {
+	return useSpring({
+		transform: isAnimated ? "rotate(0deg)" : "rotate(-90deg)",
+		config: config.stiff,
+	});
+};
+
+export const useAnimatedArrow = (isAnimated: boolean) => {
+	return useSpring({
+		to: [
+			{
+				transform: isAnimated ? "translateY(0px)" : "translateY(-10px)",
+				immediate: false,
+			},
+			{
+				transform: isAnimated ? "translateY(0px)" : "translateY(20px)",
+				immediate: true,
+			},
+			{
+				transform: "translateY(0px)",
+				immediate: false,
+			},
+		],
+	});
+};
+
+export const filledArray = <T extends any>(countElements: number, value: T) => {
+	return Array(countElements).fill(value);
+};

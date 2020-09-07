@@ -17,6 +17,7 @@ import { combineStyles } from "../../../utils/helpers";
 import { addTag } from "../../../redux/middleware/todo";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../../redux/reduxStore";
+import { addTagAction } from "../../../redux/actions/todo";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -61,6 +62,7 @@ const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	const [color, setColor] = useState(theme.palette.primary.main);
 	const [tagName, setTagName] = useState("new tag");
 	const tags = useTypedSelector((state) => state.todo.tags);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -77,7 +79,8 @@ const AddTagDialog = ({ open, setOpen }: PropsType) => {
 		if (e.target.value.length <= 15) setTagName(e.target.value);
 	};
 	const handleAddTag = () => {
-		dispatch(addTag(tagName, color, tags.length));
+		if (serverless) dispatch(addTagAction(tagName, color));
+		else dispatch(addTag(tagName, color, tags.length));
 		setOpen(false);
 	};
 	return (

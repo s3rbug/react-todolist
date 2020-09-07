@@ -6,6 +6,7 @@ import { UiStateType } from "../../types/index_d";
 const initialState = {
 	isLight: true,
 	isPageLoading: true,
+	serverless: true,
 };
 
 export type UiAction = ActionType<typeof actions>;
@@ -31,6 +32,13 @@ const reducer = (state = initialState, action: UiAction): UiStateType => {
 			return {
 				...state,
 				isPageLoading: isLoading,
+			};
+		}
+		case constants.SET_IS_SERVERLESS: {
+			const { serverless } = action.payload;
+			return {
+				...state,
+				serverless,
 			};
 		}
 		default:
