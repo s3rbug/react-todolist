@@ -38,6 +38,9 @@ export const todoApi = {
 			color: color,
 		} as TagType);
 	},
+	async deleteTag(tagId: number) {
+		return instance.delete("tags/" + tagId);
+	},
 	async editFolder(oldFolder: FolderType, headline: string, folderId: number) {
 		return instance.put("folders/" + folderId, { ...oldFolder, headline });
 	},

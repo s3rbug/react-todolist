@@ -19,6 +19,7 @@ import {
 	toggleCheckedAction,
 	swapCurrentFoldersAction,
 	swapWithNotShownAction,
+	deleteTaskAction,
 } from "./../actions/todo";
 import { todoApi } from "./../../api/todoApi";
 
@@ -32,7 +33,7 @@ export const setTodo = () => async (dispatch: ThunkDispatchType) => {
 export const addFolder = (newFolder: FolderType) => async (
 	dispatch: ThunkDispatchType
 ) => {
-	return todoApi.addFolder(newFolder).then((data) => {
+	return todoApi.addFolder(newFolder).then(() => {
 		dispatch(addFolderAction(newFolder.headline));
 	});
 };
@@ -44,7 +45,7 @@ export const addTag = (
 ) => async (dispatch: ThunkDispatchType) => {
 	return todoApi
 		.addTag({ id: tagId, name: tagName, color: tagColor } as TagType)
-		.then((data) => {
+		.then(() => {
 			dispatch(addTagAction(tagName, tagColor));
 		});
 };
@@ -54,7 +55,7 @@ export const editTag = (
 	tagText: string,
 	color: string
 ) => async (dispatch: ThunkDispatchType) => {
-	return todoApi.editTag(tagId, tagText, color).then((data) => {
+	return todoApi.editTag(tagId, tagText, color).then(() => {
 		dispatch(editTagAction(tagId, tagText));
 	});
 };
@@ -64,7 +65,7 @@ export const editFolder = (
 	headline: string,
 	folderId: number
 ) => async (dispatch: ThunkDispatchType) => {
-	return todoApi.editFolder(oldFolder, headline, folderId).then((data) => {
+	return todoApi.editFolder(oldFolder, headline, folderId).then(() => {
 		dispatch(editFolderAction(headline, folderId));
 	});
 };
@@ -86,8 +87,22 @@ export const addGoal = (goalText: string, folderId: number) => async (
 	] as GoalType[];
 	return todoApi
 		.changeGoals(getState().todo.folders[folderId], newGoals, folderId)
-		.then((data) => {
+		.then(() => {
 			dispatch(addGoalAction(newGoals[newGoals.length - 1].text, folderId));
+		});
+};
+
+export const deleteGoal = (goalId: number, folderId: number) => async (
+	dispatch: ThunkDispatchType,
+	getState: () => AppStateType
+) => {
+	const newGoals = getState()
+		.todo.folders[folderId].goals.filter((goal) => goal.id !== goalId)
+		.map((goal, id) => ({ ...goal, id: id }));
+	return todoApi
+		.changeGoals(getState().todo.folders[folderId], newGoals, folderId)
+		.then(() => {
+			dispatch(deleteTaskAction(goalId, folderId));
 		});
 };
 
@@ -164,7 +179,7 @@ export const swapWithNotShown = (
 		todoApi.changeFolder(newShownFolder, shownId),
 		todoApi.changeFolder(newToShowFolder, toShowId),
 		todoApi.setCurrentFolder(pos, toShowId),
-	]).then((data) => {
+	]).then(() => {
 		dispatch(swapWithNotShownAction(shownId, toShowId));
 	});
 };

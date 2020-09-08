@@ -368,7 +368,7 @@ const localState = {
 	folders: [
 		{
 			id: 0,
-			headline: "Purchasing",
+			headline: "Serverless",
 			shown: false,
 			goals: [
 				{
@@ -402,7 +402,7 @@ const localState = {
 		},
 		{
 			id: 1,
-			headline: "Goals",
+			headline: "Local",
 			shown: true,
 			goals: [
 				{
@@ -437,7 +437,7 @@ const localState = {
 		},
 		{
 			id: 2,
-			headline: "Headline",
+			headline: "Storage",
 			shown: true,
 			goals: [
 				{
@@ -465,7 +465,7 @@ const localState = {
 		},
 		{
 			id: 3,
-			headline: "Testing",
+			headline: "lmao",
 			shown: true,
 			goals: [
 				{

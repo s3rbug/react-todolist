@@ -19,13 +19,14 @@ import {
 } from "../../../assets/Buttons";
 import Chip from "@material-ui/core/Chip";
 import { useForm } from "react-hook-form";
-import { saveTaskDetails } from "../../../redux/middleware/todo";
+import { saveTaskDetails, deleteGoal } from "../../../redux/middleware/todo";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../../redux/reduxStore";
 import {
 	setTagAction,
 	setNoteAction,
 	setGoalAction,
+	deleteTaskAction,
 } from "../../../redux/actions/todo";
 
 const useStyles = makeStyles(
@@ -100,7 +101,8 @@ const TaskDetails = ({
 		setNewTagId(null);
 	};
 	const deleteCurrentTask = () => {
-		deleteTask(goal.id, folderId);
+		if (serverless) dispatch(deleteTaskAction(goal.id, folderId));
+		else dispatch(deleteGoal(goal.id, folderId));
 		handleClose();
 	};
 	const onSubmit = (data: TaskDetailsFormType) => {

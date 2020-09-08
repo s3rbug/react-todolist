@@ -13,3 +13,5 @@ export const setIsLoadingAction = (isLoading: boolean) =>
 
 export const setIsServerlessAction = (serverless: boolean) =>
 	action(constants.SET_IS_SERVERLESS, { serverless });
+
+export const loadLocalUiAction = () => action(constants.LOAD_LOCAL_UI, {});

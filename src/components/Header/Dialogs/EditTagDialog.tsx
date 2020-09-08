@@ -41,9 +41,6 @@ const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 	const handleDelete = () => {
 		handleClose();
 		if (serverless) deleteTag(tagId);
-		else {
-			// TODO
-		}
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
@@ -56,7 +53,9 @@ const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 				/>
 			</DialogTitle>
 			<DialogActions style={{ paddingLeft: "24px" }}>
-				<DeleteDialogButton onClick={handleDelete}>Delete</DeleteDialogButton>
+				{serverless && (
+					<DeleteDialogButton onClick={handleDelete}>Delete</DeleteDialogButton>
+				)}
 				<div style={{ flexGrow: 1 }}></div>
 				<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
 				<ApplyDialogButton onClick={handleEdit}>Save</ApplyDialogButton>

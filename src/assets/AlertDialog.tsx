@@ -8,7 +8,7 @@ import { CancelDialogButton, ApplyDialogButton } from "./Buttons";
 
 type AlertDialogPropsType = {
 	question: string;
-	text: string;
+	text?: string;
 	open: boolean;
 	handleSuccess: () => void;
 	handleFail: () => void;
@@ -30,7 +30,7 @@ const AlertDialog = ({
 			<DialogTitle id="alert-dialog-title">{question}</DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-description">
-					{text}
+					{text ? text : ""}
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>

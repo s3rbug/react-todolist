@@ -41,9 +41,20 @@ const reducer = (state = initialState, action: UiAction): UiStateType => {
 				serverless,
 			};
 		}
+		case constants.LOAD_LOCAL_UI: {
+			return {
+				...localState,
+			};
+		}
 		default:
 			return state;
 	}
+};
+
+const localState = {
+	isLight: true,
+	isPageLoading: true,
+	serverless: true,
 };
 
 export default reducer;

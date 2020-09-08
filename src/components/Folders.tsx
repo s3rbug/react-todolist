@@ -7,18 +7,9 @@ import { swapTasksAction, loadLocalAction } from "../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { getIntSecondPart } from "../utils/helpers";
 import { setTodo } from "../redux/middleware/todo";
-import { RouteComponentProps, withRouter } from "react-router-dom";
-import { setIsServerlessAction, setIsLoadingAction } from "../redux/actions/ui";
+import { setIsLoadingAction, loadLocalUiAction } from "../redux/actions/ui";
 
-interface RouterProps {
-	serverless: string;
-}
-
-interface PropsType extends RouteComponentProps<RouterProps> {
-	// own props here
-}
-
-const Folders = ({ match }: PropsType) => {
+const Folders = () => {
 	const dispatch = useDispatch();
 	const swapTasks = (
 		from: number,
@@ -27,6 +18,7 @@ const Folders = ({ match }: PropsType) => {
 		toFolderId: number
 	) => dispatch(swapTasksAction(from, to, fromFolderId, toFolderId));
 	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
+	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const onDragEnd = (result: DropResult) => {
 		if (!result.destination) {
 			return;
@@ -39,14 +31,14 @@ const Folders = ({ match }: PropsType) => {
 		);
 	};
 	useEffect(() => {
-		if (match.params.serverless === "serverless") {
+		if (serverless) {
 			dispatch(loadLocalAction());
+			dispatch(loadLocalUiAction());
 			dispatch(setIsLoadingAction(false));
 		} else {
 			dispatch(setTodo());
-			dispatch(setIsServerlessAction(false));
 		}
-	}, [dispatch, match.params.serverless]);
+	}, [dispatch, serverless]);
 	return (
 		<Grid container direction="row" justify="flex-start">
 			<DragDropContext onDragEnd={onDragEnd}>
@@ -70,4 +62,4 @@ const Folders = ({ match }: PropsType) => {
 	);
 };
 
-export default withRouter(Folders);
+export default Folders;
