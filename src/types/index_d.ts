@@ -71,3 +71,13 @@ export type FolderIdType = {
 };
 
 export type MyActionType = UiAction | TodosAction;
+
+export type AuthStateType = {
+	token: null | string;
+}
+
+export type ObjectCssType = {
+    [key: string]: {
+		[key: string]: string | undefined
+	} | undefined;
+}

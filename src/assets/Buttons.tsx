@@ -6,7 +6,7 @@ import {
 	Button,
 	ButtonProps,
 } from "@material-ui/core";
-import { combineStyles } from "../utils/helpers";
+import clsx from "clsx";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -25,7 +25,7 @@ export const CancelDialogButton = (props: ButtonProps) => {
 	return (
 		<Button
 			{...props}
-			className={combineStyles(classes.cancel, classes.bold, props.className)}
+			className={clsx(classes.cancel, classes.bold, props.className)}
 		/>
 	);
 };
@@ -35,7 +35,7 @@ export const DeleteDialogButton = (props: ButtonProps) => {
 	return (
 		<Button
 			{...props}
-			className={combineStyles(classes.delete, classes.bold, props.className)}
+			className={clsx(classes.delete, classes.bold, props.className)}
 			variant="contained"
 			color="secondary"
 		/>

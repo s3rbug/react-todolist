@@ -2,11 +2,13 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunkMiddleware from "redux-thunk";
 import todo from "./reducers/todo";
 import ui from "./reducers/ui";
+import auth from "./reducers/auth"
 import { TypedUseSelectorHook, useSelector } from "react-redux";
 
 const rootReducer = combineReducers({
 	todo: todo,
 	ui: ui,
+	auth: auth
 });
 
 type RootReducerType = typeof rootReducer;
@@ -18,7 +20,7 @@ export const useTypedSelector: TypedUseSelectorHook<AppStateType> = useSelector;
 // @ts-ignore
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // required for Redux extension
 
-let store = createStore(
+const store = createStore(
 	rootReducer,
 	composeEnhancers(applyMiddleware(thunkMiddleware))
 );

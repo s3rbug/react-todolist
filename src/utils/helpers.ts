@@ -1,10 +1,6 @@
 import { useSpring, config } from "react-spring";
 import { useCallback, Ref } from "react";
 
-export const combineStyles = (...styles: Array<string | undefined>) => {
-	return styles.reduce((style, cur) => (cur ? style + " " + cur : style));
-};
-
 export const random = (min: number, max: number) => {
 	return Math.floor(Math.random() * (max - min + 1) + min);
 };
@@ -12,7 +8,9 @@ export const random = (min: number, max: number) => {
 export const randomColor = () => {
 	let letters = "0123456789ABCDEF";
 	let color = "#";
-	for (let i = 0; i < 6; ++i) color += letters[Math.floor(Math.random() * 16)];
+	for (let i = 0; i < 6; ++i) {
+		color += letters[Math.floor(Math.random() * 16)];
+	}
 	return color;
 };
 

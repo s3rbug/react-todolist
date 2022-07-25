@@ -1,6 +1,8 @@
 import React, { forwardRef, Ref } from "react";
 
-type PropsType = {};
+type PropsType = {
+
+};
 
 const BorderlessInput = forwardRef(
 	(

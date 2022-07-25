@@ -14,12 +14,13 @@ import {
 	Fade,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
-import { combineStyles, useAnimatedExpand } from "../../utils/helpers";
+import { useAnimatedExpand } from "../../utils/helpers";
 import MoreIcon from "@material-ui/icons/ExpandMore";
 import { useTypedSelector } from "../../redux/reduxStore";
 import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import TagIcon from "@material-ui/icons/LocalOfferOutlined";
 import { animated } from "react-spring";
+import clsx from "clsx";
 
 type PropsType = {
 	openAddTag: () => void;
@@ -135,7 +136,7 @@ const FoldersTreeView = ({
 					{foldersOpened && (
 						<Fade in={foldersOpened} timeout={500}>
 							<IconButton
-								className={combineStyles(
+								className={clsx(
 									classes.iconAddButton,
 									classes.iconMargin
 								)}
@@ -158,7 +159,7 @@ const FoldersTreeView = ({
 								openEditFolder();
 							}}
 							key={"tree-item-node-" + folder.id}
-							className={combineStyles(
+							className={clsx(
 								classes.bottomListItem,
 								classes.listItem
 							)}
@@ -201,7 +202,7 @@ const FoldersTreeView = ({
 					{tagsOpened ? (
 						<Fade in={tagsOpened} timeout={300}>
 							<IconButton
-								className={combineStyles(
+								className={clsx(
 									classes.iconAddButton,
 									classes.iconMargin
 								)}
@@ -226,7 +227,7 @@ const FoldersTreeView = ({
 								setEditTagId(id);
 								setEditTagName(tag.name);
 							}}
-							className={combineStyles(
+							className={clsx(
 								classes.bottomListItem,
 								classes.listItem
 							)}

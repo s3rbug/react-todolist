@@ -8,6 +8,7 @@ import { DragDropContext, DropResult } from "react-beautiful-dnd";
 import { getIntSecondPart } from "../utils/helpers";
 import { setTodo } from "../redux/middleware/todo";
 import { setIsLoadingAction, loadLocalUiAction } from "../redux/actions/ui";
+import { Redirect } from "react-router-dom";
 
 const Folders = () => {
 	const dispatch = useDispatch();
@@ -19,10 +20,12 @@ const Folders = () => {
 	) => dispatch(swapTasksAction(from, to, fromFolderId, toFolderId));
 	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
 	const serverless = useTypedSelector((state) => state.ui.serverless);
+	const token = useTypedSelector(state => state.auth.token)
 	const onDragEnd = (result: DropResult) => {
 		if (!result.destination) {
 			return;
 		}
+		
 		swapTasks(
 			result.source.index,
 			result.destination.index,
@@ -39,6 +42,11 @@ const Folders = () => {
 			dispatch(setTodo());
 		}
 	}, [dispatch, serverless]);
+
+	if(!token){
+		return <Redirect to={"/react-todolist/login"}/>
+	}
+
 	return (
 		<Grid container direction="row" justify="flex-start">
 			<DragDropContext onDragEnd={onDragEnd}>

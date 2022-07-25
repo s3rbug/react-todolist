@@ -12,10 +12,10 @@ import { useSpring, animated } from "react-spring";
 import { useForm } from "react-hook-form";
 import { useDispatch } from "react-redux";
 import BorderlessInput from "../../assets/BorderlessInput";
-import { useCombinedRefs } from "../../utils/helpers";
 import { addGoal } from "../../redux/middleware/todo";
 import { addGoalAction } from "../../redux/actions/todo";
 import { useTypedSelector } from "../../redux/reduxStore";
+import clsx from "clsx";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -152,15 +152,19 @@ const AddGoal = ({ folderId }: PropsType) => {
 	}
 
 	const onSubmit = (data: TaskFormDataType) => {
-		if (serverless) dispatch(addGoalAction(data.goalText, folderId));
-		else dispatch(addGoal(data.goalText, folderId));
+		if (serverless)
+			dispatch(addGoalAction(data.goalText, folderId));
+		else
+			dispatch(addGoal(data.goalText, folderId));
 		textField.current?.focus();
 		setValue("goalText", "");
-		if (!errors.goalText?.message) setMoving(true);
-		else setMoving(false);
+		if (!errors.goalText?.message)
+			setMoving(true);
+		else
+			setMoving(false);
 	};
 
-	const { register, handleSubmit, errors, setValue } = useForm<
+	const { register, handleSubmit, formState: { errors }, setValue } = useForm<
 		TaskFormDataType
 	>();
 	return (
@@ -185,19 +189,11 @@ const AddGoal = ({ folderId }: PropsType) => {
 					style={moving ? props2 : {}}
 				>
 					<BorderlessInput
-						placeholder="Add goal"
-						name="goalText"
-						className={classes.input}
-						ref={useCombinedRefs(
-							register({
-								required: "Goal can not be empty",
-								maxLength: {
-									value: 40,
-									message: "Max goal length is 30",
-								},
-							}),
-							textField
+						{...register("goalText", 
+						{required: {value: true, message: "Goal text can not be empty"}}
 						)}
+						placeholder="Add goal"
+						className={classes.input}
 						onFocus={() => setFocused(true)}
 						onBlur={handleOffFocus}
 					/>
@@ -206,7 +202,9 @@ const AddGoal = ({ folderId }: PropsType) => {
 
 			<IconButton
 				className={
-					classes.sendButton + " " + (focused ? classes.focusedButton : "")
+					clsx(
+						classes.sendButton,
+						focused && classes.focusedButton)
 				}
 				color="primary"
 				type="submit"

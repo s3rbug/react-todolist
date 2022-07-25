@@ -95,7 +95,7 @@ const TaskDetails = ({
 	const theme = useTheme();
 	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const [newTagId, setNewTagId] = useState<number | undefined | null>(goal.tag);
-	const { register, handleSubmit, errors } = useForm<TaskDetailsFormType>();
+	const { register, handleSubmit, formState: { errors } } = useForm<TaskDetailsFormType>();
 	const handleClose = () => {
 		setOpen(false);
 		setNewTagId(null);
@@ -130,14 +130,15 @@ const TaskDetails = ({
 			>
 				<DialogTitle className={classes.dialogTitle}>
 					<TextField
-						inputRef={register({
-							required: "Goal can not be empty",
+						{...register("goalText", {
+							required: {
+								value: true,
+								message: "Goal can not be empty"},
 							maxLength: {
 								value: 30,
 								message: "Max goal length is 30",
 							},
 						})}
-						name="goalText"
 						InputProps={{
 							classes: {
 								input: classes.taskInput,
@@ -185,16 +186,12 @@ const TaskDetails = ({
 							NOTES
 						</Typography>
 						<TextField
-							inputRef={register({
-								required: "Note can not be empty",
-								maxLength: {
-									value: 50,
-									message: "Max note length is 50",
-								},
+							{...register("noteText", {
+								required: {value: true, message: "Note can not be empty"},
+								maxLength: {value: 50, message: "Max note length is 50"}
 							})}
 							error={!!errors.noteText}
 							helperText={errors.noteText?.message}
-							name="noteText"
 							defaultValue={goal.note}
 							className={classes.infoFontSize}
 							placeholder="There is no notes, but you can change it!"

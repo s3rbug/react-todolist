@@ -30,7 +30,7 @@ const AlertDialog = ({
 			<DialogTitle id="alert-dialog-title">{question}</DialogTitle>
 			<DialogContent>
 				<DialogContentText id="alert-dialog-description">
-					{text ? text : ""}
+					{text}
 				</DialogContentText>
 			</DialogContent>
 			<DialogActions>

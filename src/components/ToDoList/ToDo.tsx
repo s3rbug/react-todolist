@@ -5,10 +5,10 @@ import Checkbox from "@material-ui/core/Checkbox";
 import { GoalType } from "./../../types/index_d";
 import TaskDetails from "./TaskDetails/TaskDetails";
 import { Theme, makeStyles, StyleRules, Tooltip } from "@material-ui/core";
-import { combineStyles } from "../../utils/helpers";
 import { useDispatch } from "react-redux";
 import { deleteTaskAction } from "../../redux/actions/todo";
 import { useTypedSelector } from "../../redux/reduxStore";
+import clsx from "clsx";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -75,8 +75,8 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 					arrow
 				>
 					<span
-						className={combineStyles(
-							goal.checked ? classes.checkedText : "",
+						className={clsx(
+							goal.checked && classes.checkedText,
 							classes.notSelectable
 						)}
 					>

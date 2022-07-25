@@ -1,6 +1,5 @@
 import { FolderType, FolderIdType } from "./../../types/index_d";
 import { TodoStateType } from "../../types/index_d";
-//import { TodoStateType } from "./../reducers/todo";
 import { action } from "typesafe-actions";
 import * as constants from "./../constants/todo";
 

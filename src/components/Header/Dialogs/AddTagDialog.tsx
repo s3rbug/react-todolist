@@ -13,11 +13,11 @@ import {
 } from "@material-ui/core";
 import { ColorResult, HuePicker } from "react-color";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
-import { combineStyles } from "../../../utils/helpers";
 import { addTag } from "../../../redux/middleware/todo";
 import { useDispatch } from "react-redux";
 import { useTypedSelector } from "../../../redux/reduxStore";
 import { addTagAction } from "../../../redux/actions/todo";
+import clsx from "clsx";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -99,8 +99,8 @@ const AddTagDialog = ({ open, setOpen }: PropsType) => {
 					style={{ borderLeft: "4px solid " + color }}
 				>
 					<span
-						className={combineStyles(
-							checked ? classes.checked : "",
+						className={clsx(
+							checked && classes.checked,
 							classes.notSelectable
 						)}
 					>

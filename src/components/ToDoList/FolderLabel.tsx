@@ -38,6 +38,7 @@ const useStyles = makeStyles(
 		},
 		text: {
 			marginRight: "20px",
+			paddingLeft: "5px"
 		},
 		divider: {
 			marginRight: "20px",
