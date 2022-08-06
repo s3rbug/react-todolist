@@ -10,12 +10,10 @@ import ArrowUpwardIcon from "@material-ui/icons/ArrowUpward";
 import { TaskFormDataType } from "../../types/index_d";
 import { useSpring, animated } from "react-spring";
 import { useForm } from "react-hook-form";
-import { useDispatch } from "react-redux";
 import BorderlessInput from "../../assets/BorderlessInput";
-import { addGoal } from "../../redux/middleware/todo";
-import { addGoalAction } from "../../redux/actions/todo";
-import { useTypedSelector } from "../../redux/reduxStore";
 import clsx from "clsx";
+import { addGoal } from "../../redux/middleware/goal";
+import { useTypedDispatch } from "../../redux/reduxStore";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -71,15 +69,14 @@ const useStyles = makeStyles(
 );
 
 type PropsType = {
-	folderId: number;
+	folderId: string;
 };
 
 const AddGoal = ({ folderId }: PropsType) => {
 	const classes = useStyles();
-	const dispatch = useDispatch();
+	const dispatch = useTypedDispatch();
 	const theme = useTheme();
 	const textField = useRef<null | HTMLInputElement>(null);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
 	const [moving, setMoving] = useState(false);
 	const [focused, setFocused] = useState(false);
 	const props = useSpring({
@@ -143,7 +140,7 @@ const AddGoal = ({ folderId }: PropsType) => {
 			setMoving(false);
 		},
 	});
-	function handleOffFocus() {
+	const handleOffFocus = () => {
 		if (!moving) {
 			setFocused(false);
 		} else {
@@ -152,13 +149,10 @@ const AddGoal = ({ folderId }: PropsType) => {
 	}
 
 	const onSubmit = (data: TaskFormDataType) => {
-		if (serverless)
-			dispatch(addGoalAction(data.goalText, folderId));
-		else
-			dispatch(addGoal(data.goalText, folderId));
+		dispatch(addGoal(folderId, data.goalText))
 		textField.current?.focus();
 		setValue("goalText", "");
-		if (!errors.goalText?.message)
+		if (!errors.goalText?.message) 
 			setMoving(true);
 		else
 			setMoving(false);
@@ -185,7 +179,7 @@ const AddGoal = ({ folderId }: PropsType) => {
 				className={classes.textField}
 			>
 				<animated.div
-					key={"animated.div" + folderId}
+					key={`animated.div-${folderId}`}
 					style={moving ? props2 : {}}
 				>
 					<BorderlessInput
@@ -204,13 +198,14 @@ const AddGoal = ({ folderId }: PropsType) => {
 				className={
 					clsx(
 						classes.sendButton,
-						focused && classes.focusedButton)
+						focused && classes.focusedButton
+					)
 				}
 				color="primary"
 				type="submit"
 			>
 				<animated.div
-					key={"animated.div" + folderId}
+					key={`animated.div-${folderId}`}
 					style={moving ? props : {}}
 				>
 					<ArrowUpwardIcon className={classes.icon} />

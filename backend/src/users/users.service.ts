@@ -1,12 +1,15 @@
+import { InjectModel } from '@nestjs/mongoose';
+import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
-import { Injectable } from "@nestjs/common";
-import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 
 @Injectable()
 export class UsersService {
-    constructor(@InjectModel(User.name) private userModel: Model<UserDocument>){}
+    constructor(
+        @InjectModel(User.name) private userModel: Model<UserDocument>
+    ){}
 
     async create(userDto: CreateUserDto): Promise<User>{
         const createdUser = new this.userModel(userDto)
@@ -18,6 +21,22 @@ export class UsersService {
     }
 
     async findUserByUsername(username: string): Promise<User | undefined>{
-        return this.userModel.findOne({"username": username})
+        const userFound = this.userModel.findOne({"username": username})
+        if(!userFound){
+            throw new HttpException("Invalid user data", HttpStatus.BAD_REQUEST)
+        }
+        return userFound
+    }
+
+    async whoami(user: User){
+        const userFound = await this.userModel.findOne({username: user.username})
+        if(!userFound){
+            throw new HttpException("Invalid user data", HttpStatus.BAD_REQUEST)
+        }
+        
+        const {password, ...userWithoutPassword} = userFound
+        
+        return userWithoutPassword
+        
     }
 }

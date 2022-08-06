@@ -1,66 +1,104 @@
 import React, { useEffect } from "react";
 import { Grid } from "@material-ui/core";
 import ToDoList from "./ToDoList/ToDoList";
-import { useTypedSelector } from "../redux/reduxStore";
-import { useDispatch } from "react-redux";
-import { swapTasksAction, loadLocalAction } from "../redux/actions/todo";
 import { DragDropContext, DropResult } from "react-beautiful-dnd";
-import { getIntSecondPart } from "../utils/helpers";
-import { setTodo } from "../redux/middleware/todo";
-import { setIsLoadingAction, loadLocalUiAction } from "../redux/actions/ui";
-import { Redirect } from "react-router-dom";
+import { Navigate } from "react-router-dom";
+
+import { useTypedDispatch, useTypedSelector } from "../redux/reduxStore";
+import { stringAfterSymbol } from "../utils/helpers";
+import { localStorageWrapper } from "../localStorage/localStorageWrapper";
+import { LoginResponseType } from "../types/index_d";
+import { setUserData, swapGoalsDifferentFolders, swapGoalsSameFolder } from "../redux/middleware/goal";
+import { setApiHeader } from "../api/api";
+import { authActions } from "../redux/slices/auth";
+import { goalActions } from "../redux/slices/goal";
+import { uiActions } from "../redux/slices/ui";
 
 const Folders = () => {
-	const dispatch = useDispatch();
-	const swapTasks = (
-		from: number,
-		to: number,
-		fromFolderId: number,
-		toFolderId: number
-	) => dispatch(swapTasksAction(from, to, fromFolderId, toFolderId));
-	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
+	const dispatch = useTypedDispatch();
+
+	const currentFolders = useTypedSelector((state) => state.goal.currentFolders);
 	const token = useTypedSelector(state => state.auth.token)
-	const onDragEnd = (result: DropResult) => {
+
+	const onDragEnd = async (result: DropResult) => {
 		if (!result.destination) {
 			return;
 		}
-		
-		swapTasks(
-			result.source.index,
-			result.destination.index,
-			getIntSecondPart(result.source.droppableId, "-"), // get number after '-' symbol
-			getIntSecondPart(result.destination.droppableId, "-")
-		);
-	};
-	useEffect(() => {
-		if (serverless) {
-			dispatch(loadLocalAction());
-			dispatch(loadLocalUiAction());
-			dispatch(setIsLoadingAction(false));
-		} else {
-			dispatch(setTodo());
+		const 
+			fromGoalIndex = result.source.index,
+			toGoalIndex = result.destination.index,
+			fromFolderId = stringAfterSymbol(result.source.droppableId, "-"),
+			toFolderId = stringAfterSymbol(result.destination.droppableId, "-")
+			dispatch(uiActions.setIsLoading({isLoading: true}))
+		if(fromFolderId === toFolderId){
+			dispatch(
+				goalActions.swapGoalsSameFolder({
+					fromGoalIndex,
+					toGoalIndex,
+					folderId: fromFolderId
+			})
+			)
+			dispatch(
+				swapGoalsSameFolder(
+					fromGoalIndex,
+					toGoalIndex,
+					fromFolderId
+				)
+			)
 		}
-	}, [dispatch, serverless]);
+		else {
+			dispatch(
+				goalActions.swapGoalsDifferentFolders({
+					fromGoalIndex,
+					toGoalIndex,
+					fromFolderId,
+					toFolderId,
+			})
+			);
+			dispatch(
+				swapGoalsDifferentFolders(
+					fromGoalIndex,
+					toGoalIndex,
+					fromFolderId,
+					toFolderId,
+				)
+			);
+		}
+	};
+
+	useEffect(() => {
+		const localStorageUser: LoginResponseType | undefined = localStorageWrapper.getLocalStorageItem<LoginResponseType>("token")
+		if(token){
+			dispatch(uiActions.setIsLoading({isLoading: true}))
+			dispatch(setUserData())
+		}
+		else if(!token && localStorageUser){
+			setApiHeader(localStorageUser.accessToken)
+			dispatch(authActions.setUser({token: localStorageUser.accessToken, username: localStorageUser.username}))
+		}
+	}, [dispatch, token])
 
 	if(!token){
-		return <Redirect to={"/react-todolist/login"}/>
+		return <Navigate to={"/react-todolist/login"} replace/>
 	}
 
 	return (
-		<Grid container direction="row" justify="flex-start">
+		<Grid container direction="row" justifyContent="flex-start">
 			<DragDropContext onDragEnd={onDragEnd}>
-				{currentFolders.map((folder) => {
+				{currentFolders.map((folderId) => {
+					if(!folderId){
+						return null						
+					}
 					return (
 						<Grid
-							key={"todolist-folder-id-" + folder.id}
+							key={"todolist-folder-id-" + folderId}
 							item
 							xs={12}
 							sm={6}
 							md={4}
 						>
 							<div>
-								<ToDoList folderId={folder.folder} />
+								<ToDoList folderId={folderId} />
 							</div>
 						</Grid>
 					);

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { makeStyles, Theme, StyleRules } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
@@ -12,16 +12,8 @@ import { LinearProgress } from "@material-ui/core";
 import SunIcon from "@material-ui/icons/Brightness7";
 import MoonIcon from "@material-ui/icons/Brightness4";
 import { useDispatch } from "react-redux";
-import {
-	setIsLightAction,
-	setIsServerlessAction,
-	setIsLoadingAction,
-} from "../../redux/actions/ui";
-import { setIsLight } from "../../redux/middleware/ui";
 import GithubIcon from "@material-ui/icons/GitHub";
-import WifiIcon from "@material-ui/icons/Wifi";
-import StorageIcon from "@material-ui/icons/Storage";
-import AlertDialog from "../../assets/AlertDialog";
+import { uiActions } from "../../redux/slices/ui";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -85,23 +77,16 @@ type PropsType = {
 const Header = ({ open, setOpen, children }: PropsType) => {
 	const classes = useStyles();
 	const dispatch = useDispatch();
+	const username = useTypedSelector(state => state.auth.username)
 	const isPageLoading = useTypedSelector((state) => state.ui.isPageLoading);
 	const isLight = useTypedSelector((state) => state.ui.isLight);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
-	const [alertOpened, setAlertOpened] = useState(false);
+	
 	const toggleDrawerOpened = () => {
 		setOpen(!open);
 	};
 
 	const toggleTheme = () => {
-		if (serverless) dispatch(setIsLightAction(!isLight));
-		else dispatch(setIsLight(!isLight));
-	};
-
-	const toggleServerless = () => {
-		if (serverless) dispatch(setIsLoadingAction(true));
-		dispatch(setIsServerlessAction(!serverless));
-		setAlertOpened(false);
+		dispatch(uiActions.setIsLight({isLight: !isLight}))
 	};
 
 	return (
@@ -121,15 +106,11 @@ const Header = ({ open, setOpen, children }: PropsType) => {
 					</IconButton>
 
 					<Typography variant="h6" noWrap className={classes.title}>
-						{serverless ? "Serverless to do list" : "To do list"}
+						{username ?
+							`${username}'s to do list` :
+							"To do list"
+						}
 					</Typography>
-					<IconButton onClick={() => setAlertOpened(true)}>
-						{serverless ? (
-							<WifiIcon className={classes.icon} />
-						) : (
-							<StorageIcon className={classes.icon} />
-						)}
-					</IconButton>
 					<IconButton onClick={toggleTheme}>
 						{isLight ? (
 							<MoonIcon className={classes.icon} />
@@ -161,21 +142,6 @@ const Header = ({ open, setOpen, children }: PropsType) => {
 					{children}
 				</div>
 			</main>
-			<AlertDialog
-				question={
-					"Do you really want to " +
-					(serverless ? "disable" : "enable") +
-					" serverless mode?"
-				}
-				text={
-					serverless
-						? "In server mode you need to launch json-server by writing 'yarn local' in json-server directory"
-						: "You don't need to launch server in serverless mode, but all of your data changes will not be saved"
-				}
-				open={alertOpened}
-				handleSuccess={toggleServerless}
-				handleFail={() => setAlertOpened(false)}
-			/>
 		</div>
 	);
 };

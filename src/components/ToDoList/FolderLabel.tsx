@@ -12,16 +12,8 @@ import {
 } from "@material-ui/core";
 import FolderIcon from "@material-ui/icons/FolderOutlined";
 import { FolderType } from "../../types/index_d";
-import { useDispatch } from "react-redux";
-import {
-	swapCurrentFolders,
-	swapWithNotShown,
-} from "../../redux/middleware/todo";
-import { useTypedSelector } from "../../redux/reduxStore";
-import {
-	swapCurrentFoldersAction,
-	swapWithNotShownAction,
-} from "../../redux/actions/todo";
+import { reorderCurrentFolders } from "../../redux/middleware/goal";
+import { useTypedDispatch } from "../../redux/reduxStore";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -58,23 +50,20 @@ const useStyles = makeStyles(
 type PropsType = {
 	headline: string;
 	folders: ReadonlyArray<FolderType>;
-	folderId: number;
+	folderId: string;
 };
 
 const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
 	const classes = useStyles();
 	const theme = useTheme();
-	const dispatch = useDispatch();
+	const dispatch = useTypedDispatch()
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [tooltipOpened, setTooltipOpened] = useState(false);
-
-	const currentFolders = useTypedSelector((state) => state.todo.currentFolders);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
 
 	const handleTooltipClose = () => {
 		setTooltipOpened(false);
 	};
-	const handleClose = () => {
+	const closeMenu = () => {
 		setAnchorEl(null);
 	};
 	const handleClick = (event: any) => {
@@ -100,67 +89,28 @@ const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
 					<FolderIcon onClick={handleClick} className={classes.icon} />
 				</Tooltip>
 				<Menu
-					id="simple-menu"
 					anchorEl={anchorEl}
 					keepMounted
 					open={Boolean(anchorEl)}
-					onClose={handleClose}
+					onClose={closeMenu}
 				>
-					{folders.map((folder, id) => {
-						if (id === folderId)
-							return <div key={folder.headline + folder.id + "menu"} />;
-						else
+					{folders.map((folder) => {
+						if (folder.id === folderId){
+							return null
+						}
+						else {
 							return (
 								<MenuItem
-									key={folder.headline + folder.id + "menu"}
-									onClick={() => {
-										if (folder.shown) {
-											if (serverless) {
-												dispatch(swapCurrentFoldersAction(folderId, id));
-											} else {
-												let from = 0,
-													to = 0;
-												for (let i = 0; i < currentFolders.length; ++i) {
-													if (currentFolders[i].folder === folderId) {
-														from = i;
-														break;
-													}
-												}
-												for (let i = 0; i < currentFolders.length; ++i) {
-													if (currentFolders[i].folder === id) {
-														to = i;
-														break;
-													}
-												}
-												dispatch(
-													swapCurrentFolders(
-														from,
-														to,
-														currentFolders[to].folder,
-														currentFolders[from].folder
-													)
-												);
-											}
-										} else {
-											if (serverless) {
-												dispatch(swapWithNotShownAction(folderId, id));
-											} else {
-												let pos = 0;
-												for (let i = 0; i < currentFolders.length; ++i) {
-													if (currentFolders[i].folder === folderId) {
-														pos = i;
-														break;
-													}
-												}
-												dispatch(swapWithNotShown(folderId, id, pos));
-											}
-										}
-										handleClose();
+									key={`${folder.id}-menu-item`}
+									onClick={() => {										
+										dispatch(reorderCurrentFolders(folderId, folder.id))
+										closeMenu()
 									}}
 								>
 									{folder.headline}
 								</MenuItem>
 							);
+						}
 					})}
 				</Menu>
 			</div>

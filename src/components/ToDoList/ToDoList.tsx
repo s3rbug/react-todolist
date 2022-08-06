@@ -4,15 +4,13 @@ import { makeStyles } from "@material-ui/core/styles";
 import { Theme, StyleRules, Typography, useTheme } from "@material-ui/core";
 import DraggableItem from "../../assets/DraggableItem";
 import DroppableItem from "../../assets/DroppableItem";
-import ToDo from "./ToDo";
+import Goal from "./Goal";
 import { FolderType } from "../../types/index_d";
 import AddGoal from "./AddGoal";
-import { useTypedSelector } from "../../redux/reduxStore";
+import { useTypedDispatch, useTypedSelector } from "../../redux/reduxStore";
 import { DraggingStyle, NotDraggingStyle } from "react-beautiful-dnd";
 import FolderLabel from "./FolderLabel";
-import { useDispatch } from "react-redux";
-import { toggleChecked } from "../../redux/middleware/todo";
-import { toggleCheckedAction } from "../../redux/actions/todo";
+import { toggleChecked } from "../../redux/middleware/goal";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -41,25 +39,23 @@ const useStyles = makeStyles(
 );
 
 interface PropsType {
-	folderId: number;
+	folderId: string;
 }
 
 const ToDoList = ({ folderId }: PropsType) => {
 	const classes = useStyles();
 	const theme = useTheme();
 
-	const dispatch = useDispatch();
-	const folders = useTypedSelector((state) => state.todo.folders);
-	const currentFolder: FolderType = useTypedSelector(
-		(state) => state.todo.folders[folderId]
+	const dispatch = useTypedDispatch();
+	const folders = useTypedSelector((state) => state.goal.folders);
+	const currentFolder: FolderType | undefined = useTypedSelector(
+		(state) => state.goal.folders.find(folder => folder.id === folderId)
 	);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
-
+	
 	const toggleCheckbox = (e: React.ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value) {
-			if (serverless)
-				dispatch(toggleCheckedAction(parseInt(e.target.value), folderId));
-			else dispatch(toggleChecked(parseInt(e.target.value), folderId));
+			const goalId: string = e.target.value
+			dispatch(toggleChecked(folderId, goalId))
 		}
 	};
 
@@ -73,6 +69,10 @@ const ToDoList = ({ folderId }: PropsType) => {
 		...draggableStyle,
 	});
 
+	if(!currentFolder){
+		return null
+	}
+
 	return (
 		<div className={classes.root}>
 			<FolderLabel
@@ -85,17 +85,17 @@ const ToDoList = ({ folderId }: PropsType) => {
 					<Typography align="center" variant="h4">
 						{currentFolder.headline}
 					</Typography>
-					<DroppableItem droppableId={"DroppableToDo-" + folderId}>
+					<DroppableItem droppableId={`DroppableToDo-${folderId}`}>
 						<List className={classes.list}>
-							{currentFolder.goals.map((goal) => {
+							{currentFolder.goals.map((goal, index) => {
 								return (
 									<DraggableItem
-										id={goal.id}
-										key={"Goal-id: " + goal.id + " Folder-id: " + folderId}
-										adding={folderId.toString()}
+										draggableId={`${folderId}-${goal.id}`}
+										index={index}
+										key={`Goal-id-${goal.id}-folder-id-${folderId}`}
 										getItemStyle={getItemStyle}
 									>
-										<ToDo
+										<Goal
 											toggleCheckbox={toggleCheckbox}
 											folderId={folderId}
 											goal={goal}

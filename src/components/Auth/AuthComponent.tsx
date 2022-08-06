@@ -2,8 +2,10 @@ import { Button, Card, TextField, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react'
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
-import { NavLink } from 'react-router-dom';
-import { setIsLoadingAction } from '../../redux/actions/ui';
+import { NavLink, Navigate } from 'react-router-dom';
+import { useTypedSelector } from '../../redux/reduxStore';
+import { uiActions } from '../../redux/slices/ui';
+import { AuthFormType } from '../../types/index_d';
 import {useStyles} from './AuthComponentStyles'
 
 type AuthComponentPropsType = {
@@ -12,28 +14,17 @@ type AuthComponentPropsType = {
     linkText: string;
     link: string;
     buttonText: string;
-    onSubmit: () => void;
+    onSubmit: (data: AuthFormType) => void;
 }
 
 const AuthComponent = ({title, passwordConfirmation, onSubmit, linkText, buttonText, link}: AuthComponentPropsType) => {
     const classes = useStyles()
     const dispatch = useDispatch()
+    const token = useTypedSelector(state => state.auth.token)
     
-    type AuthFormType = {
-        username: string;
-        password: string;
-        cpassword?: string;
+    const submitHandler: SubmitHandler<AuthFormType> = (data: AuthFormType) => {
+        onSubmit(data)
     }
-    
-    useEffect(() => {
-        dispatch(setIsLoadingAction(false))
-    })
-
-    const test: SubmitHandler<AuthFormType> = (data: AuthFormType) => {
-        console.log(data);
-    }
-
-    const {watch, register, handleSubmit, formState: { errors }} = useForm<AuthFormType>()
 
     const validationObject = (name: string, minLength: number, maxLength: number) => {
         return {
@@ -42,8 +33,19 @@ const AuthComponent = ({title, passwordConfirmation, onSubmit, linkText, buttonT
             maxLength: {value: maxLength, message: `${name} maximum length is ${maxLength} symbols`}
         }
     }
+
+    useEffect(() => {
+        dispatch(uiActions.setIsLoading({isLoading: false}))
+    })
+
+    const {watch, register, handleSubmit, formState: { errors }} = useForm<AuthFormType>()
+
+    if(token){
+        return <Navigate to={"/react-todolist"} replace/>
+    }
+
     return (
-    <form className={classes.root} onSubmit={handleSubmit(test)}>
+    <form className={classes.root} onSubmit={handleSubmit(submitHandler)}>
         <Card className={classes.card}>
             <Typography className={classes.title} align="center" variant="h4">
                 {title}  

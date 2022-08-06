@@ -2,11 +2,9 @@ import React, { useState } from "react";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import Checkbox from "@material-ui/core/Checkbox";
-import { GoalType } from "./../../types/index_d";
+import { GoalType } from "../../types/index_d";
 import TaskDetails from "./TaskDetails/TaskDetails";
 import { Theme, makeStyles, StyleRules, Tooltip } from "@material-ui/core";
-import { useDispatch } from "react-redux";
-import { deleteTaskAction } from "../../redux/actions/todo";
 import { useTypedSelector } from "../../redux/reduxStore";
 import clsx from "clsx";
 
@@ -34,23 +32,16 @@ const useStyles = makeStyles(
 
 type PropsType = {
 	goal: GoalType;
-	folderId: number;
+	folderId: string;
 	toggleCheckbox: (event: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
-const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
+const Goal = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 	const [open, setOpen] = useState(false);
-	const dispatch = useDispatch();
+	const tags = useTypedSelector(state => state.goal.tags);
 
-	const tags = useTypedSelector((state) => state.todo.tags);
+	const currentTag = tags.find(tag => tag.id === goal.tagId)
 
-	const deleteTask = (id: number, folderId: number) =>
-		dispatch(deleteTaskAction(id, folderId));
-
-	const currentColor =
-		goal.tag === undefined || goal.tag === null
-			? undefined
-			: tags[goal.tag].color;
 	const classes = useStyles();
 	const handleClick = () => {
 		setOpen(true);
@@ -62,14 +53,12 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 				className={classes.item}
 				style={{
 					borderLeft:
-						currentColor === undefined ? "none" : "4px solid " + currentColor,
+						currentTag?.color === undefined ? "none" : "4px solid " + currentTag?.color,
 				}}
 			>
 				<Tooltip
 					title={
-						goal.tag === null || goal.tag === undefined
-							? ""
-							: tags[goal.tag].name
+						currentTag?.name || ""
 					}
 					placement="right"
 					arrow
@@ -97,7 +86,6 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 				open={open}
 				setOpen={setOpen}
 				goal={goal}
-				deleteTask={deleteTask}
 				tags={tags}
 				folderId={folderId}
 			/>
@@ -105,4 +93,4 @@ const ToDo = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 	);
 };
 
-export default ToDo;
+export default Goal;

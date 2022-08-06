@@ -19,15 +19,8 @@ import {
 } from "../../../assets/Buttons";
 import Chip from "@material-ui/core/Chip";
 import { useForm } from "react-hook-form";
-import { saveTaskDetails, deleteGoal } from "../../../redux/middleware/todo";
-import { useDispatch } from "react-redux";
-import { useTypedSelector } from "../../../redux/reduxStore";
-import {
-	setTagAction,
-	setNoteAction,
-	setGoalAction,
-	deleteTaskAction,
-} from "../../../redux/actions/todo";
+import { deleteGoal, editGoal } from "../../../redux/middleware/goal";
+import { useTypedDispatch } from "../../../redux/reduxStore";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -77,9 +70,8 @@ type PropsType = {
 	open: boolean;
 	setOpen: (isOpen: boolean) => void;
 	goal: GoalType;
-	deleteTask: (id: number, folderId: number) => void;
 	tags: ReadonlyArray<TagType>;
-	folderId: number;
+	folderId: string;
 };
 
 const TaskDetails = ({
@@ -88,39 +80,33 @@ const TaskDetails = ({
 	tags,
 	folderId,
 	setOpen,
-	deleteTask,
 }: PropsType) => {
 	const classes = useStyles();
-	const dispatch = useDispatch();
+	const dispatch = useTypedDispatch();
 	const theme = useTheme();
-	const serverless = useTypedSelector((state) => state.ui.serverless);
-	const [newTagId, setNewTagId] = useState<number | undefined | null>(goal.tag);
+
+	const [newTagId, setNewTagId] = useState<string | undefined>(goal.tagId);
 	const { register, handleSubmit, formState: { errors } } = useForm<TaskDetailsFormType>();
+	
 	const handleClose = () => {
 		setOpen(false);
-		setNewTagId(null);
+		setNewTagId(goal.tagId);
 	};
-	const deleteCurrentTask = () => {
-		if (serverless) dispatch(deleteTaskAction(goal.id, folderId));
-		else dispatch(deleteGoal(goal.id, folderId));
+	const deleteCurrentGoal = () => {
+		dispatch(deleteGoal(folderId, goal.id));
 		handleClose();
 	};
 	const onSubmit = (data: TaskDetailsFormType) => {
-		setOpen(false);
-		if (serverless) {
-			dispatch(setTagAction(goal.id, newTagId, folderId));
-			dispatch(setNoteAction(goal.id, data.noteText, folderId));
-			dispatch(setGoalAction(goal.id, data.goalText, folderId));
-		} else
-			dispatch(
-				saveTaskDetails(
-					goal.id,
-					data.goalText,
-					data.noteText,
-					newTagId,
-					folderId
-				)
-			);
+		setOpen(false);		
+		dispatch(editGoal(
+			folderId,
+			goal.id, 
+			{
+				text: data.goalText,
+				note: data.noteText,
+				tagId: newTagId
+			}
+		))
 	};
 	return (
 		<Dialog open={open} onClose={handleClose}>
@@ -152,26 +138,30 @@ const TaskDetails = ({
 				</DialogTitle>
 				<DialogContent>
 					<div>
-						{tags.map((tag, tagId) => {
+						{tags.map((tag) => {
 							return (
 								<Chip
-									key={"tags-" + tag.name + tag.color}
+									key={`tags-${tag.name}-${tag.color}`}
 									label={tag.name}
 									className={classes.chip}
 									style={{
 										borderColor:
-											tagId === newTagId
-												? tags[newTagId].color
+											tag.id === newTagId
+												? tag.color
 												: theme.palette.action.disabled,
-										borderWidth: tagId === newTagId ? "3.3px" : "2px",
+										borderWidth: tag.id === newTagId ? "3.3px" : "2px",
 										background:
-											tagId === newTagId
-												? tags[newTagId].color + "48" // #48 - 0.3 opacity
+											tag.id === newTagId
+												? tag.color + "48" // #48 - 0.3 opacity
 												: theme.palette.chip,
 									}}
 									onClick={() => {
-										if (tagId === newTagId) setNewTagId(null);
-										else setNewTagId(tagId);
+										if (tag.id === newTagId){
+											setNewTagId(undefined);
+										}
+										else { 
+											setNewTagId(tag.id);
+										}
 									}}
 								/>
 							);
@@ -187,7 +177,6 @@ const TaskDetails = ({
 						</Typography>
 						<TextField
 							{...register("noteText", {
-								required: {value: true, message: "Note can not be empty"},
 								maxLength: {value: 50, message: "Max note length is 50"}
 							})}
 							error={!!errors.noteText}
@@ -200,7 +189,7 @@ const TaskDetails = ({
 				</DialogContent>
 				<DialogContent>
 					<DialogActions style={{ paddingLeft: 0 }}>
-						<DeleteDialogButton onClick={deleteCurrentTask}>
+						<DeleteDialogButton onClick={deleteCurrentGoal}>
 							Delete
 						</DeleteDialogButton>
 						<div className={classes.cancel}></div>

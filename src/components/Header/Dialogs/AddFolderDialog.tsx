@@ -7,11 +7,8 @@ import {
 	DialogActions,
 } from "@material-ui/core";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
-import { useDispatch } from "react-redux";
-import { useTypedSelector } from "../../../redux/reduxStore";
-import { GoalType } from "../../../types/index_d";
-import { addFolder } from "../../../redux/middleware/todo";
-import { addFolderAction } from "../../../redux/actions/todo";
+import { addFolder } from "../../../redux/middleware/goal";
+import { useTypedDispatch } from "../../../redux/reduxStore";
 
 type PropsType = {
 	open: boolean;
@@ -20,28 +17,17 @@ type PropsType = {
 
 const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 	const [headline, setHeadline] = useState("");
-	const dispatch = useDispatch();
-	const folders = useTypedSelector((state) => state.todo.folders);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
+	const dispatch = useTypedDispatch()
 	const handleClose = () => {
 		setOpen(false);
 	};
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value.length <= 15) setHeadline(e.target.value);
+		if (e.target.value.length <= 15){
+			setHeadline(e.target.value);
+		}
 	};
 	const handleAddFolder = () => {
-		if (serverless) {
-			dispatch(addFolderAction(headline));
-		} else {
-			dispatch(
-				addFolder({
-					id: folders.length,
-					headline: headline,
-					shown: false,
-					goals: [] as GoalType[],
-				})
-			);
-		}
+		dispatch(addFolder(headline))
 		setHeadline("");
 		handleClose();
 	};

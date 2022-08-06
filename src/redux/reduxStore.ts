@@ -1,54 +1,32 @@
-import { createStore, combineReducers, applyMiddleware, compose } from "redux";
-import thunkMiddleware from "redux-thunk";
-import todo from "./reducers/todo";
-import ui from "./reducers/ui";
-import auth from "./reducers/auth"
-import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { AnyAction } from "redux";
+import { ThunkAction } from "redux-thunk";
+import goal from "./slices/goal"
+import ui from "./slices/ui"
+import auth from "./slices/auth"
 
-const rootReducer = combineReducers({
-	todo: todo,
-	ui: ui,
-	auth: auth
+import { TypedUseSelectorHook, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { configureStore } from '@reduxjs/toolkit';
+
+const store = configureStore({
+	reducer: {
+		goal,
+		ui,
+		auth
+	}
 });
 
-type RootReducerType = typeof rootReducer;
-export type AppStateType = ReturnType<RootReducerType>;
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatchType = typeof store.dispatch;
+export type AppStateType = ReturnType<typeof store.getState>;
+
+export type AppThunkType<ReturnType = Promise<void>> = ThunkAction<
+	ReturnType,
+	AppStateType,
+	unknown,
+	AnyAction
+>
 
 export const useTypedSelector: TypedUseSelectorHook<AppStateType> = useSelector;
-
-// @ts-ignore
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose; // required for Redux extension
-
-const store = createStore(
-	rootReducer,
-	composeEnhancers(applyMiddleware(thunkMiddleware))
-);
-
-export const isMobile = {
-	Android: () => navigator.userAgent.match(/Android/i),
-	BlackBerry: () => navigator.userAgent.match(/BlackBerry/i),
-	iOS: () => navigator.userAgent.match(/iPhone|iPad|iPod/i),
-	Opera: () => navigator.userAgent.match(/Opera Mini/i),
-	Windows: () =>
-		navigator.userAgent.match(/IEMobile/i) ||
-		navigator.userAgent.match(/WPDesktop/i),
-	any: () =>
-		isMobile.Android() ||
-		isMobile.BlackBerry() ||
-		isMobile.iOS() ||
-		isMobile.Opera() ||
-		isMobile.Windows(),
-};
-
-export const reduceItem = <T>(
-	array: ReadonlyArray<T>,
-	index: number,
-	reducer: (value: T) => T
-): T[] => [
-	...array.slice(0, index),
-	reducer(array[index]),
-	...array.slice(index + 1),
-];
+export const useTypedDispatch = () => useDispatch<AppDispatchType>()
 
 export default store;

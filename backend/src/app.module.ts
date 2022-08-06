@@ -1,3 +1,6 @@
+import { GoalsModule } from './folders/goals/goals.module';
+import { TagsModule } from './folders/tags/tags.module';
+import { FoldersModule } from './folders/folders.module';
 import { AuthModule } from './auth/auth.module';
 import { UsersModule } from './users/users.module';
 import { Global, Module } from "@nestjs/common";
@@ -12,6 +15,9 @@ import { AppController } from './app.controller';
     imports: [
         UsersModule,
         AuthModule,
+        FoldersModule,
+        TagsModule,
+        GoalsModule,
         ConfigModule.forRoot({
             envFilePath: '.env',
             isGlobal: true

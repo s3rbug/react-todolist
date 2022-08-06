@@ -8,10 +8,10 @@ import {
 } from "react-beautiful-dnd";
 
 type DraggableItemPropsType = {
-	id: number;
+	draggableId: string;
+	index: number;
 	className?: string;
 	children: React.ReactChild;
-	adding: string;
 	getItemStyle?: (
 		isDragging: boolean,
 		draggableProps: DraggingStyle | NotDraggingStyle | undefined
@@ -19,14 +19,14 @@ type DraggableItemPropsType = {
 };
 
 const DraggableItem = ({
-	adding,
-	id,
+	draggableId,
 	className,
 	children,
 	getItemStyle,
+	index,
 }: DraggableItemPropsType) => {
 	return (
-		<Draggable draggableId={"item-" + adding + id} index={id}>
+		<Draggable draggableId={`item-${draggableId}`} index={index}>
 			{(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
 				<div
 					ref={provided.innerRef}

@@ -21,6 +21,7 @@ import FolderOpenIcon from "@material-ui/icons/FolderOpen";
 import TagIcon from "@material-ui/icons/LocalOfferOutlined";
 import { animated } from "react-spring";
 import clsx from "clsx";
+import { FolderType, TagType } from "../../types/index_d";
 
 type PropsType = {
 	openAddTag: () => void;
@@ -28,9 +29,9 @@ type PropsType = {
 	openSetFolder: () => void;
 	openEditFolder: () => void;
 	setEditTagName: (name: string) => void;
-	setEditTagId: (id: number) => void;
+	setEditTagId: (id: string) => void;
 	setHeadline: (headline: string) => void;
-	setCurrentFolderId: (id: number) => void;
+	setCurrentFolderId: (id: string) => void;
 };
 
 const useStyles = makeStyles(
@@ -99,17 +100,29 @@ const FoldersTreeView = ({
 	const [foldersOpened, setFoldersOpened] = useState(false);
 	const [tagsOpened, setTagsOpened] = useState(false);
 
-	const tags = useTypedSelector((state) => state.todo.tags);
-	const folders = useTypedSelector((state) => state.todo.folders);
+	const tags = useTypedSelector((state) => state.goal.tags);
+	const folders = useTypedSelector((state) => state.goal.folders);
 	const foldersExpandAnimation = useAnimatedExpand(foldersOpened);
 	const tagsExpandAnimation = useAnimatedExpand(tagsOpened);
 
 	const toggleFoldersOpen = () => {
 		setFoldersOpened(!foldersOpened);
 	};
+	
 	const toggleTagsOpened = () => {
 		setTagsOpened(!tagsOpened);
 	};
+
+	const handleFolderClick = (folder: FolderType) => () => {
+		setCurrentFolderId(folder.id);
+		setHeadline(folder.headline);
+		openEditFolder();
+	}
+	const handleTagClick = (tag: TagType) => () => {
+		setEditTagId(tag.id);
+		setEditTagName(tag.name);
+		openEditTag();
+	}
 	return (
 		<List className={classes.root}>
 			<ListItem button onClick={toggleFoldersOpen} className={classes.listItem}>
@@ -153,12 +166,8 @@ const FoldersTreeView = ({
 					return (
 						<ListItem
 							button
-							onClick={() => {
-								setHeadline(folder.headline);
-								setCurrentFolderId(folder.id);
-								openEditFolder();
-							}}
-							key={"tree-item-node-" + folder.id}
+							onClick={handleFolderClick(folder)}
+							key={`tree-item-node-${folder.id}`}
 							className={clsx(
 								classes.bottomListItem,
 								classes.listItem
@@ -199,7 +208,7 @@ const FoldersTreeView = ({
 					</div>
 				</ListItemText>
 				<ListItemSecondaryAction>
-					{tagsOpened ? (
+					{tagsOpened && (
 						<Fade in={tagsOpened} timeout={300}>
 							<IconButton
 								className={clsx(
@@ -211,22 +220,16 @@ const FoldersTreeView = ({
 								<AddIcon className={classes.addIcon} />
 							</IconButton>
 						</Fade>
-					) : (
-						<></>
 					)}
 				</ListItemSecondaryAction>
 			</ListItem>
 			<Collapse in={tagsOpened}>
-				{tags.map((tag, id) => {
+				{tags.map((tag) => {
 					return (
 						<ListItem
-							key={"tree-item-node-" + tag.name}
+							key={`tree-item-node-${tag.name}`}
 							button
-							onClick={() => {
-								openEditTag();
-								setEditTagId(id);
-								setEditTagName(tag.name);
-							}}
+							onClick={handleTagClick(tag)}
 							className={clsx(
 								classes.bottomListItem,
 								classes.listItem
@@ -242,7 +245,7 @@ const FoldersTreeView = ({
 										style={{ color: tag.color }}
 										className={classes.bottomLabel}
 									>
-										{"#" + tag.name}
+										{`#${tag.name}`}
 									</Typography>
 								</div>
 							</ListItemText>

@@ -1,44 +1,45 @@
 import React, { useState, useEffect } from "react";
 import { Dialog, DialogTitle, DialogActions, Input } from "@material-ui/core";
-import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
-import { useDispatch } from "react-redux";
-import { useTypedSelector } from "../../../redux/reduxStore";
-import { editFolder } from "../../../redux/middleware/todo";
-import { FolderType } from "../../../types/index_d";
-import { editFolderAction } from "../../../redux/actions/todo";
+import { CancelDialogButton, ApplyDialogButton, DeleteDialogButton } from "../../../assets/Buttons";
+import { deleteFolder, editFolderHeadline } from "../../../redux/middleware/goal";
+import { useTypedDispatch } from "../../../redux/reduxStore";
 
 type PropsType = {
 	headline: string;
 	open: boolean;
 	setOpen: (open: boolean) => void;
-	folderId: number;
+	folderId: string;
 };
 
 const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
-	const dispatch = useDispatch();
 	const [newHeadline, setNewHeadline] = useState(headline);
-	const currentFolder = useTypedSelector(
-		(state) => state.todo.folders[folderId]
-	);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
+	const dispatch = useTypedDispatch()
+
 	useEffect(() => {
 		setNewHeadline(headline);
 	}, [headline]);
+
 	const handleClose = () => {
 		setNewHeadline(headline);
 		setOpen(false);
 	};
+
 	const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value.length <= 15) setNewHeadline(e.target.value);
+		if (e.target.value.length <= 15){
+			setNewHeadline(e.target.value);
+		}
 	};
+
 	const handleSave = () => {
-		if (serverless) dispatch(editFolderAction(newHeadline, folderId));
-		else
-			dispatch(
-				editFolder({ ...currentFolder } as FolderType, newHeadline, folderId)
-			);
+		dispatch(editFolderHeadline(folderId, newHeadline))	
 		handleClose();
 	};
+
+	const handleDelete = () => {
+		dispatch(deleteFolder(folderId))
+		handleClose();
+	}
+
 	return (
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>
@@ -49,7 +50,9 @@ const EditFolderDialog = ({ open, setOpen, headline, folderId }: PropsType) => {
 					autoFocus
 				/>
 			</DialogTitle>
-			<DialogActions>
+			<DialogActions style={{ paddingLeft: "24px" }}>
+				<DeleteDialogButton onClick={handleDelete}>Delete</DeleteDialogButton>
+				<div style={{ flexGrow: 1 }}></div>
 				<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
 				<ApplyDialogButton onClick={handleSave}>Apply</ApplyDialogButton>
 			</DialogActions>

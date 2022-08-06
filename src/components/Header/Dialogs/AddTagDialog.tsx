@@ -13,11 +13,9 @@ import {
 } from "@material-ui/core";
 import { ColorResult, HuePicker } from "react-color";
 import { CancelDialogButton, ApplyDialogButton } from "../../../assets/Buttons";
-import { addTag } from "../../../redux/middleware/todo";
-import { useDispatch } from "react-redux";
-import { useTypedSelector } from "../../../redux/reduxStore";
-import { addTagAction } from "../../../redux/actions/todo";
 import clsx from "clsx";
+import { addTag } from "../../../redux/middleware/goal";
+import { useTypedDispatch } from "../../../redux/reduxStore";
 
 const useStyles = makeStyles(
 	(theme: Theme): StyleRules<string> => ({
@@ -56,13 +54,13 @@ type PropsType = {
 
 const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	const classes = useStyles();
-	const dispatch = useDispatch();
 	const theme = useTheme();
+	const dispatch = useTypedDispatch()
+
 	const [checked, setChecked] = useState(false);
 	const [color, setColor] = useState(theme.palette.primary.main);
 	const [tagName, setTagName] = useState("new tag");
-	const tags = useTypedSelector((state) => state.todo.tags);
-	const serverless = useTypedSelector((state) => state.ui.serverless);
+	
 	const handleClose = () => {
 		setOpen(false);
 	};
@@ -76,11 +74,12 @@ const AddTagDialog = ({ open, setOpen }: PropsType) => {
 		setColor(newColor.hex);
 	};
 	const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value.length <= 15) setTagName(e.target.value);
+		if (e.target.value.length <= 15) {
+			setTagName(e.target.value);
+		}
 	};
 	const handleAddTag = () => {
-		if (serverless) dispatch(addTagAction(tagName, color));
-		else dispatch(addTag(tagName, color, tags.length));
+		dispatch(addTag(tagName, color))
 		setOpen(false);
 	};
 	return (
@@ -96,7 +95,7 @@ const AddTagDialog = ({ open, setOpen }: PropsType) => {
 			<DialogContent>
 				<div
 					className={classes.item}
-					style={{ borderLeft: "4px solid " + color }}
+					style={{ borderLeft: `4px solid ${color}` }}
 				>
 					<span
 						className={clsx(

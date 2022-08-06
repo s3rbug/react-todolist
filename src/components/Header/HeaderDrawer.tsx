@@ -34,8 +34,8 @@ const HeaderDrawer = ({ open }: PropsType) => {
 	const [folderSetOpened, setFolderSetOpened] = useState(false);
 	const [editFolderOpened, setEditFolderOpened] = useState(false);
 	const [headline, setHeadline] = useState("");
-	const [editTagId, setEditTagId] = useState(0);
-	const [currentFolderId, setCurrentFolderId] = useState(0);
+	const [editTagId, setEditTagId] = useState("");
+	const [currentFolderId, setCurrentFolderId] = useState("");
 	const [editTagName, setEditTagName] = useState("");
 
 	const openAddTag = () => {

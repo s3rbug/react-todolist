@@ -1,8 +1,8 @@
-import mongoose, { Document } from 'mongoose';
+import mongoose, { Document, Types } from 'mongoose';
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 
-import { Tag } from './../folders/tags/tag.schema';
-import { Folder } from './../folders/folder.schema';
+import { Tag, TagSchema } from './../folders/tags/tag.schema';
+import { Folder, FolderSchema } from './../folders/folder.schema';
 
 export type UserDocument = User & Document;
 
@@ -14,11 +14,14 @@ export class User {
     @Prop({required: true, minlength: 6, maxlength: 100})
     password: string
 
-    @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Folder'}]})
+    @Prop({type: [FolderSchema]})
     folders: Folder[]
 
-    @Prop({type: [{type: mongoose.Schema.Types.ObjectId, ref: 'Tag'}]})
+    @Prop({type: [TagSchema]})
     tags: Tag[]
+
+    @Prop({required: true})
+    currentFolders: Array<string | null>
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

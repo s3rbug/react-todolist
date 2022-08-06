@@ -1,10 +1,8 @@
 import { ThunkDispatch } from "redux-thunk";
 import { AppStateType } from "./../redux/reduxStore";
-import { ActionType } from "typesafe-actions";
-import { TodosAction } from "./../redux/reducers/todo";
-import { UiAction } from "./../redux/reducers/ui";
-import * as todoActions from "../redux/actions/todo";
-import * as uiActions from "../redux/actions/ui";
+import { goalActions } from "../redux/slices/goal";
+import { uiActions } from "../redux/slices/ui";
+import { authActions } from "../redux/slices/auth";
 
 declare module "@material-ui/core/styles/createPalette" {
 	interface Palette {
@@ -14,35 +12,31 @@ declare module "@material-ui/core/styles/createPalette" {
 		chip: React.CSSProperties["color"];
 	}
 }
-export type actions = typeof todoActions | typeof uiActions;
-export type ActionsType = ActionType<actions>;
-export type ThunkDispatchType = ThunkDispatch<AppStateType, void, ActionsType>;
+export type actions = typeof goalActions | typeof uiActions | typeof authActions;
 
 export type GoalType = {
-	id: number;
+	id: string;
 	text: string;
 	note: string;
-	tag: number | undefined | null;
+	tagId: string | undefined;
 	checked: boolean;
 };
 
 export type FolderType = {
-	id: number;
+	id: string;
 	headline: string;
-	shown: boolean;
 	goals: Array<GoalType>;
 };
 
-export type TodoStateType = {
+export type GoalStateType = {
 	folders: FolderType[];
 	tags: TagType[];
-	currentFolders: FolderIdType[];
+	currentFolders: CurrentFolderIdType[];
 };
 
 export type UiStateType = {
 	isLight: boolean;
 	isPageLoading: boolean;
-	serverless: boolean;
 };
 
 export type FolderFormDataType = {
@@ -60,24 +54,32 @@ export type TaskDetailsFormType = {
 };
 
 export type TagType = {
-	id: number;
+	id: string;
 	name: string;
 	color: string;
 };
 
-export type FolderIdType = {
-	id: number;
-	folder: number;
-};
-
-export type MyActionType = UiAction | TodosAction;
+export type CurrentFolderIdType = string | null
 
 export type AuthStateType = {
 	token: null | string;
+	username: null | string;
 }
 
 export type ObjectCssType = {
     [key: string]: {
 		[key: string]: string | undefined
 	} | undefined;
+}
+
+export type AuthFormType = {
+    username: string;
+    password: string;
+    cpassword?: string;
+}
+
+export type LoginResponseType = {
+	accessToken: string;
+	username: string;
+	expiresIn: string;
 }
