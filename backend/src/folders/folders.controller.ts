@@ -6,6 +6,7 @@ import { Body, Controller, Delete, Get, Param, Post, Put, Req, UseGuards } from 
 import { CreateFolderDto } from "./dto/create-folder.dto";
 import { AuthRequest } from './../auth/interfaces/auth-request.interface';
 import { ReorderFoldersDto } from './dto/reorder-folders.dto';
+import { DeleteFolderDto } from './dto/delete-folder.dto';
 
 @Controller('folders')
 export class FoldersController {
@@ -22,8 +23,8 @@ export class FoldersController {
 
     @UseGuards(JwtAuthGuard)
     @Put('delete')
-    deleteFolder(@Req() req: AuthRequest, @Body('id') folderId: string){   
-        return this.foldersService.deleteFolder(req.user, folderId)
+    deleteFolder(@Req() req: AuthRequest, @Body() deleteFolderDto: DeleteFolderDto){   
+        return this.foldersService.deleteFolder(req.user, deleteFolderDto)
     }
     
     @UseGuards(JwtAuthGuard)

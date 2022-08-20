@@ -10,10 +10,10 @@ import { AuthRequest } from "src/auth/interfaces/auth-request.interface";
 export class UsersController {
     constructor(private usersService: UsersService) {}
 
-    @Post()
-    async create(@Body() userDto: CreateUserDto): Promise<User | undefined>{
-        return this.usersService.create(userDto)
-    }
+    // @Post()
+    // async create(@Body() userDto: CreateUserDto): Promise<User | undefined>{
+    //     return this.usersService.create(userDto)
+    // }
 
     @Get()
     async getAll(): Promise<User[]>{

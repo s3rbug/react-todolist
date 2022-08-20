@@ -11,6 +11,7 @@ import { UsersService } from 'src/users/users.service';
 import { InjectModel } from "@nestjs/mongoose";
 import mongoose, { Model, MongooseError } from "mongoose";
 import * as uuid from 'uuid';
+import { DeleteFolderDto } from './dto/delete-folder.dto';
 
 
 @Injectable()
@@ -28,27 +29,28 @@ export class FoldersService {
             goals: [] as Goal[]
         }
         userFound.folders.push(newFolder)
-        const indexEmptyCurrentFolder = userFound.currentFolders.indexOf(null)
-        if(indexEmptyCurrentFolder){
-            userFound.currentFolders[indexEmptyCurrentFolder] = newFolder.id
+        if(userFound.currentFolders.includes(null)){
+            const index = userFound.currentFolders.findIndex(currentFolderId => currentFolderId === null)
+            userFound.currentFolders[index] = newFolder.id
         } 
         await userFound.save()
     
         return newFolder
     }
 
-    async deleteFolder(user: User, idToDelete: string){        
+    async deleteFolder(user: User, deleteFolderDto: DeleteFolderDto){
+        const {folderId} = deleteFolderDto
         const userFound = await this.userModel.findOne({username: user.username})
         const hiddenFolders = userFound.folders.filter(folder => !userFound.currentFolders.includes(folder.id))
         let success = false
         userFound.folders = userFound.folders.filter(folder => {
-            if(folder.id === idToDelete){
+            if(folder.id === folderId){
                 success = true
             }
-            return folder.id !== idToDelete
+            return folder.id !== folderId
         })
         userFound.currentFolders = userFound.currentFolders.map(currentFolderId => {
-            if(currentFolderId === idToDelete){
+            if(currentFolderId === folderId){
                 return hiddenFolders[0] ? hiddenFolders[0].id : null
             }
             else{
@@ -57,9 +59,8 @@ export class FoldersService {
         })
         await userFound.save()
 
-        return {
-            success,
-            deletedId: success ? idToDelete : null
+        if(!success){
+            throw new HttpException("Folder not found", HttpStatus.BAD_REQUEST)
         }
     }
 
@@ -77,12 +78,10 @@ export class FoldersService {
             }
         })
 
-        await userFound.save()
-        return {
-            success,
-            id: success ? folderData.folderId : null,
-            newHeadline: success ? folderData.headline : null
+        if(!success){
+            throw new HttpException("Folder not found", HttpStatus.BAD_REQUEST)
         }
+        await userFound.save()
     }
 
     async getAllFolders(user: User){
@@ -107,8 +106,5 @@ export class FoldersService {
             return currentFolderId
         })
         await userFound.save()
-        return {
-            success: true
-        }
     }
 }

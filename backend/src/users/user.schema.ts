@@ -20,7 +20,7 @@ export class User {
     @Prop({type: [TagSchema]})
     tags: Tag[]
 
-    @Prop({required: true})
+    @Prop()
     currentFolders: Array<string | null>
 }
 

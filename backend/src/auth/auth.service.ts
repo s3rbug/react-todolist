@@ -34,29 +34,42 @@ export class AuthService {
             throw new HttpException(`Wrong password`, HttpStatus.BAD_REQUEST)
         }
 
-        const token = this._createToken(user)
+        const token = this._createToken(user.username)
         return {
             username: username,
             ...token
         }
     }
 
-    async register(userDto: CreateUserDto): Promise<User>{
+    async register(userDto: CreateUserDto){
         try {
+            const userFound = await this.usersService.findUserByUsername(userDto.username)
+            if(userFound){
+                throw new HttpException(`User ${userDto.username} already exists`, HttpStatus.BAD_REQUEST)
+            }
             const hashPassword = await bcrypt.hash(userDto.password, 5)
-            return await this.usersService.create(
-                {
-                    ...userDto,
-                    password: hashPassword
-                }
-            )
+            const newUser = {
+                username: userDto.username,
+                password: hashPassword
+            }
+            
+            await this.usersService.create({
+                ...newUser,
+                currentFolders: [null, null, null]
+            })
+
+            const token = this._createToken(newUser.username)
+            return {
+                username: userDto.username,
+                ...token
+            }
         }
         catch (err) {
             throw new HttpException(`Invalid user data ${err.message}`, HttpStatus.BAD_REQUEST)
         }
     }
 
-    private _createToken({username}: User): TokenType{
+    private _createToken(username: string): TokenType{
         const expiresIn = `${process.env.EXPIRES_IN}`
 
         const user: JwtPayload = {username}

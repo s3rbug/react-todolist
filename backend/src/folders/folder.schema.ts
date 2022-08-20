@@ -8,7 +8,7 @@ export type FolderDocument = Folder & Document;
 @Schema({ _id: false})
 export class Folder {
 
-    @Prop({required: true, unique: true})
+    @Prop({required: true, unique: true, partialFilterExpression: { $ne: null }})
     id: string
 
     @Prop({required: true})

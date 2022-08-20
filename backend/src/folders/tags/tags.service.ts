@@ -62,11 +62,10 @@ export class TagsService{
                 })
             )
         }
-        await userFound.save()
-        return {
-            success: !!success,
-            deletedTagId: success ? idToDelete : null
+        else {
+            throw new HttpException("Tag not found", HttpStatus.BAD_REQUEST)
         }
+        await userFound.save()
     }
 
     async getTagById(user: User, idToGet: string){
@@ -96,9 +95,9 @@ export class TagsService{
                 return {...tag}
             }
         })
-        await userFound.save()
-        return {
-            success
+        if(!success){
+            throw new HttpException("Tag not found", HttpStatus.BAD_REQUEST)
         }
+        await userFound.save()
     }
 }

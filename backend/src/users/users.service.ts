@@ -1,9 +1,10 @@
 import { InjectModel } from '@nestjs/mongoose';
-import { HttpException, HttpStatus, Injectable } from "@nestjs/common";
+import { BadRequestException, HttpException, HttpStatus, Injectable } from "@nestjs/common";
 
 import { User, UserDocument } from './user.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { Model } from 'mongoose';
+import { v4 } from 'uuid';
 
 @Injectable()
 export class UsersService {
@@ -11,9 +12,16 @@ export class UsersService {
         @InjectModel(User.name) private userModel: Model<UserDocument>
     ){}
 
-    async create(userDto: CreateUserDto): Promise<User>{
-        const createdUser = new this.userModel(userDto)
-        return createdUser.save()
+    async create(userDto: CreateUserDto){   
+        try {
+            const user = await this.userModel.create(userDto)
+            return user
+        }
+        catch (error) {
+            throw new BadRequestException(error.message)
+        }
+        // const newUser = new this.userModel(userDto)
+        // return newUser.save()
     }
 
     async getAll(): Promise<User[]>{

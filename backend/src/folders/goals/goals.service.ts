@@ -82,12 +82,10 @@ export class GoalsService {
                 return { ...folder }
             }
         })
-        await userFound.save()
-        return {
-            success,
-            folderId: success ? deleteGoalData.folderId : null,
-            goalId: success ? deleteGoalData.goalId : null,
+        if(!success){
+            throw new HttpException("Goal not found", HttpStatus.BAD_REQUEST)
         }
+        await userFound.save()
     }
 
     async editGoal(user: User, editGoalData: EditGoalDto){
@@ -117,12 +115,10 @@ export class GoalsService {
                 return {...folder}
             }
         })
-        await userFound.save()
-        return {
-            success,
-            folderId: success ? editGoalData.folderId : null,
-            goalId: success ? editGoalData.goalId : null,
+        if(!success){
+            throw new HttpException("Goal not found", HttpStatus.BAD_REQUEST)
         }
+        await userFound.save()
     }
 
     async toggleChecked(user: User, toggleCheckedData: GetGoalDto){
@@ -150,12 +146,10 @@ export class GoalsService {
                 return { ...folder }
             }
         })
-        await userFound.save()
-        return {
-            success,
-            folderId: success ? toggleCheckedData.folderId : null,
-            goalId: success ? toggleCheckedData.goalId : null,
+        if(!success){
+            throw new HttpException("Goal not found", HttpStatus.BAD_REQUEST)
         }
+        await userFound.save()
     }
 
     async swapGoalsDifferentFolders(user: User, swapData: SwapGoalDifferentFolders){
@@ -191,9 +185,6 @@ export class GoalsService {
         })
 
         await userFound.save()
-        return {
-            success: true
-        }
     }
 
     async swapGoalsSameFolder(user: User, swapData: SwapGoalsSameFolderDto){
@@ -225,8 +216,5 @@ export class GoalsService {
             }
         })
         await userFound.save()
-        return {
-            success: true
-        }
     }
 }
