@@ -1,7 +1,8 @@
+import { isDevelopment } from './../utils/helpers';
 import axios from "axios";
 
 export const instance = axios.create({
-	baseURL: "http://localhost:3100/",
+	baseURL: isDevelopment() ? "http://localhost:3100/" : "https://s3rbug-react-todolist.herokuapp.com/",
 });
 
 

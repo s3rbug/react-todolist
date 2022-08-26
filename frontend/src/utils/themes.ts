@@ -11,10 +11,10 @@ export const themes = {
                 paper: "#FFFFFF"
             },
             primary: {
-                main: colors.indigo[600]//"#3F51B5"
+                main: colors.indigo[600]
             },
             secondary: {
-                main: "#FF0000"//"#F50057"
+                main: "#FF0000"
             },
         },
     }),
@@ -23,7 +23,7 @@ export const themes = {
             mode: "dark",
             chip: "#535353",
             primary: {
-                main: colors.indigo[500],
+                main: "#3a86ff",
             },
             secondary: {
                 main: "#e63946",

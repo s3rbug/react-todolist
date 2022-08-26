@@ -66,7 +66,8 @@ const Header = ({ open, setOpen, children }: PropsType) => {
 					paddingRight: 2,
 					paddingLeft: 3,
 				}}>
-					{(token) && <IconButton
+					{
+					(token) && <IconButton
 						color="inherit"
 						aria-label="open drawer"
 						onClick={toggleDrawerOpened}

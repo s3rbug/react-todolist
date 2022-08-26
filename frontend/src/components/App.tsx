@@ -1,18 +1,18 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import Header from "./components/Header/Header";
-import store, { useTypedDispatch, useTypedSelector } from "./redux/reduxStore";
+import Header from "./Header/Header";
+import store, { useTypedDispatch, useTypedSelector } from "../redux/reduxStore";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
-import Folders from "./components/Folders";
-import { themes } from "./utils/themes";
+import Folders from "./Folders";
+import { themes } from "../utils/themes";
 import clsx from "clsx";
-import Login from "./components/Auth/Login";
-import Register from "./components/Auth/Register";
-import { localStorageWrapper, LOCAL_STORAGE_KEY } from "./localStorage/localStorageWrapper";
-import { uiActions } from "./redux/slices/ui";
-import { ThemeResponseType } from "./types/index_d";
+import Login from "./Auth/Login";
+import Register from "./Auth/Register";
+import { localStorageWrapper, LOCAL_STORAGE_KEY } from "../localStorage/localStorageWrapper";
+import { uiActions } from "../redux/slices/ui";
+import { ThemeResponseType } from "../types/index_d";
 
 const App = () => {
 	const dispatch = useTypedDispatch()

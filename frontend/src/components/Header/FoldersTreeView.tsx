@@ -4,16 +4,13 @@ import {
 	ListItemText,
 	ListItemIcon,
 	ListItemButton,
-	colors,
 } from "@mui/material";
 import { useTypedSelector } from "../../redux/reduxStore";
 import FolderOpenIcon from "@mui/icons-material/FolderOpen";
 import FolderCopyIcon from '@mui/icons-material/FolderCopyOutlined';
-import CreateNewFolderIcon from '@mui/icons-material/CreateNewFolderOutlined';
 import ColorLensIcon from '@mui/icons-material/ColorLensOutlined';
 import ColorizeIcon from '@mui/icons-material/ColorizeOutlined';
 import CollapseTreeItem from "./CollapseTreeItem";
-import BrushOutlinedIcon from '@mui/icons-material/BrushOutlined';
 import AddIcon from '@mui/icons-material/Add';
 import { FolderType, TagType } from "../../types/index_d";
 
