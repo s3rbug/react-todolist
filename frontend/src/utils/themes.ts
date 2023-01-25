@@ -23,7 +23,7 @@ export const themes = {
             mode: "dark",
             chip: "#535353",
             primary: {
-                main: "#3a86ff",
+                main: "#5fa8d3",
             },
             secondary: {
                 main: "#e63946",

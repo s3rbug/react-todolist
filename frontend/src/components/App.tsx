@@ -1,5 +1,4 @@
-import { useEffect, useState } from "react";
-import "./App.css";
+import { useEffect, useState } from "react";import "./App.css";
 import Header from "./Header/Header";
 import store, { useTypedDispatch, useTypedSelector } from "../redux/reduxStore";
 import { Provider } from "react-redux";
@@ -13,6 +12,7 @@ import Register from "./Auth/Register";
 import { localStorageWrapper, LOCAL_STORAGE_KEY } from "../localStorage/localStorageWrapper";
 import { uiActions } from "../redux/slices/ui";
 import { ThemeResponseType } from "../types/index_d";
+
 
 const App = () => {
 	const dispatch = useTypedDispatch()
@@ -31,25 +31,14 @@ const App = () => {
 			<ThemeProvider theme={isLight ? themes.lightTheme : themes.darkTheme}>
 				<Header open={drawerOpened} setOpen={setDrawerOpened}>
 					<Routes>
-						<Route
-							path="/react-todolist"
-							element={<Folders />}
-						/>
-						<Route
-							path="/react-todolist/login"
-							element={<Login />}
-						/>
-						<Route
-							path="/react-todolist/register"
-							element={<Register />}
-						/>
+						<Route path="/react-todolist" element={<Folders />} />
+						<Route path="/react-todolist/login" element={<Login />} />
+						<Route path="/react-todolist/register" element={<Register />} />
 					</Routes>
 				</Header>
 			</ThemeProvider>
 			<div
-				className={clsx(
-					drawerOpened && "overlay"
-				)}
+				className={clsx(drawerOpened && "overlay")}
 				onClick={() => {
 					setDrawerOpened(false);
 				}}

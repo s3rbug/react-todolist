@@ -22,7 +22,7 @@ const ToDoList = ({ folderId }: PropsType) => {
 	const currentFolder: FolderType | undefined = useTypedSelector(
 		(state) => state.goal.folders.find(folder => folder.id === folderId)
 	);
-	
+	const isDragDisabled = useTypedSelector(state => state.ui.isPageLoading)
 	const toggleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
 		if (e.target.value) {
 			const goalId: string = e.target.value
@@ -80,6 +80,7 @@ const ToDoList = ({ folderId }: PropsType) => {
 										index={index}
 										key={`Draggable-goal-${goal.id}-folder-${folderId}`}
 										getDraggableSx={getDraggableSx}
+										isDragDisabled={isDragDisabled}
 									>
 										<Goal
 											toggleCheckbox={toggleCheckbox}

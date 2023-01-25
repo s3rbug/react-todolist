@@ -17,6 +17,7 @@ type DraggableItemPropsType = {
 		isDragging: boolean,
 		draggableProps: DraggingStyle | NotDraggingStyle | undefined
 	) => object;
+	isDragDisabled?: boolean;
 };
 
 const DraggableItem = ({
@@ -25,9 +26,10 @@ const DraggableItem = ({
 	children,
 	getDraggableSx,
 	index,
+	isDragDisabled
 }: DraggableItemPropsType) => {
 	return (
-		<Draggable draggableId={`item-${draggableId}`} index={index}>
+		<Draggable draggableId={`item-${draggableId}`} index={index} isDragDisabled={isDragDisabled}>
 			{(provided: DraggableProvided, snapshot: DraggableStateSnapshot) => (
 				<Box
 					ref={provided.innerRef}

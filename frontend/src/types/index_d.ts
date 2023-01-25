@@ -35,6 +35,7 @@ export type GoalStateType = {
 export type UiStateType = {
 	isLight: boolean;
 	isPageLoading: boolean;
+	showStatusAlert: boolean;
 };
 
 export type FolderFormDataType = {
