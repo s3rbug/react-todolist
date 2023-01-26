@@ -36,6 +36,8 @@ export type UiStateType = {
 	isLight: boolean;
 	isPageLoading: boolean;
 	showStatusAlert: boolean;
+	usernameError: string | null;
+    passwordError: string | null;
 };
 
 export type FolderFormDataType = {
@@ -81,6 +83,7 @@ export type LoginResponseType = {
 	accessToken: string;
 	username: string;
 	expiresIn: string;
+	message?: string;
 }
 
 export type ThemeResponseType = {

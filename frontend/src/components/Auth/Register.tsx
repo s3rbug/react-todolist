@@ -5,7 +5,7 @@ import AuthComponent from './AuthComponent';
 
 const Register = () => {
     const dispatch = useTypedDispatch()
-    const registerSubmit = (data: AuthFormType) => {
+    const registerSubmit = (data: AuthFormType): void => {
         dispatch(register(data.username, data.password))
     }
     return (

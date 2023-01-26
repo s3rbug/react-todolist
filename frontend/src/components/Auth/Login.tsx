@@ -5,7 +5,7 @@ import { useTypedDispatch } from '../../redux/reduxStore';
 
 const Login = () => {
     const dispatch = useTypedDispatch()
-    const loginSubmit = (data: AuthFormType) => {
+    const loginSubmit = (data: AuthFormType): void => {
         dispatch(login(data.username, data.password))
     }
     return (

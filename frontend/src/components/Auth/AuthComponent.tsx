@@ -20,8 +20,18 @@ const AuthComponent = ({title, passwordConfirmation, onSubmit, linkText, buttonT
 
     const dispatch = useDispatch()
     const token = useTypedSelector(state => state.auth.token)
+
+    const usernameError = useTypedSelector(state => state.ui.usernameError)
+    const passwordError = useTypedSelector(state => state.ui.passwordError)
+
+    const {watch, register, handleSubmit, setError, formState: { errors }} = useForm<AuthFormType>()
+
+    const clearAuthErrors = (): void => {
+        dispatch(uiActions.clearAuthErrors())
+    }
     
     const submitHandler: SubmitHandler<AuthFormType> = (data: AuthFormType) => {
+        clearAuthErrors()
         onSubmit(data)
     }
 
@@ -37,7 +47,14 @@ const AuthComponent = ({title, passwordConfirmation, onSubmit, linkText, buttonT
         dispatch(uiActions.setIsLoading({isLoading: false}))
     })
 
-    const {watch, register, handleSubmit, formState: { errors }} = useForm<AuthFormType>()
+    useEffect(() => {      
+        if(usernameError){
+            setError("username", {message: usernameError})
+        }
+        if(passwordError){
+            setError("password", {message: passwordError})
+        }
+    }, [usernameError, passwordError, setError])
 
     if(token){
         return <Navigate to={"/react-todolist"} replace/>
@@ -132,7 +149,8 @@ const AuthComponent = ({title, passwordConfirmation, onSubmit, linkText, buttonT
                             display: "flex",
                             alignItems: "center"
                         }} 
-                        color="primary" 
+                        color="primary"
+                        onClick={clearAuthErrors}
                     >
                         <NavLink to={link}>{linkText}</NavLink>
                     </Box>
