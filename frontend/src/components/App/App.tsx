@@ -1,20 +1,21 @@
-import { useEffect, useState } from "react";import "./App.css";
-import Header from "./Header/Header";
-import store, { useTypedDispatch, useTypedSelector } from "../redux/reduxStore";
+import { useEffect, useState } from "react";
+import "./App.css";
+import Header from "../Header/Header";
+import store, { useTypedDispatch, useTypedSelector } from "../../redux/reduxStore";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { ThemeProvider } from "@mui/material/styles";
-import Folders from "./Folders";
-import { themes } from "../utils/themes";
+import Folders from "../Folders/Folders";
+import { themes } from "../../utils/themes";
 import clsx from "clsx";
-import Login from "./Auth/Login";
-import Register from "./Auth/Register";
-import { localStorageWrapper, LOCAL_STORAGE_KEY } from "../localStorage/localStorageWrapper";
-import { uiActions } from "../redux/slices/ui";
-import { ThemeResponseType } from "../types/index_d";
+import Login from "../Auth/Login";
+import Register from "../Auth/Register";
+import { localStorageWrapper, LOCAL_STORAGE_KEY } from "../../localStorage/localStorageWrapper";
+import { uiActions } from "../../redux/slices/ui";
+import { ThemeResponseType } from "../../types/index_d";
 
 
-const App = () => {
+const App: React.FC = () => {
 	const dispatch = useTypedDispatch()
 	const [drawerOpened, setDrawerOpened] = useState(false);
 	const isLight = useTypedSelector((state) => state.ui.isLight);
@@ -26,8 +27,9 @@ const App = () => {
 			dispatch(uiActions.setIsLight({isLight: localStorageIsLight.isLight}))
 		}
 	}, [dispatch])
+
 	return (
-		<div className="app-wrapper">
+		<div className="app-wrapper" data-testid="app-wrapper">
 			<ThemeProvider theme={isLight ? themes.lightTheme : themes.darkTheme}>
 				<Header open={drawerOpened} setOpen={setDrawerOpened}>
 					<Routes>
