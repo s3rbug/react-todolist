@@ -1,22 +1,22 @@
-import { AnyAction } from "redux";
-import { ThunkAction } from "redux-thunk";
-import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux";
-import { configureStore } from '@reduxjs/toolkit';
+import { AnyAction } from "redux"
+import { ThunkAction } from "redux-thunk"
+import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux"
+import { configureStore } from "@reduxjs/toolkit"
 
-import goal from "./slices/goal"
-import ui from "./slices/ui"
-import auth from "./slices/auth"
+import { goalReducer } from "./slices/goal"
+import { uiReducer } from "./slices/ui"
+import { authReducer } from "./slices/auth"
 
 const store = configureStore({
 	reducer: {
-		goal,
-		ui,
-		auth
-	}
-});
+		goal: goalReducer,
+		ui: uiReducer,
+		auth: authReducer,
+	},
+})
 
-export type AppDispatchType = typeof store.dispatch;
-export type AppStateType = ReturnType<typeof store.getState>;
+export type AppDispatchType = typeof store.dispatch
+export type AppStateType = ReturnType<typeof store.getState>
 
 export type AppThunkType<ReturnType = Promise<void>> = ThunkAction<
 	ReturnType,
@@ -25,7 +25,7 @@ export type AppThunkType<ReturnType = Promise<void>> = ThunkAction<
 	AnyAction
 >
 
-export const useTypedSelector: TypedUseSelectorHook<AppStateType> = useSelector;
+export const useTypedSelector: TypedUseSelectorHook<AppStateType> = useSelector
 export const useTypedDispatch = () => useDispatch<AppDispatchType>()
 
-export default store;
+export default store

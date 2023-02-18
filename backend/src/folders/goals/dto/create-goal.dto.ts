@@ -1,4 +1,4 @@
 export class CreateGoalDto {
-    readonly folderId: string;
-    readonly text: string;
+	readonly folderId: string
+	readonly text: string
 }

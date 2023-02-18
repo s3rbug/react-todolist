@@ -1,11 +1,17 @@
-import { isDevelopment } from './../utils/helpers';
-import axios from "axios";
+import { isDevelopment } from "../utils/isDevelopment"
+import axios from "axios"
+
+const getBaseURL = () => {
+	if (isDevelopment()) {
+		return "http://localhost:3100/"
+	}
+	return "https://s3rbug-react-todolist.herokuapp.com/"
+}
 
 export const instance = axios.create({
-	baseURL: isDevelopment() ? "http://localhost:3100/" : "https://s3rbug-react-todolist.herokuapp.com/",
-});
-
+	baseURL: getBaseURL(),
+})
 
 export const setApiHeader = (token: string) => {
-	instance.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+	instance.defaults.headers.common["Authorization"] = `Bearer ${token}`
 }

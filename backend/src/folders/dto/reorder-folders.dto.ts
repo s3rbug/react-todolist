@@ -1,4 +1,4 @@
 export class ReorderFoldersDto {
-    readonly fromFolderId: string;
-    readonly toFolderId: string;
+	readonly fromFolderId: string
+	readonly toFolderId: string
 }

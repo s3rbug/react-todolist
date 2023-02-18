@@ -1,0 +1,28 @@
+{
+	"extends": ["react-app", "react-app/jest"],
+	"rules": {
+		"no-restricted-imports": [
+			"warn",
+			{
+				"patterns": [
+					{
+						"group": ["components/"],
+						"message": "Use module import 'src/components' instead"
+					},
+					{
+						"group": ["containers/"],
+						"message": "Use module import 'src/containers' instead"
+					},
+					{
+						"group": ["pages/"],
+						"message": "Use module import 'src/pages' instead"
+					},
+					{
+						"group": ["layout/"],
+						"message": "Use module import 'src/layout' instead"
+					}
+				]
+			}
+		]
+	}
+}

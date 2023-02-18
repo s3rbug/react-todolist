@@ -1,4 +1,4 @@
 interface TokenType {
-    accessToken: string;
-    expiresIn: string;
+	accessToken: string
+	expiresIn: string
 }

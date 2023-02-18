@@ -1,4 +1,4 @@
 export class EditTagDto {
-    readonly name?: string;
-    readonly color?: string;
+	readonly name?: string
+	readonly color?: string
 }

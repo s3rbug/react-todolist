@@ -1,188 +1,266 @@
-import { AppThunkType } from './../reduxStore';
-import { localStorageWrapper, LOCAL_STORAGE_KEY } from './../../localStorage/localStorageWrapper';
-import { setApiHeader } from './../../api/api';
-import {authActions} from './../slices/auth';
-import {goalActions} from './../slices/goal';
-import { goalApi } from "../../api/goalApi";
-import { uiActions } from '../slices/ui';
+import { AppThunkType } from "./../reduxStore"
+import {
+	localStorageWrapper,
+	LOCAL_STORAGE_KEY,
+} from "./../../localStorage/localStorageWrapper"
+import { setApiHeader } from "./../../api/api"
+import { authActions } from "./../slices/auth"
+import { goalActions } from "./../slices/goal"
+import { goalApi } from "../../api/goalApi"
+import { uiActions } from "../slices/ui"
 
-export const setUserData = (): AppThunkType => 
+export const setUserData = (): AppThunkType => async (dispatch) => {
+	return Promise.all([
+		goalApi.getFolders(),
+		goalApi.getTags(),
+		goalApi.getCurrentFolders(),
+	])
+		.then((response) => {
+			const isResponseOk = !response.some((res) => res.status !== 200)
+
+			if (isResponseOk) {
+				const folders = response[0].data
+				const tags = response[1].data
+				const currentFolders = response[2].data
+				dispatch(goalActions.setUserData({ folders, tags, currentFolders }))
+			}
+		})
+		.catch(() => {
+			setApiHeader("")
+			localStorageWrapper.setLocalStorageItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, {
+				username: null,
+				accessToken: null,
+			})
+			dispatch(authActions.resetUser())
+		})
+		.finally(() => {
+			dispatch(uiActions.setIsLoading({ isLoading: false }))
+		})
+}
+
+type AddGoalType = {
+	folderId: string
+	text: string
+}
+
+export const addGoal =
+	({ folderId, text }: AddGoalType): AppThunkType =>
 	async (dispatch) => {
-		return Promise.all([
-			goalApi.getFolders(), 
-			goalApi.getTags(),
-			goalApi.getCurrentFolders()
-		])
-			.then(response => {
-				const isResponseOk = !response.some(res => res.status !== 200)
-				
-				if(isResponseOk){
-					const folders = response[0].data
-					const tags = response[1].data
-					const currentFolders = response[2].data					
-					dispatch(goalActions.setUserData({folders, tags, currentFolders}))
+		return goalApi.addGoal(folderId, text).then((response) => {
+			if (response.status === 201) {
+				const newGoal = response.data
+				dispatch(
+					goalActions.addGoal({
+						folderId,
+						text: newGoal.text,
+						newGoalId: newGoal.id,
+					})
+				)
+			}
+		})
+	}
+
+type DeleteGoalType = {
+	folderId: string
+	goalId: string
+}
+
+export const deleteGoal =
+	({ folderId, goalId }: DeleteGoalType): AppThunkType<Promise<void>> =>
+	async (dispatch) => {
+		return goalApi.deleteGoal(folderId, goalId).then((response) => {
+			if (response.status === 200) {
+				dispatch(goalActions.deleteGoal({ goalId, folderId }))
+			}
+		})
+	}
+
+type EditGoalType = {
+	folderId: string
+	goalId: string
+	newGoal: { note?: string; tagId?: string; text?: string }
+}
+
+export const editGoal =
+	({ folderId, goalId, newGoal }: EditGoalType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.editGoal(folderId, goalId, newGoal).then((response) => {
+			if (response.status === 200) {
+				dispatch(goalActions.editGoal({ folderId, goalId, newGoal }))
+			}
+		})
+	}
+
+type ToggleCheckedType = {
+	folderId: string
+	goalId: string
+}
+
+export const toggleChecked =
+	({ folderId, goalId }: ToggleCheckedType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.toggleChecked(folderId, goalId).then((response) => {
+			if (response.status === 200) {
+				dispatch(goalActions.toggleChecked({ folderId, goalId }))
+			}
+		})
+	}
+
+type EditFolderHeadlineType = {
+	folderId: string
+	headline: string
+}
+
+export const editFolderHeadline =
+	({ folderId, headline }: EditFolderHeadlineType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.editFolderHeadline(folderId, headline).then((response) => {
+			if (response.status === 200) {
+				dispatch(goalActions.editFolderHeadline({ folderId, headline }))
+			}
+		})
+	}
+
+type AddFolderType = {
+	headline: string
+}
+
+export const addFolder =
+	({ headline }: AddFolderType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.addFolder(headline).then((response) => {
+			if (response.status === 201) {
+				dispatch(goalActions.addFolder({ newFolder: response.data }))
+			}
+		})
+	}
+
+type AddTagType = {
+	name: string
+	color: string
+}
+
+export const addTag =
+	({ name, color }: AddTagType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.addTag(name, color).then((response) => {
+			if (response.status === 201) {
+				dispatch(goalActions.addTag({ newTag: response.data }))
+			}
+		})
+	}
+
+type DeleteTagType = {
+	tagId: string
+}
+
+export const deleteTag =
+	({ tagId }: DeleteTagType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.deleteTag(tagId).then((response) => {
+			if (response.status === 200) {
+				dispatch(goalActions.deleteTag({ tagId }))
+			}
+		})
+	}
+
+type EditTagType = {
+	tagId: string
+	newTag: { name?: string; color?: string }
+}
+
+export const editTag =
+	({ tagId, newTag }: EditTagType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.editTag(tagId, newTag).then((response) => {
+			if (response.status === 200) {
+				dispatch(goalActions.editTag({ tagId, newTag }))
+			}
+		})
+	}
+
+type SwapGoalsDifferentFoldersType = {
+	fromGoalIndex: number
+	toGoalIndex: number
+	fromFolderId: string
+	toFolderId: string
+}
+
+export const swapGoalsDifferentFolders =
+	({
+		fromGoalIndex,
+		toGoalIndex,
+		fromFolderId,
+		toFolderId,
+	}: SwapGoalsDifferentFoldersType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi
+			.swapGoalsDifferentFolders(
+				fromGoalIndex,
+				toGoalIndex,
+				fromFolderId,
+				toFolderId
+			)
+			.then(() => {
+				dispatch(uiActions.setIsLoading({ isLoading: false }))
+			})
+	}
+
+type SwapGoalsSameFolderType = {
+	fromGoalIndex: number
+	toGoalIndex: number
+	folderId: string
+}
+
+export const swapGoalsSameFolder =
+	({
+		fromGoalIndex,
+		toGoalIndex,
+		folderId,
+	}: SwapGoalsSameFolderType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi
+			.swapGoalsSameFolder(fromGoalIndex, toGoalIndex, folderId)
+			.then(() => {
+				dispatch(uiActions.setIsLoading({ isLoading: false }))
+			})
+	}
+
+type ReorderCurrentFoldersType = {
+	fromFolderId: string
+	toFolderId: string
+}
+
+export const reorderCurrentFolders =
+	({ fromFolderId, toFolderId }: ReorderCurrentFoldersType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi
+			.reorderCurrentFolders(fromFolderId, toFolderId)
+			.then((response) => {
+				if (response.status === 200) {
+					dispatch(
+						goalActions.reorderCurrentFolders({ fromFolderId, toFolderId })
+					)
 				}
 			})
-			.catch(() => {
-				setApiHeader("")
-				localStorageWrapper.setLocalStorageItem(LOCAL_STORAGE_KEY.ACCESS_TOKEN, {
-					username: null,
-					accessToken: null
-				})
-				dispatch(authActions.resetUser())
+			.then(() => {
+				dispatch(uiActions.setIsLoading({ isLoading: false }))
 			})
-			.finally(() => {
-				dispatch(uiActions.setIsLoading({isLoading: false}))
-			})
-}
+	}
 
-export const addGoal = (
-	folderId: string, 
-	text: string
-) : AppThunkType => async (dispatch) => {
-	return goalApi.addGoal(folderId, text).then(response => {
-		if(response.status === 201){
-			const newGoal = response.data
-			dispatch(goalActions.addGoal({folderId, text: newGoal.text, newGoalId: newGoal.id}))
-		}
-	})
-}
-
-export const deleteGoal = (
-	folderId: string, 
-	goalId: string
-) : AppThunkType<Promise<void>> => async (dispatch) => {
-	return goalApi.deleteGoal(folderId, goalId).then(response => {
-		if(response.status === 200){
-			dispatch(goalActions.deleteGoal({goalId, folderId}))
-		}
-	})
-}
-
-export const editGoal = (
-	folderId: string, 
-	goalId: string, 
-	newGoal: {note?: string, tagId?: string, text?: string}
-): AppThunkType => async (dispatch) => {
-	return goalApi.editGoal(folderId, goalId, newGoal).then(response => {
-		if(response.status === 200){
-			dispatch(goalActions.editGoal({folderId, goalId, newGoal}))
-		}
-	})
-}
-
-export const toggleChecked = (
-	folderId: string, 
-	goalId: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.toggleChecked(folderId, goalId).then(response => {
-		if(response.status === 200){
-			dispatch(goalActions.toggleChecked({folderId, goalId}))
-		}
-	})
-}
-
-export const editFolderHeadline = (
-	folderId: string, 
-	headline: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.editFolderHeadline(folderId, headline).then(response => {
-		if(response.status === 200){
-			dispatch(goalActions.editFolderHeadline({folderId, headline}))
-		}
-	})
-}
-
-export const addFolder = (
-	headline: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.addFolder(headline).then(response => {
-		if(response.status === 201){
-			dispatch(goalActions.addFolder({newFolder: response.data}))
-		}
-	})
-}
-
-export const addTag = (
-	name: string, 
-	color: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.addTag(name, color).then(response => {
-		if(response.status === 201){		
-			dispatch(goalActions.addTag({newTag: response.data}))
-		}
-	})
-}
-
-export const deleteTag = (
-	tagId: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.deleteTag(tagId).then(response => {
-		if(response.status === 200){
-			dispatch(goalActions.deleteTag({tagId}))		
-		}
-	})
-}
-
-export const editTag = (
-	tagId: string, 
-	newTag: {name?: string, color?: string}
-): AppThunkType => async (dispatch) => {
-	return goalApi.editTag(tagId, newTag).then(response => {
-		if(response.status === 200){
-			dispatch(goalActions.editTag({tagId, newTag}))	
-		}
-	})
-}
-
-export const swapGoalsDifferentFolders = (
-		fromGoalIndex: number, 
-		toGoalIndex: number, 
-		fromFolderId: string, 
-		toFolderId: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.swapGoalsDifferentFolders(fromGoalIndex, toGoalIndex, fromFolderId, toFolderId)
-		.then(() => {
-			dispatch(uiActions.setIsLoading({isLoading: false}))
-		})
-}
-
-export const swapGoalsSameFolder = (
-	fromGoalIndex: number, 
-	toGoalIndex: number, 
+type DeleteFolderType = {
 	folderId: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.swapGoalsSameFolder(fromGoalIndex, toGoalIndex, folderId)
-		.then(() => {
-			dispatch(uiActions.setIsLoading({isLoading: false}))
-		})
 }
 
-export const reorderCurrentFolders = (
-	fromFolderId: string,
-	toFolderId: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.reorderCurrentFolders(fromFolderId, toFolderId)
-		.then(response => {
-			if(response.status === 200){
-				dispatch(goalActions.reorderCurrentFolders({fromFolderId, toFolderId}))
+export const deleteFolder =
+	({ folderId }: DeleteFolderType): AppThunkType =>
+	async (dispatch) => {
+		return goalApi.deleteFolder(folderId).then((response) => {
+			console.log(response)
+
+			if (response.status === 200) {
+				console.log(folderId)
+				dispatch(goalActions.deleteFolder({ folderId }))
 			}
 		})
-		.then(() => {
-			dispatch(uiActions.setIsLoading({isLoading: false}))
-		})
-}
-
-export const deleteFolder = (
-	folderId: string
-): AppThunkType => async (dispatch) => {
-	return goalApi.deleteFolder(folderId)
-		.then(response => {
-			console.log(response);
-			
-			if(response.status === 200){
-				console.log(folderId);
-				dispatch(goalActions.deleteFolder({folderId}))
-			}
-		})
-}
+	}

@@ -1,9 +1,9 @@
 body {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 .MuiDialog-paper {
-    background-image: none !important;
+	background-image: none !important;
 }

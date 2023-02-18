@@ -1,3 +1,3 @@
 export class CreateFolderDto {
-    readonly headline: string;
+	readonly headline: string
 }
