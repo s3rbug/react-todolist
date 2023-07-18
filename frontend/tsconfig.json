@@ -1,7 +1,8 @@
 {
 	"compilerOptions": {
-		"target": "es5",
-		"module": "CommonJS",
+		"target": "ESNext",
+		"module": "ESNext",
+		"types": ["vite/client"],
 		"strict": true,
 		"esModuleInterop": true,
 		"forceConsistentCasingInFileNames": true,

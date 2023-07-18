@@ -1,7 +1,7 @@
 import { register } from "../../redux/middleware/auth"
 import { useTypedDispatch } from "../../redux/reduxStore"
 import { AuthFormType } from "../../types/index_d"
-import { AuthContainer } from "../../containers"
+import { AuthForm } from "../../containers"
 
 export const Register = () => {
 	const dispatch = useTypedDispatch()
@@ -9,12 +9,12 @@ export const Register = () => {
 		dispatch(register({ username: data.username, password: data.password }))
 	}
 	return (
-		<AuthContainer
+		<AuthForm
 			title="Create account"
 			onSubmit={registerSubmit}
 			linkText="Sign in"
 			link="/react-todolist/login"
-			buttonText="Next"
+			buttonText="Register"
 			passwordConfirmation
 		/>
 	)

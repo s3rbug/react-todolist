@@ -14,5 +14,6 @@
 	"lint-staged": {
 		"**/*": "prettier --write --ignore-unknown"
 	},
-	"private": "true"
+	"private": "true",
+	"dependencies": {}
 }

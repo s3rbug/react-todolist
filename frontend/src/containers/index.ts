@@ -1,6 +1,6 @@
 export { FolderLabel } from "./FolderLabel"
 export { AddGoalForm } from "./AddGoalForm"
 export { ItemGoal } from "./ItemGoal"
-export { AuthContainer } from "./AuthContainer"
+export { AuthForm } from "./AuthForm"
 export { ToDoList } from "./ToDoList"
 export { App } from "./App"

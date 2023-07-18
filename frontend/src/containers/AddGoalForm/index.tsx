@@ -2,47 +2,60 @@ import { useState, useRef } from "react"
 import { IconButton, Box } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { TaskFormDataType } from "../../types/index_d"
-import { useSpring, animated } from "react-spring"
 import { useForm } from "react-hook-form"
 import { addGoal } from "../../redux/middleware/goal"
 import { useTypedDispatch } from "../../redux/reduxStore"
+import { makeStyles } from "@mui/styles"
 
 type PropsType = {
 	folderId: string
 }
 
+const useStyles = makeStyles(() => ({
+	arrow: {
+		animation: "$arrowAnimation 1000ms ease-in-out",
+	},
+	"@keyframes arrowAnimation": {
+		"50%": {
+			transform: "translateY(-15px)",
+			opacity: 0,
+		},
+		"55%": {
+			transform: "translateY(15px)",
+		},
+		"80%": {
+			transform: "translateY(-5px)",
+		},
+		"90%": {
+			transform: "translateY(5px)",
+		},
+		"100%": {
+			transform: "translateY(0)",
+			opacity: 1,
+		},
+	},
+}))
+
 export const AddGoalForm = ({ folderId }: PropsType) => {
 	const dispatch = useTypedDispatch()
+	const classes = useStyles()
 	const textField = useRef<null | HTMLInputElement>(null)
-	const [isMoving, setMoving] = useState(false)
+	const [arrowAnimation, setArrowAnimation] = useState<boolean>(false)
 	const [focused, setFocused] = useState(false)
-	const states = [
-		{},
-		{
-			to: [
-				{ opacity: 0, marginBottom: "25px" },
-				{ marginBottom: "-25px" },
-				{ opacity: 1, marginBottom: "0" },
-			],
-			config: { tension: 400, friction: 20, clamp: true },
-			onRest: () => {
-				setMoving(false)
-			},
-		},
-	]
-	const arrowAnimationProps = useSpring({
-		...states[+isMoving],
-	})
 
 	const handleOffFocus = () => {
 		setFocused(false)
+	}
+
+	const toggleArrowAnimation = () => {
+		setArrowAnimation((oldArrowAnimation) => !oldArrowAnimation)
+		console.log(arrowAnimation)
 	}
 
 	const onSubmit = (data: TaskFormDataType) => {
 		dispatch(addGoal({ folderId, text: data.goalText }))
 		textField.current?.focus()
 		setValue("goalText", "")
-		if (!errors.goalText?.message) setMoving(true)
 	}
 
 	const {
@@ -83,7 +96,7 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 					borderWidth: !!errors.goalText || focused ? 2 : 1,
 				}}
 			>
-				<animated.div key={`animated.div-${folderId}`}>
+				<div>
 					<Box
 						{...register("goalText", {
 							required: { value: true, message: "Goal text can not be empty" },
@@ -102,7 +115,7 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 						onFocus={() => setFocused(true)}
 						onBlur={handleOffFocus}
 					/>
-				</animated.div>
+				</div>
 			</Box>
 			<IconButton
 				sx={{
@@ -123,15 +136,15 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 						color: focused ? "white" : "primary.main",
 					},
 				}}
+				onClick={toggleArrowAnimation}
 				color="primary"
 				type="submit"
 			>
-				<animated.div
-					key={`animated.div-${folderId}`}
-					style={arrowAnimationProps}
-				>
-					<ArrowUpwardIcon sx={{ alignSelf: "center" }} />
-				</animated.div>
+				<ArrowUpwardIcon
+					onAnimationEnd={toggleArrowAnimation}
+					className={arrowAnimation ? classes.arrow : ""}
+					sx={{ alignSelf: "center" }}
+				/>
 			</IconButton>
 		</Box>
 	)

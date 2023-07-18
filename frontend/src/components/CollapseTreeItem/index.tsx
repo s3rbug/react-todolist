@@ -7,7 +7,6 @@ import {
 } from "@mui/material"
 import ExpandLess from "@mui/icons-material/ExpandLess"
 import { ReactNode } from "react"
-import { animated, useSpring, config } from "react-spring"
 import { Box } from "@mui/system"
 
 type PropsType = {
@@ -18,13 +17,6 @@ type PropsType = {
 	children: ReactNode
 }
 
-const useAnimatedExpand = (isAnimated: boolean) => {
-	return useSpring({
-		transform: isAnimated ? "rotateX(0deg)" : "rotateX(180deg)",
-		config: config.stiff,
-	})
-}
-
 export const CollapseTreeItem = ({
 	open,
 	setOpen,
@@ -32,7 +24,6 @@ export const CollapseTreeItem = ({
 	collapseIcon,
 	children,
 }: PropsType) => {
-	const tagsExpandAnimation = useAnimatedExpand(open)
 	const handleClick = () => {
 		setOpen(!open)
 	}
@@ -42,15 +33,16 @@ export const CollapseTreeItem = ({
 				<ListItemIcon>{collapseIcon}</ListItemIcon>
 				<ListItemText primary={collapseText} />
 				<Box>
-					<animated.div style={tagsExpandAnimation}>
-						<ExpandLess
-							sx={{
-								"&:hover svg": {
-									color: "primary.main",
-								},
-							}}
-						/>
-					</animated.div>
+					<ExpandLess
+						sx={{
+							"&:hover svg": {
+								color: "primary.main",
+							},
+							transition: "transform 250ms ease-in",
+							transformOrigin: "center",
+							transform: open ? "rotateX(180deg)" : "rotateX(0)",
+						}}
+					/>
 				</Box>
 			</ListItemButton>
 			<Collapse in={open} timeout="auto" unmountOnExit>

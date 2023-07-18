@@ -16,7 +16,7 @@ type PropsType = {
 	onSubmit: (data: AuthFormType) => void
 }
 
-export const AuthContainer = ({
+export const AuthForm = ({
 	title,
 	passwordConfirmation,
 	onSubmit,
