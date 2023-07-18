@@ -11,7 +11,7 @@ import {
 import { ColorResult, HuePicker } from "react-color"
 import { CancelDialogButton, ApplyDialogButton } from "../../../../components"
 import { addTag } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/reduxStore"
+import { useTypedDispatch } from "../../../../redux/store"
 import { Box } from "@mui/system"
 
 type PropsType = {

@@ -5,7 +5,7 @@ import Checkbox from "@mui/material/Checkbox"
 import { GoalType } from "../../types/index_d"
 import { TaskDetails } from "./TaskDetails"
 import { Box, Tooltip } from "@mui/material"
-import { useTypedSelector } from "../../redux/reduxStore"
+import { useTypedSelector } from "../../redux/store"
 
 type PropsType = {
 	goal: GoalType

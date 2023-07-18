@@ -16,7 +16,7 @@ import {
 import Chip from "@mui/material/Chip"
 import { useForm } from "react-hook-form"
 import { deleteGoal, editGoal } from "../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../redux/reduxStore"
+import { useTypedDispatch } from "../../../redux/store"
 
 type PropsType = {
 	open: boolean

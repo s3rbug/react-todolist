@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material"
 import { DraggableItem, DroppableItem } from "../../components"
 import { ItemGoal, AddGoalForm, FolderLabel } from ".."
 import { FolderType } from "../../types/index_d"
-import { useTypedDispatch, useTypedSelector } from "../../redux/reduxStore"
+import { useTypedDispatch, useTypedSelector } from "../../redux/store"
 import { DraggingStyle, NotDraggingStyle } from "react-beautiful-dnd"
 import { toggleChecked } from "../../redux/middleware/goal"
 

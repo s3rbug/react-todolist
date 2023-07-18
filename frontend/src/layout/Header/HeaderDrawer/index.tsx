@@ -22,9 +22,10 @@ const DrawerHeader = styled("div", {
 type PropsType = {
 	open: boolean
 	drawerWidth: number
+	setOpen: (open: boolean) => void
 }
 
-export const HeaderDrawer = ({ open, drawerWidth }: PropsType) => {
+export const HeaderDrawer = ({ open, setOpen, drawerWidth }: PropsType) => {
 	const [addTagOpened, setAddTagOpened] = useState(false)
 	const [editTagOpened, setEditTagOpened] = useState(false)
 	const [addFolderOpened, setAddFolderOpened] = useState(false)
@@ -56,9 +57,9 @@ export const HeaderDrawer = ({ open, drawerWidth }: PropsType) => {
 					boxShadow: 15,
 				},
 			}}
-			variant="persistent"
 			anchor="left"
 			open={open}
+			onClose={() => setOpen(false)}
 		>
 			<DrawerHeader drawerWidth={drawerWidth} />
 			<FoldersTreeView

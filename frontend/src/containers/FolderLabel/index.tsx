@@ -10,7 +10,7 @@ import {
 import FolderIcon from "@mui/icons-material/FolderOutlined"
 import { FolderType } from "../../types/index_d"
 import { reorderCurrentFolders } from "../../redux/middleware/goal"
-import { useTypedDispatch } from "../../redux/reduxStore"
+import { useTypedDispatch } from "../../redux/store"
 
 type PropsType = {
 	headline: string

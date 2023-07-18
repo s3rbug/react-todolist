@@ -3,7 +3,7 @@ import { useEffect } from "react"
 import { SubmitHandler, useForm } from "react-hook-form"
 import { useDispatch } from "react-redux"
 import { NavLink, Navigate } from "react-router-dom"
-import { useTypedSelector } from "../../redux/reduxStore"
+import { useTypedSelector } from "../../redux/store"
 import { uiActions } from "../../redux/slices/ui"
 import { AuthFormType } from "../../types/index_d"
 

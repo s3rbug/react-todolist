@@ -1,6 +1,6 @@
 import { LoginResponseType } from "./../types/index_d"
 import { AuthFormType } from "../types/index_d"
-import { instance } from "./api"
+import { instance } from "./config"
 
 export const authApi = {
 	async login(data: AuthFormType) {

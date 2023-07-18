@@ -40,7 +40,7 @@ export const CollapseTreeItem = ({
 							},
 							transition: "transform 250ms ease-in",
 							transformOrigin: "center",
-							transform: open ? "rotateX(180deg)" : "rotateX(0)",
+							transform: open ? "rotateX(0)" : "rotateX(180deg)",
 						}}
 					/>
 				</Box>

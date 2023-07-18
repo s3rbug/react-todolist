@@ -4,8 +4,9 @@ import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
 import { TaskFormDataType } from "../../types/index_d"
 import { useForm } from "react-hook-form"
 import { addGoal } from "../../redux/middleware/goal"
-import { useTypedDispatch } from "../../redux/reduxStore"
+import { useTypedDispatch } from "../../redux/store"
 import { makeStyles } from "@mui/styles"
+import { BorderlessInput } from "../../components"
 
 type PropsType = {
 	folderId: string
@@ -13,14 +14,17 @@ type PropsType = {
 
 const useStyles = makeStyles(() => ({
 	arrow: {
-		animation: "$arrowAnimation 1000ms ease-in-out",
+		animation: "$arrowAnimation 750ms ease-in-out",
 	},
 	"@keyframes arrowAnimation": {
-		"50%": {
+		"40%": {
 			transform: "translateY(-15px)",
+			opacity: 0.5,
+		},
+		"40.01%": {
 			opacity: 0,
 		},
-		"55%": {
+		"45%": {
 			transform: "translateY(15px)",
 		},
 		"80%": {
@@ -49,7 +53,6 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 
 	const toggleArrowAnimation = () => {
 		setArrowAnimation((oldArrowAnimation) => !oldArrowAnimation)
-		console.log(arrowAnimation)
 	}
 
 	const onSubmit = (data: TaskFormDataType) => {
@@ -85,8 +88,7 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 					flexGrow: 1,
 					border: "1px solid darkgrey",
 					borderRadius: 5,
-					pt: 1,
-					pl: 1.5,
+					px: 1,
 					height: 40,
 					borderColor: !!errors.goalText
 						? "secondary.main"
@@ -96,26 +98,22 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 					borderWidth: !!errors.goalText || focused ? 2 : 1,
 				}}
 			>
-				<div>
-					<Box
-						{...register("goalText", {
-							required: { value: true, message: "Goal text can not be empty" },
-						})}
-						component="input"
-						placeholder="Add goal"
-						sx={{
-							backgroundColor: "transparent",
-							width: "100%",
-							height: "100%",
-							fontSize: "1em",
-							border: "none",
-							outline: "none",
-							color: "text.primary",
-						}}
-						onFocus={() => setFocused(true)}
-						onBlur={handleOffFocus}
-					/>
-				</div>
+				<Box
+					{...register("goalText", {
+						required: { value: true, message: "Goal text can not be empty" },
+					})}
+					component={BorderlessInput}
+					placeholder="Add goal"
+					sx={{
+						backgroundColor: "transparent",
+						width: "100%",
+						height: "100%",
+						fontSize: "1rem",
+						color: "text.primary",
+					}}
+					onFocus={() => setFocused(true)}
+					onBlur={handleOffFocus}
+				/>
 			</Box>
 			<IconButton
 				sx={{

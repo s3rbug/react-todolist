@@ -2,7 +2,7 @@ import { useState, ChangeEvent } from "react"
 import { Dialog, Input, DialogContent, DialogActions } from "@mui/material"
 import { CancelDialogButton, ApplyDialogButton } from "../../../../components"
 import { addFolder } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/reduxStore"
+import { useTypedDispatch } from "../../../../redux/store"
 
 type PropsType = {
 	open: boolean

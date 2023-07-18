@@ -1,5 +1,5 @@
 import { register } from "../../redux/middleware/auth"
-import { useTypedDispatch } from "../../redux/reduxStore"
+import { useTypedDispatch } from "../../redux/store"
 import { AuthFormType } from "../../types/index_d"
 import { AuthForm } from "../../containers"
 

@@ -1,11 +1,11 @@
-import { ReactNode } from "react"
+import { ReactNode, useState } from "react"
 import CssBaseline from "@mui/material/CssBaseline"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
 import Typography from "@mui/material/Typography"
 import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
-import { useTypedSelector } from "../../redux/reduxStore"
+import { useTypedSelector } from "../../redux/store"
 import { HeaderDrawer } from "./HeaderDrawer"
 import { Box, LinearProgress, Theme } from "@mui/material"
 import SunIcon from "@mui/icons-material/Brightness7"
@@ -29,13 +29,13 @@ const DrawerHeader = styled("div")(({ theme }: { theme: Theme }) => ({
 }))
 
 type PropsType = {
-	open: boolean
-	setOpen: (open: boolean) => void
 	children: ReactNode
 }
 
-export const Header = ({ open, setOpen, children }: PropsType) => {
+export const Header = ({ children }: PropsType) => {
 	const dispatch = useDispatch()
+	const [drawerOpened, setDrawerOpened] = useState(false)
+
 	const username = useTypedSelector((state) => state.auth.username)
 	const isPageLoading = useTypedSelector((state) => state.ui.isPageLoading)
 	const isLight = useTypedSelector((state) => state.ui.isLight)
@@ -43,7 +43,7 @@ export const Header = ({ open, setOpen, children }: PropsType) => {
 	const drawerWidth = 300
 
 	const toggleDrawerOpened = () => {
-		setOpen(!open)
+		setDrawerOpened(!drawerOpened)
 	}
 
 	const toggleTheme = () => {
@@ -57,7 +57,6 @@ export const Header = ({ open, setOpen, children }: PropsType) => {
 		<Box
 			sx={{
 				display: "flex",
-				height: "100vh",
 			}}
 		>
 			<CssBaseline />
@@ -143,7 +142,11 @@ export const Header = ({ open, setOpen, children }: PropsType) => {
 					/>
 				)}
 			</AppBar>
-			<HeaderDrawer drawerWidth={drawerWidth} open={open} />
+			<HeaderDrawer
+				drawerWidth={drawerWidth}
+				open={drawerOpened}
+				setOpen={setDrawerOpened}
+			/>
 			<Box
 				sx={{
 					flexGrow: 1,
@@ -152,7 +155,6 @@ export const Header = ({ open, setOpen, children }: PropsType) => {
 							easing: theme.transitions.easing.sharp,
 							duration: theme.transitions.duration.leavingScreen,
 						}),
-					marginLeft: `-${drawerWidth}px`,
 				}}
 			>
 				<DrawerHeader />

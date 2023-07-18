@@ -3,7 +3,7 @@ import { Grid } from "@mui/material"
 import { ToDoList } from "../../containers"
 import { DragDropContext, DropResult } from "react-beautiful-dnd"
 import { Navigate } from "react-router-dom"
-import { useTypedDispatch, useTypedSelector } from "../../redux/reduxStore"
+import { useTypedDispatch, useTypedSelector } from "../../redux/store"
 import {
 	localStorageWrapper,
 	LOCAL_STORAGE_KEY,
@@ -14,7 +14,7 @@ import {
 	swapGoalsDifferentFolders,
 	swapGoalsSameFolder,
 } from "../../redux/middleware/goal"
-import { setApiHeader } from "../../api/api"
+import { setApiHeader } from "../../api/config"
 import { authActions } from "../../redux/slices/auth"
 import { goalActions } from "../../redux/slices/goal"
 import { uiActions } from "../../redux/slices/ui"

@@ -1,7 +1,5 @@
-import { AnyAction } from "redux"
-import { ThunkAction } from "redux-thunk"
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux"
-import { configureStore } from "@reduxjs/toolkit"
+import { configureStore, ThunkAction, AnyAction } from "@reduxjs/toolkit"
 
 import { goalReducer } from "./slices/goal"
 import { uiReducer } from "./slices/ui"

@@ -9,7 +9,7 @@ import {
 	deleteFolder,
 	editFolderHeadline,
 } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/reduxStore"
+import { useTypedDispatch } from "../../../../redux/store"
 
 type PropsType = {
 	headline: string

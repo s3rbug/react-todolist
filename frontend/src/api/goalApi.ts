@@ -4,7 +4,7 @@ import {
 	GoalType,
 	CurrentFolderIdType,
 } from "./../types/index_d"
-import { instance } from "./api"
+import { instance } from "./config"
 
 export const goalApi = {
 	async getFolders() {

@@ -1,6 +1,6 @@
 import { useState } from "react"
 import { List, ListItemText, ListItemIcon, ListItemButton } from "@mui/material"
-import { useTypedSelector } from "../../../redux/reduxStore"
+import { useTypedSelector } from "../../../redux/store"
 import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 import FolderCopyIcon from "@mui/icons-material/FolderCopyOutlined"
 import ColorLensIcon from "@mui/icons-material/ColorLensOutlined"

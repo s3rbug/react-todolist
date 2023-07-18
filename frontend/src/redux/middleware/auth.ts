@@ -1,11 +1,11 @@
-import { setApiHeader } from "./../../api/api"
+import { setApiHeader } from "../../api/config"
 import { authActions } from "./../slices/auth"
 import { authApi } from "./../../api/authApi"
 import {
 	localStorageWrapper,
 	LOCAL_STORAGE_KEY,
 } from "../../localStorage/localStorageWrapper"
-import { AppThunkType } from "../reduxStore"
+import { AppThunkType } from "../store"
 import { uiActions } from "../slices/ui"
 import axios, { AxiosError } from "axios"
 

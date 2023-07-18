@@ -1,7 +1,7 @@
 import { AuthFormType } from "../../types/index_d"
 import { AuthForm } from "../../containers"
 import { login } from "../../redux/middleware/auth"
-import { useTypedDispatch } from "../../redux/reduxStore"
+import { useTypedDispatch } from "../../redux/store"
 
 export const Login = () => {
 	const dispatch = useTypedDispatch()

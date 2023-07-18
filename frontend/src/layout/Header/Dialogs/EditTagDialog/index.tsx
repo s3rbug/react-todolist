@@ -6,7 +6,7 @@ import {
 	DeleteDialogButton,
 } from "../../../../components"
 import { deleteTag, editTag } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/reduxStore"
+import { useTypedDispatch } from "../../../../redux/store"
 
 type PropsType = {
 	open: boolean

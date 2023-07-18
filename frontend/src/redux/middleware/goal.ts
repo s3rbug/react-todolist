@@ -1,9 +1,9 @@
-import { AppThunkType } from "./../reduxStore"
+import { AppThunkType } from "../store"
 import {
 	localStorageWrapper,
 	LOCAL_STORAGE_KEY,
 } from "./../../localStorage/localStorageWrapper"
-import { setApiHeader } from "./../../api/api"
+import { setApiHeader } from "../../api/config"
 import { authActions } from "./../slices/auth"
 import { goalActions } from "./../slices/goal"
 import { goalApi } from "../../api/goalApi"
