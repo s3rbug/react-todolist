@@ -8,3 +8,4 @@ export {
 export { DraggableItem } from "./DraggableItem"
 export { DroppableItem } from "./DroppableItem"
 export { CollapseTreeItem } from "./CollapseTreeItem"
+export { Goal } from "./Goal"

@@ -23,6 +23,7 @@
 					}
 				]
 			}
-		]
+		],
+		"no-unused-vars": "warn"
 	}
 }

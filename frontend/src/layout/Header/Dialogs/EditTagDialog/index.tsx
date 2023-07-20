@@ -45,7 +45,7 @@ export const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 					autoFocus
 					onChange={handleChange}
 					value={newName}
-					sx={{ fontSize: "1.6em" }}
+					sx={{ fontSize: "1.6rem" }}
 				/>
 			</DialogTitle>
 			<DialogActions sx={{ paddingLeft: 3 }}>

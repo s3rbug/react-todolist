@@ -18,6 +18,7 @@ import { setApiHeader } from "../../api/config"
 import { authActions } from "../../redux/slices/auth"
 import { goalActions } from "../../redux/slices/goal"
 import { uiActions } from "../../redux/slices/ui"
+import { useLocalStorageAuth } from "../../hooks/useLocalStorageAuth"
 
 export const Folders = () => {
 	const dispatch = useTypedDispatch()
@@ -77,24 +78,7 @@ export const Folders = () => {
 		}
 	}
 
-	useEffect(() => {
-		const localStorageUser =
-			localStorageWrapper.getLocalStorageItem<LoginResponseType>(
-				LOCAL_STORAGE_KEY.ACCESS_TOKEN
-			)
-		if (token) {
-			dispatch(uiActions.setIsLoading({ isLoading: true }))
-			dispatch(setUserData())
-		} else if (!token && localStorageUser) {
-			setApiHeader(localStorageUser.accessToken)
-			dispatch(
-				authActions.setUser({
-					token: localStorageUser.accessToken,
-					username: localStorageUser.username,
-				})
-			)
-		}
-	}, [dispatch, token])
+	useLocalStorageAuth({ token })
 
 	if (!token) {
 		return <Navigate to={"/react-todolist/login"} replace />

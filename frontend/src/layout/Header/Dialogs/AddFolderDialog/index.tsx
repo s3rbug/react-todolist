@@ -33,7 +33,7 @@ export const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 					placeholder="Folder name"
 					value={headline}
 					sx={{
-						fontSize: "1.6em",
+						fontSize: "1.6rem",
 					}}
 					onChange={handleChange}
 				/>

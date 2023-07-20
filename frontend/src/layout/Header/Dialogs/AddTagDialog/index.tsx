@@ -5,14 +5,18 @@ import {
 	DialogContent,
 	Input,
 	DialogActions,
-	Checkbox,
 	useTheme,
 } from "@mui/material"
 import { ColorResult, HuePicker } from "react-color"
-import { CancelDialogButton, ApplyDialogButton } from "../../../../components"
+import {
+	CancelDialogButton,
+	ApplyDialogButton,
+	Goal,
+} from "../../../../components"
 import { addTag } from "../../../../redux/middleware/goal"
 import { useTypedDispatch } from "../../../../redux/store"
 import { Box } from "@mui/system"
+import { GoalType } from "../../../../types/index_d"
 
 type PropsType = {
 	open: boolean
@@ -26,6 +30,14 @@ export const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	const [checked, setChecked] = useState(false)
 	const [color, setColor] = useState(theme.palette.primary.main)
 	const [tagName, setTagName] = useState("new tag")
+
+	const testGoal: GoalType = {
+		id: "example",
+		checked,
+		note: "example",
+		tagId: undefined,
+		text: "Example text",
+	}
 
 	const handleClose = () => {
 		setOpen(false)
@@ -50,11 +62,11 @@ export const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	}
 	return (
 		<Dialog open={open} onClose={handleClose}>
-			<DialogTitle sx={{ width: "400px" }}>
+			<DialogTitle sx={{ width: "100%" }}>
 				<Input
 					autoFocus
 					value={tagName}
-					sx={{ fontSize: "1.6em" }}
+					sx={{ fontSize: "1.6rem" }}
 					onChange={handleInputChange}
 				/>
 			</DialogTitle>
@@ -62,8 +74,6 @@ export const AddTagDialog = ({ open, setOpen }: PropsType) => {
 				<Box
 					sx={{
 						borderLeft: `4px solid ${color}`,
-						width: "100%",
-						height: "100%",
 						position: "relative",
 						borderBottom: (theme) =>
 							`1px solid ${theme.palette.action.selected}`,
@@ -74,27 +84,11 @@ export const AddTagDialog = ({ open, setOpen }: PropsType) => {
 						display: "flex",
 						marginBottom: 2,
 						px: 2,
+						py: 1,
+						alignItems: "center",
 					}}
 				>
-					<Box
-						sx={{
-							textDecoration: checked ? "line-through" : "none",
-							userSelect: "none",
-							alignSelf: "center",
-							flexGrow: 1,
-						}}
-					>
-						Example text
-					</Box>
-					<Box>
-						<Checkbox
-							color="secondary"
-							edge="end"
-							checked={checked}
-							onChange={toggleCheckbox}
-							value={0}
-						/>
-					</Box>
+					<Goal toggleCheckbox={toggleCheckbox} goal={testGoal} />
 				</Box>
 				<HuePicker
 					width={"100%"}

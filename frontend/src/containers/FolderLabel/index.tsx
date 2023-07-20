@@ -87,24 +87,23 @@ export const FolderLabel = ({ headline, folders, folderId }: PropsType) => {
 				{folders.map((folder) => {
 					if (folder.id === folderId) {
 						return null
-					} else {
-						return (
-							<MenuItem
-								key={`${folder.id}-menu-item`}
-								onClick={() => {
-									dispatch(
-										reorderCurrentFolders({
-											fromFolderId: folderId,
-											toFolderId: folder.id,
-										})
-									)
-									closeMenu()
-								}}
-							>
-								{folder.headline}
-							</MenuItem>
-						)
 					}
+					return (
+						<MenuItem
+							key={`${folder.id}-menu-item`}
+							onClick={() => {
+								dispatch(
+									reorderCurrentFolders({
+										fromFolderId: folderId,
+										toFolderId: folder.id,
+									})
+								)
+								closeMenu()
+							}}
+						>
+							{folder.headline}
+						</MenuItem>
+					)
 				})}
 			</Menu>
 		</Box>

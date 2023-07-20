@@ -56,7 +56,7 @@ export const EditFolderDialog = ({
 		<Dialog open={open} onClose={handleClose}>
 			<DialogTitle>
 				<Input
-					sx={{ fontSize: "1.6em" }}
+					sx={{ fontSize: "1.6rem" }}
 					value={newHeadline}
 					onChange={handleChange}
 					autoFocus

@@ -19,10 +19,13 @@ export const setUserData = (): AppThunkType => async (dispatch) => {
 			const isResponseOk = !response.some((res) => res.status !== 200)
 
 			if (isResponseOk) {
-				const folders = response[0].data
-				const tags = response[1].data
-				const currentFolders = response[2].data
-				dispatch(goalActions.setUserData({ folders, tags, currentFolders }))
+				dispatch(
+					goalActions.setUserData({
+						folders: response[0].data,
+						tags: response[1].data,
+						currentFolders: response[2].data,
+					})
+				)
 			}
 		})
 		.catch(() => {
@@ -256,8 +259,6 @@ export const deleteFolder =
 	({ folderId }: DeleteFolderType): AppThunkType =>
 	async (dispatch) => {
 		return goalApi.deleteFolder(folderId).then((response) => {
-			console.log(response)
-
 			if (response.status === 200) {
 				console.log(folderId)
 				dispatch(goalActions.deleteFolder({ folderId }))
