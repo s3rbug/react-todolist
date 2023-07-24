@@ -6,6 +6,7 @@ import { NavLink, Navigate } from "react-router-dom"
 import { useTypedSelector } from "../../redux/store"
 import { uiActions } from "../../redux/slices/ui"
 import { AuthFormType } from "../../types/index_d"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	title: string
@@ -25,6 +26,7 @@ export const AuthForm = ({
 	link,
 }: PropsType) => {
 	const dispatch = useDispatch()
+	const { t } = useTranslation()
 	const token = useTypedSelector((state) => state.auth.token)
 
 	const usernameError = useTypedSelector((state) => state.ui.usernameError)
@@ -53,14 +55,14 @@ export const AuthForm = ({
 		maxLength: number
 	) => {
 		return {
-			required: { value: true, message: `${name} is required` },
+			required: { value: true, message: t("form.required", { name }) },
 			minLength: {
 				value: minLength,
-				message: `${name} minimum length is ${minLength} symbols`,
+				message: t("form.min-length", { name, minLength }),
 			},
 			maxLength: {
 				value: maxLength,
-				message: `${name} maximum length is ${maxLength} symbols`,
+				message: t("form.max-length", { name, maxLength }),
 			},
 		}
 	}
@@ -111,22 +113,22 @@ export const AuthForm = ({
 				<TextField
 					error={!!errors.username}
 					helperText={errors.username?.message}
-					{...register("username", validationObject("Username", 6, 20))}
+					{...register("username", validationObject(t("auth.username"), 6, 20))}
 					sx={{
 						marginTop: 2.5,
 						width: "100%",
 					}}
-					label="Username"
+					label={t("auth.username")}
 				/>
 				<TextField
 					error={!!errors.password}
 					helperText={errors.password?.message}
-					{...register("password", validationObject("Password", 6, 20))}
+					{...register("password", validationObject(t("auth.password"), 6, 20))}
 					sx={{
 						marginTop: 2,
 						width: "100%",
 					}}
-					label="Password"
+					label={t("auth.password")}
 					type="password"
 				/>
 				{passwordConfirmation && (
@@ -136,11 +138,11 @@ export const AuthForm = ({
 						{...register("cpassword", {
 							required: {
 								value: true,
-								message: "Password confirmation is required",
+								message: t("register.password-confirmation-required"),
 							},
 							validate: (cpassword: string | undefined) => {
 								if (cpassword && watch("password") !== cpassword) {
-									return "Passwords do not match"
+									return t("register.password-match-error")
 								}
 							},
 						})}
@@ -148,7 +150,7 @@ export const AuthForm = ({
 							marginTop: 2,
 							width: "100%",
 						}}
-						label="Confirm password"
+						label={t("register.confirm-password")}
 						type="password"
 					/>
 				)}

@@ -7,6 +7,7 @@ import { addGoal } from "../../redux/middleware/goal"
 import { useTypedDispatch } from "../../redux/store"
 import { makeStyles } from "@mui/styles"
 import { BorderlessInput } from "../../components"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	folderId: string
@@ -42,6 +43,7 @@ const useStyles = makeStyles(() => ({
 
 export const AddGoalForm = ({ folderId }: PropsType) => {
 	const dispatch = useTypedDispatch()
+	const { t } = useTranslation()
 	const classes = useStyles()
 	const textField = useRef<null | HTMLInputElement>(null)
 	const [arrowAnimation, setArrowAnimation] = useState<boolean>(false)
@@ -100,10 +102,13 @@ export const AddGoalForm = ({ folderId }: PropsType) => {
 			>
 				<Box
 					{...register("goalText", {
-						required: { value: true, message: "Goal text can not be empty" },
+						required: {
+							value: true,
+							message: t("form.required", { name: "Goal text" }),
+						},
 					})}
 					component={BorderlessInput}
-					placeholder="Add goal"
+					placeholder={t("folder.add-goal")}
 					sx={{
 						backgroundColor: "transparent",
 						width: "100%",

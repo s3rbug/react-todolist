@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import {
 	LOCAL_STORAGE_KEY,
 	localStorageWrapper,
-} from "../localStorage/localStorageWrapper"
+} from "../utils/localStorageWrapper"
 import { LoginResponseType } from "../types/index_d"
 import { setApiHeader } from "../api/config"
 import { setUserData } from "../redux/middleware/goal"

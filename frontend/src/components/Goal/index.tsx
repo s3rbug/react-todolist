@@ -1,16 +1,9 @@
-import {
-	Box,
-	ListItem,
-	Tooltip,
-	ListItemSecondaryAction,
-	Checkbox,
-} from "@mui/material"
+import { Box, Tooltip, ListItemSecondaryAction, Checkbox } from "@mui/material"
 import { GoalType, TagType } from "../../types/index_d"
-import { ChangeEvent } from "react"
 
 type PropsType = {
 	handleClick?: () => void
-	toggleCheckbox: (event: ChangeEvent<HTMLInputElement>) => void
+	toggleCheckbox: (goalId?: string) => void
 	currentTag?: TagType
 	goal: GoalType
 }
@@ -21,6 +14,12 @@ export const Goal = ({
 	goal,
 	toggleCheckbox,
 }: PropsType) => {
+	const toggleCheckboxNoPropagation = (
+		event: React.MouseEvent<HTMLElement>
+	) => {
+		event.stopPropagation()
+		toggleCheckbox(goal.id)
+	}
 	return (
 		<Box onClick={handleClick}>
 			<Tooltip title={currentTag?.name || ""} placement="right" arrow>
@@ -40,7 +39,7 @@ export const Goal = ({
 					color="secondary"
 					edge="end"
 					checked={goal.checked}
-					onChange={toggleCheckbox}
+					onClick={toggleCheckboxNoPropagation}
 					value={goal.id}
 				/>
 			</ListItemSecondaryAction>

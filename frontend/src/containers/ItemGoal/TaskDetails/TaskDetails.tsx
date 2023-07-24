@@ -1,22 +1,18 @@
 import { useState } from "react"
 import {
 	Dialog,
-	DialogActions,
 	Typography,
 	DialogContent,
 	TextField,
 	Box,
 } from "@mui/material"
 import { GoalType, TagType, TaskDetailsFormType } from "../../../types/index_d"
-import {
-	ApplyDialogButton,
-	DeleteDialogButton,
-	CancelDialogButton,
-} from "../../../components"
+import { DialogButtons } from "../../../components"
 import Chip from "@mui/material/Chip"
 import { useForm } from "react-hook-form"
 import { deleteGoal, editGoal } from "../../../redux/middleware/goal"
 import { useTypedDispatch } from "../../../redux/store"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	open: boolean
@@ -34,6 +30,7 @@ export const TaskDetails = ({
 	setOpen,
 }: PropsType) => {
 	const dispatch = useTypedDispatch()
+	const { t } = useTranslation()
 
 	const [newTagId, setNewTagId] = useState<string | undefined>(goal.tagId)
 	const {
@@ -81,7 +78,7 @@ export const TaskDetails = ({
 					mb: 1.5,
 					mt: 3,
 				}}
-				key={"task-details-" + goal.id + "-folder-" + folderId}
+				key={`details-${goal.id}-folder-${folderId}`}
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<DialogContent sx={{ padding: 0 }}>
@@ -89,11 +86,11 @@ export const TaskDetails = ({
 						{...register("goalText", {
 							required: {
 								value: true,
-								message: "Goal can not be empty",
+								message: t("form.required", { name: "Goal" }),
 							},
 							maxLength: {
 								value: 30,
-								message: "Max goal length is 30",
+								message: t("form.max-length", { maxLength: 30 }),
 							},
 						})}
 						sx={{
@@ -107,7 +104,7 @@ export const TaskDetails = ({
 						error={!!errors.goalText}
 						helperText={errors.goalText?.message}
 						variant="standard"
-						placeholder="Goal title"
+						placeholder={t("folder.goal-title")}
 					/>
 					<div>
 						{tags.map((tag) => {
@@ -158,11 +155,14 @@ export const TaskDetails = ({
 								fontSize: "1.1em",
 							}}
 						>
-							NOTES
+							{t("folder.notes").toUpperCase()}
 						</Typography>
 						<TextField
 							{...register("noteText", {
-								maxLength: { value: 50, message: "Max note length is 50" },
+								maxLength: {
+									value: 50,
+									message: t("form.max-length", { maxLength: 50 }),
+								},
 							})}
 							sx={{
 								mb: 3,
@@ -173,18 +173,27 @@ export const TaskDetails = ({
 							error={!!errors.noteText}
 							helperText={errors.noteText?.message}
 							defaultValue={goal.note}
-							placeholder="There is no notes, but you can change it"
+							placeholder={t("folder.no-notes")}
 							variant="standard"
 						/>
 					</Box>
 				</DialogContent>
-				<DialogActions sx={{ padding: 0 }}>
+				<DialogButtons
+					handleDelete={deleteCurrentGoal}
+					handleClose={handleClose}
+					padding={0}
+				/>
+				{/* <DialogActions sx={{ padding: 0 }}>
 					<DeleteDialogButton onClick={deleteCurrentGoal} sx={{ mr: 15 }}>
-						Delete
+						{t("dialog.delete")}
 					</DeleteDialogButton>
-					<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
-					<ApplyDialogButton type="submit">Done</ApplyDialogButton>
-				</DialogActions>
+					<CancelDialogButton onClick={handleClose}>
+						{t("dialog.cancel")}
+					</CancelDialogButton>
+					<ApplyDialogButton type="submit">
+						{t("dialog.done")}
+					</ApplyDialogButton>
+				</DialogActions> */}
 			</Box>
 		</Dialog>
 	)

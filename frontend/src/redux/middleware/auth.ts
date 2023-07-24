@@ -4,7 +4,7 @@ import { authApi } from "./../../api/authApi"
 import {
 	localStorageWrapper,
 	LOCAL_STORAGE_KEY,
-} from "../../localStorage/localStorageWrapper"
+} from "../../utils/localStorageWrapper"
 import { AppThunkType } from "../store"
 import { uiActions } from "../slices/ui"
 import axios, { AxiosError } from "axios"

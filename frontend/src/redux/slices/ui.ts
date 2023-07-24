@@ -1,11 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 import { UiStateType } from "../../types/index_d"
+import { LOCALS } from "../../constants"
 
 const initialState: UiStateType = {
 	isLight: true,
 	isPageLoading: false,
 	usernameError: null,
 	passwordError: null,
+	lang: LOCALS.EN,
 }
 
 const uiSlice = createSlice({
@@ -36,6 +38,10 @@ const uiSlice = createSlice({
 		},
 		clearAuthErrors: (state) => {
 			state.passwordError = state.usernameError = null
+		},
+		setLanguage: (state, action: PayloadAction<{ lang: LOCALS }>) => {
+			const { lang } = action.payload
+			state.lang = lang
 		},
 	},
 })

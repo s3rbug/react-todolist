@@ -8,6 +8,7 @@ import ColorizeIcon from "@mui/icons-material/ColorizeOutlined"
 import { CollapseTreeItem } from "../../../components"
 import AddIcon from "@mui/icons-material/Add"
 import { FolderType, TagType } from "../../../types/index_d"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	openAddTag: () => void
@@ -32,6 +33,7 @@ export const FoldersTreeView = ({
 }: PropsType) => {
 	const [foldersOpened, setFoldersOpened] = useState(false)
 	const [tagsOpened, setTagsOpened] = useState(false)
+	const { t } = useTranslation()
 
 	const tags = useTypedSelector((state) => state.goal.tags)
 	const folders = useTypedSelector((state) => state.goal.folders)
@@ -55,7 +57,7 @@ export const FoldersTreeView = ({
 			<CollapseTreeItem
 				open={foldersOpened}
 				setOpen={setFoldersOpened}
-				collapseText="Folders"
+				collapseText={t("drawer.folders")}
 				collapseIcon={<FolderCopyIcon />}
 			>
 				{folders.map((folder) => {
@@ -81,14 +83,14 @@ export const FoldersTreeView = ({
 					<ListItemIcon>
 						<AddIcon />
 					</ListItemIcon>
-					<ListItemText primary="Create new folder" />
+					<ListItemText primary={t("drawer.create-folder")} />
 				</ListItemButton>
 			</CollapseTreeItem>
 
 			<CollapseTreeItem
 				open={tagsOpened}
 				setOpen={setTagsOpened}
-				collapseText="Tags"
+				collapseText={t("drawer.tags")}
 				collapseIcon={<ColorLensIcon />}
 			>
 				{tags.map((tag) => {
@@ -121,7 +123,7 @@ export const FoldersTreeView = ({
 					<ListItemIcon>
 						<AddIcon />
 					</ListItemIcon>
-					<ListItemText primary="Create new tag" />
+					<ListItemText primary={t("drawer.create-tag")} />
 				</ListItemButton>
 			</CollapseTreeItem>
 		</List>

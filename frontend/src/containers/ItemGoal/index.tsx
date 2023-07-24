@@ -1,4 +1,4 @@
-import { useState, ChangeEvent } from "react"
+import { useState } from "react"
 import ListItem from "@mui/material/ListItem"
 import { GoalType } from "../../types/index_d"
 import { TaskDetails } from "./TaskDetails"
@@ -8,7 +8,7 @@ import { Goal } from "../../components"
 type PropsType = {
 	goal: GoalType
 	folderId: string
-	toggleCheckbox: (event: ChangeEvent<HTMLInputElement>) => void
+	toggleCheckbox: (goalId?: string) => void
 }
 
 export const ItemGoal = ({ goal, folderId, toggleCheckbox }: PropsType) => {
@@ -20,6 +20,7 @@ export const ItemGoal = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 	return (
 		<>
 			<ListItem
+				onClick={() => setOpen(true)}
 				sx={{
 					position: "relative",
 					borderBottom: 1,
@@ -36,7 +37,6 @@ export const ItemGoal = ({ goal, folderId, toggleCheckbox }: PropsType) => {
 				}}
 			>
 				<Goal
-					handleClick={() => setOpen(true)}
 					toggleCheckbox={toggleCheckbox}
 					currentTag={currentTag}
 					goal={goal}

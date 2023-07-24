@@ -1,0 +1,53 @@
+{
+	"header": {
+		"title": "To do list",
+		"title-username": "{{username}}'s to do list"
+	},
+	"auth": {
+		"username": "Username",
+		"password": "Password"
+	},
+	"form": {
+		"min-length": "{{name}} minimum length is {{minLength, number}} symbols",
+		"max-length": "{{name}} maximum length is {{minLength, number}} symbols",
+		"required": "{{name}} is required"
+	},
+	"login": {
+		"title": "Sign in",
+		"create-account": "Create account",
+		"submit": "Login"
+	},
+	"register": {
+		"title": "Create account",
+		"confirm-password": "Confirm password",
+		"sign-in": "Sign in",
+		"submit": "Register",
+		"password-match-error": "Passwords do not match",
+		"password-confirmation-required": "Password confirmation is required"
+	},
+	"folder": {
+		"add-goal": "Add goal",
+		"notes": "Notes",
+		"no-notes": "There is no notes, but you can change it",
+		"goal-title": "Goal title"
+	},
+	"dialog": {
+		"delete": "Delete",
+		"cancel": "Cancel",
+		"done": "Done",
+		"add": "Add",
+		"apply": "Apply",
+		"yes": "Yes",
+		"no": "No"
+	},
+	"drawer": {
+		"folders": "Folders",
+		"tags": "Tags",
+		"create-folder": "Create new folder",
+		"create-tag": "Create new tag",
+		"folder-placeholder": "Folder name",
+		"new-folder-placeholder": "New folder name",
+		"tag-placeholder": "Tag name",
+		"new-tag-placeholder": "New tag name"
+	}
+}

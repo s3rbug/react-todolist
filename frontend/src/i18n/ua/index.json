@@ -1,0 +1,53 @@
+{
+	"header": {
+		"title": "Список завдань",
+		"title-username": "Список завдань користувача {{username}}"
+	},
+	"auth": {
+		"username": "Користувач",
+		"password": "Пароль"
+	},
+	"form": {
+		"min-length": "Мінімальна довжина поля {{name, lowercase}} - {{minLength, number}} символів",
+		"max-length": "Максимальна довжина поля {{name, lowercase}} - {{minLength, number}} символів",
+		"required": "Поле {{name, lowercase}} обов'язкове"
+	},
+	"login": {
+		"title": "Вхід",
+		"create-account": "Створити акаунт",
+		"submit": "Увійти"
+	},
+	"register": {
+		"title": "Створити акаунт",
+		"confirm-password": "Повторіть пароль",
+		"sign-in": "Увійти",
+		"submit": "Реєстрація",
+		"password-match-error": "Паролі не збігаються",
+		"password-confirmation-required": "Підтвердження паролю обов'язкове"
+	},
+	"folder": {
+		"add-goal": "Додати ціль",
+		"notes": "Нотатки",
+		"no-notes": "Нотаток поки що немає",
+		"goal-title": "Заголовок цілі"
+	},
+	"dialog": {
+		"delete": "Видалити",
+		"cancel": "Скасувати",
+		"done": "Готово",
+		"add": "Додати",
+		"apply": "Застосувати",
+		"yes": "Так",
+		"no": "Ні"
+	},
+	"drawer": {
+		"folders": "Папки",
+		"tags": "Теги",
+		"create-folder": "Створити нову папку",
+		"create-tag": "Створити новий тег",
+		"folder-placeholder": "Назва папки",
+		"new-folder-placeholder": "Назва нової папки",
+		"tag-placeholder": "Назва тегу",
+		"new-tag-placeholder": "Назва нового тегу"
+	}
+}

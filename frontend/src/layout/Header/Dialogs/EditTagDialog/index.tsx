@@ -1,12 +1,9 @@
 import { useState, useEffect, ChangeEvent } from "react"
-import { Dialog, DialogTitle, Input, DialogActions } from "@mui/material"
-import {
-	ApplyDialogButton,
-	CancelDialogButton,
-	DeleteDialogButton,
-} from "../../../../components"
+import { Dialog, DialogTitle, Input } from "@mui/material"
+import { DialogButtons } from "../../../../components"
 import { deleteTag, editTag } from "../../../../redux/middleware/goal"
 import { useTypedDispatch } from "../../../../redux/store"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	open: boolean
@@ -18,6 +15,8 @@ type PropsType = {
 export const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 	const [newName, setNewName] = useState("")
 	const dispatch = useTypedDispatch()
+	const { t } = useTranslation()
+
 	useEffect(() => {
 		setNewName(tagName)
 	}, [tagName])
@@ -43,23 +42,19 @@ export const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
 			<DialogTitle>
 				<Input
 					autoFocus
+					fullWidth
 					onChange={handleChange}
 					value={newName}
+					placeholder={t("drawer.tag-placeholder")}
 					sx={{ fontSize: "1.6rem" }}
 				/>
 			</DialogTitle>
-			<DialogActions sx={{ paddingLeft: 3 }}>
-				<DeleteDialogButton
-					sx={{
-						marginRight: "auto",
-					}}
-					onClick={handleDelete}
-				>
-					Delete
-				</DeleteDialogButton>
-				<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
-				<ApplyDialogButton onClick={handleEdit}>Save</ApplyDialogButton>
-			</DialogActions>
+			<DialogButtons
+				handleDelete={handleDelete}
+				handleClose={handleClose}
+				handleSubmit={handleEdit}
+				submitText={t("dialog.apply")}
+			/>
 		</Dialog>
 	)
 }

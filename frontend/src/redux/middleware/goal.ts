@@ -2,7 +2,7 @@ import { AppThunkType } from "../store"
 import {
 	localStorageWrapper,
 	LOCAL_STORAGE_KEY,
-} from "./../../localStorage/localStorageWrapper"
+} from "../../utils/localStorageWrapper"
 import { setApiHeader } from "../../api/config"
 import { authActions } from "./../slices/auth"
 import { goalActions } from "./../slices/goal"

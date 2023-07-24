@@ -1,6 +1,7 @@
 import { goalActions } from "../redux/slices/goal"
 import { uiActions } from "../redux/slices/ui"
 import { authActions } from "../redux/slices/auth"
+import { LOCALS } from "../constants"
 
 declare module "@mui/material/styles/createPalette" {
 	interface Palette {
@@ -37,6 +38,7 @@ export type UiStateType = {
 	isPageLoading: boolean
 	usernameError: string | null
 	passwordError: string | null
+	lang: LOCALS
 }
 
 export type FolderFormDataType = {

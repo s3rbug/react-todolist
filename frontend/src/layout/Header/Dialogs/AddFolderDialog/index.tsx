@@ -1,8 +1,9 @@
 import { useState, ChangeEvent } from "react"
-import { Dialog, Input, DialogContent, DialogActions } from "@mui/material"
-import { CancelDialogButton, ApplyDialogButton } from "../../../../components"
+import { Dialog, Input, DialogContent } from "@mui/material"
+import { DialogButtons } from "../../../../components"
 import { addFolder } from "../../../../redux/middleware/goal"
 import { useTypedDispatch } from "../../../../redux/store"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	open: boolean
@@ -12,6 +13,8 @@ type PropsType = {
 export const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 	const [headline, setHeadline] = useState("")
 	const dispatch = useTypedDispatch()
+	const { t } = useTranslation()
+
 	const handleClose = () => {
 		setOpen(false)
 	}
@@ -30,7 +33,8 @@ export const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 			<DialogContent>
 				<Input
 					autoFocus
-					placeholder="Folder name"
+					fullWidth
+					placeholder={t("drawer.new-folder-placeholder")}
 					value={headline}
 					sx={{
 						fontSize: "1.6rem",
@@ -38,10 +42,11 @@ export const AddFolderDialog = ({ open, setOpen }: PropsType) => {
 					onChange={handleChange}
 				/>
 			</DialogContent>
-			<DialogActions>
-				<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
-				<ApplyDialogButton onClick={handleAddFolder}>Add</ApplyDialogButton>
-			</DialogActions>
+			<DialogButtons
+				handleClose={handleClose}
+				handleSubmit={handleAddFolder}
+				submitText={t("dialog.add")}
+			/>
 		</Dialog>
 	)
 }

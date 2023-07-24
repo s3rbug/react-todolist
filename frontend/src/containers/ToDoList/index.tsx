@@ -1,4 +1,3 @@
-import { ChangeEvent } from "react"
 import List from "@mui/material/List"
 import { Box, Typography } from "@mui/material"
 import { DraggableItem, DroppableItem } from "../../components"
@@ -19,9 +18,8 @@ export const ToDoList = ({ folderId }: PropsType) => {
 		state.goal.folders.find((folder) => folder.id === folderId)
 	)
 	const isDragDisabled = useTypedSelector((state) => state.ui.isPageLoading)
-	const toggleCheckbox = (e: ChangeEvent<HTMLInputElement>) => {
-		if (e.target.value) {
-			const goalId: string = e.target.value
+	const toggleCheckbox = (goalId?: string) => {
+		if (goalId) {
 			dispatch(toggleChecked({ folderId, goalId }))
 		}
 	}

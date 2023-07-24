@@ -1,11 +1,11 @@
 import Dialog from "@mui/material/Dialog"
-import DialogActions from "@mui/material/DialogActions"
 import DialogContent from "@mui/material/DialogContent"
 import DialogContentText from "@mui/material/DialogContentText"
 import DialogTitle from "@mui/material/DialogTitle"
-import { CancelDialogButton, ApplyDialogButton } from "../"
+import { DialogButtons } from "../"
+import { useTranslation } from "react-i18next"
 
-type AlertDialogPropsType = {
+type PropsType = {
 	question: string
 	text?: string
 	open: boolean
@@ -19,7 +19,8 @@ export const AlertDialog = ({
 	open,
 	handleSuccess,
 	handleFail,
-}: AlertDialogPropsType) => {
+}: PropsType) => {
+	const { t } = useTranslation()
 	return (
 		<Dialog
 			open={open}
@@ -32,18 +33,12 @@ export const AlertDialog = ({
 					{text}
 				</DialogContentText>
 			</DialogContent>
-			<DialogActions>
-				<CancelDialogButton autoFocus onClick={handleFail} color="primary">
-					No
-				</CancelDialogButton>
-				<ApplyDialogButton
-					variant="contained"
-					onClick={handleSuccess}
-					color="primary"
-				>
-					Yes
-				</ApplyDialogButton>
-			</DialogActions>
+			<DialogButtons
+				handleClose={handleFail}
+				handleSubmit={handleSuccess}
+				closeText={t("dialog.no")}
+				submitText={t("dialog.yes")}
+			/>
 		</Dialog>
 	)
 }

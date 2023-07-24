@@ -7,8 +7,8 @@ import { Login, Register, Folders } from "../../pages"
 import { useLocalStorageTheme } from "../../hooks/useLocalStorageTheme"
 
 export const App = () => {
-	const isLight = useTypedSelector((state) => state.ui.isLight)
 	useLocalStorageTheme()
+	const isLight = useTypedSelector((state) => state.ui.isLight)
 
 	return (
 		<ThemeProvider theme={isLight ? themes.lightTheme : themes.darkTheme}>

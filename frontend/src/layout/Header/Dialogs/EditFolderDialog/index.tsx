@@ -1,15 +1,12 @@
 import { useState, useEffect, ChangeEvent } from "react"
-import { Dialog, DialogTitle, DialogActions, Input } from "@mui/material"
-import {
-	CancelDialogButton,
-	ApplyDialogButton,
-	DeleteDialogButton,
-} from "../../../../components"
+import { Dialog, DialogTitle, Input } from "@mui/material"
+import { DialogButtons } from "../../../../components"
 import {
 	deleteFolder,
 	editFolderHeadline,
 } from "../../../../redux/middleware/goal"
 import { useTypedDispatch } from "../../../../redux/store"
+import { useTranslation } from "react-i18next"
 
 type PropsType = {
 	headline: string
@@ -26,6 +23,7 @@ export const EditFolderDialog = ({
 }: PropsType) => {
 	const [newHeadline, setNewHeadline] = useState(headline)
 	const dispatch = useTypedDispatch()
+	const { t } = useTranslation()
 
 	useEffect(() => {
 		setNewHeadline(headline)
@@ -58,22 +56,18 @@ export const EditFolderDialog = ({
 				<Input
 					sx={{ fontSize: "1.6rem" }}
 					value={newHeadline}
+					placeholder={t("drawer.folder-placeholder")}
 					onChange={handleChange}
 					autoFocus
+					fullWidth
 				/>
 			</DialogTitle>
-			<DialogActions sx={{ paddingLeft: 3 }}>
-				<DeleteDialogButton
-					sx={{
-						marginRight: "auto",
-					}}
-					onClick={handleDelete}
-				>
-					Delete
-				</DeleteDialogButton>
-				<CancelDialogButton onClick={handleClose}>Cancel</CancelDialogButton>
-				<ApplyDialogButton onClick={handleSave}>Apply</ApplyDialogButton>
-			</DialogActions>
+			<DialogButtons
+				handleDelete={handleDelete}
+				handleClose={handleClose}
+				handleSubmit={handleSave}
+				submitText={t("dialog.apply")}
+			/>
 		</Dialog>
 	)
 }

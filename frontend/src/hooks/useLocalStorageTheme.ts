@@ -2,7 +2,7 @@ import { useEffect } from "react"
 import {
 	LOCAL_STORAGE_KEY,
 	localStorageWrapper,
-} from "../localStorage/localStorageWrapper"
+} from "../utils/localStorageWrapper"
 import { ThemeResponseType } from "../types/index_d"
 import { uiActions } from "../redux/slices/ui"
 import { useTypedDispatch } from "../redux/store"

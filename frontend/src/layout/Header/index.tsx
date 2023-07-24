@@ -1,4 +1,4 @@
-import { ReactNode, useState } from "react"
+import { ReactNode, useRef, useState } from "react"
 import CssBaseline from "@mui/material/CssBaseline"
 import AppBar from "@mui/material/AppBar"
 import Toolbar from "@mui/material/Toolbar"
@@ -7,7 +7,7 @@ import IconButton from "@mui/material/IconButton"
 import MenuIcon from "@mui/icons-material/Menu"
 import { useTypedSelector } from "../../redux/store"
 import { HeaderDrawer } from "./HeaderDrawer"
-import { Box, LinearProgress, Theme } from "@mui/material"
+import { Box, LinearProgress, Menu, MenuItem, Theme } from "@mui/material"
 import SunIcon from "@mui/icons-material/Brightness7"
 import MoonIcon from "@mui/icons-material/Brightness4"
 import { useDispatch } from "react-redux"
@@ -16,10 +16,15 @@ import { uiActions } from "../../redux/slices/ui"
 import {
 	localStorageWrapper,
 	LOCAL_STORAGE_KEY,
-} from "../../localStorage/localStorageWrapper"
+} from "../../utils/localStorageWrapper"
 import { styled } from "@mui/styles"
 import LogoutIcon from "@mui/icons-material/Logout"
 import { authActions } from "../../redux/slices/auth"
+import LanguageIcon from "@mui/icons-material/Language"
+import { LOCALS } from "../../constants"
+import UkrainianFlag from "../../assets/ukraine.svg"
+import UnitedKingdomFlag from "../../assets/united-kingdom.svg"
+import { useTranslation } from "react-i18next"
 
 const DrawerHeader = styled("div")(({ theme }: { theme: Theme }) => ({
 	display: "flex",
@@ -34,7 +39,10 @@ type PropsType = {
 
 export const Header = ({ children }: PropsType) => {
 	const dispatch = useDispatch()
+	const { t, i18n } = useTranslation()
 	const [drawerOpened, setDrawerOpened] = useState(false)
+	const [langOpened, setLangOpened] = useState(false)
+	const langButton = useRef(null)
 
 	const username = useTypedSelector((state) => state.auth.username)
 	const isPageLoading = useTypedSelector((state) => state.ui.isPageLoading)
@@ -51,6 +59,16 @@ export const Header = ({ children }: PropsType) => {
 			isLight: !isLight,
 		})
 		dispatch(uiActions.setIsLight({ isLight: !isLight }))
+	}
+
+	const handleLangChange = (newLang: LOCALS) => {
+		dispatch(uiActions.setLanguage({ lang: newLang }))
+		i18n.changeLanguage(newLang)
+		setLangOpened(false)
+	}
+
+	const toggleLangOpen = () => {
+		setLangOpened((prevLangOpen) => !prevLangOpen)
 	}
 
 	return (
@@ -99,8 +117,40 @@ export const Header = ({ children }: PropsType) => {
 					)}
 
 					<Typography variant="h6" noWrap sx={{ flexGrow: 1, color: "white" }}>
-						{username ? `${username}'s to do list` : "To do list"}
+						{username
+							? t("header.title-username", { username })
+							: t("header.title")}
 					</Typography>
+					<div>
+						<IconButton onClick={toggleLangOpen} ref={langButton}>
+							<LanguageIcon sx={{ color: "white" }} />
+						</IconButton>
+						<Menu
+							open={langOpened}
+							anchorEl={langButton.current || null}
+							onClose={() => setLangOpened(false)}
+						>
+							<MenuItem
+								onClick={() => handleLangChange(LOCALS.EN)}
+								sx={{ width: "140px" }}
+							>
+								<Box
+									component={"img"}
+									src={UnitedKingdomFlag}
+									sx={{ maxHeight: "20px", mr: 1 }}
+								/>
+								English
+							</MenuItem>
+							<MenuItem onClick={() => handleLangChange(LOCALS.UA)}>
+								<Box
+									component={"img"}
+									src={UkrainianFlag}
+									sx={{ maxHeight: "20px", mr: 1 }}
+								/>
+								Ukrainian
+							</MenuItem>
+						</Menu>
+					</div>
 					<IconButton onClick={toggleTheme}>
 						{isLight ? (
 							<MoonIcon sx={{ color: "white" }} />
