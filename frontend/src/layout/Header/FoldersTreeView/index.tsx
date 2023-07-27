@@ -1,20 +1,17 @@
 import { useState } from "react"
 import { List, ListItemText, ListItemIcon, ListItemButton } from "@mui/material"
-import { useTypedSelector } from "../../../redux/store"
+import { useTypedDispatch, useTypedSelector } from "../../../redux/store"
 import FolderOpenIcon from "@mui/icons-material/FolderOpen"
 import FolderCopyIcon from "@mui/icons-material/FolderCopyOutlined"
 import ColorLensIcon from "@mui/icons-material/ColorLensOutlined"
 import ColorizeIcon from "@mui/icons-material/ColorizeOutlined"
 import { CollapseTreeItem } from "../../../components"
 import AddIcon from "@mui/icons-material/Add"
-import { FolderType, TagType } from "../../../types/index_d"
+import { FolderType, TagType } from "../../../redux/types/goal"
 import { useTranslation } from "react-i18next"
+import { uiActions } from "../../../redux/slices/ui"
 
 type PropsType = {
-	openAddTag: () => void
-	openEditTag: () => void
-	openAddFolder: () => void
-	openEditFolder: () => void
 	setEditTagName: (name: string) => void
 	setEditTagId: (id: string) => void
 	setHeadline: (headline: string) => void
@@ -22,10 +19,6 @@ type PropsType = {
 }
 
 export const FoldersTreeView = ({
-	openAddTag,
-	openEditTag,
-	openAddFolder,
-	openEditFolder,
 	setEditTagName,
 	setEditTagId,
 	setHeadline,
@@ -33,6 +26,7 @@ export const FoldersTreeView = ({
 }: PropsType) => {
 	const [foldersOpened, setFoldersOpened] = useState(false)
 	const [tagsOpened, setTagsOpened] = useState(false)
+	const dispatch = useTypedDispatch()
 	const { t } = useTranslation()
 
 	const tags = useTypedSelector((state) => state.goal.tags)
@@ -41,13 +35,23 @@ export const FoldersTreeView = ({
 	const handleFolderClick = (folder: FolderType) => () => {
 		setCurrentFolderId(folder.id)
 		setHeadline(folder.headline)
-		openEditFolder()
+		dispatch(uiActions.setModalOpen({ type: "editFolder", open: true }))
 	}
+
 	const handleTagClick = (tag: TagType) => () => {
 		setEditTagId(tag.id)
 		setEditTagName(tag.name)
-		openEditTag()
+		dispatch(uiActions.setModalOpen({ type: "editTag", open: true }))
 	}
+
+	const openAddFolder = () => {
+		dispatch(uiActions.setModalOpen({ type: "addFolder", open: true }))
+	}
+
+	const openAddTag = () => {
+		dispatch(uiActions.setModalOpen({ type: "addTag", open: true }))
+	}
+
 	return (
 		<List
 			component="nav"

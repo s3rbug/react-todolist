@@ -3,7 +3,7 @@ import {
 	TagType,
 	GoalType,
 	CurrentFolderIdType,
-} from "./../types/index_d"
+} from "../redux/types/goal"
 import { instance } from "./config"
 
 export const goalApi = {

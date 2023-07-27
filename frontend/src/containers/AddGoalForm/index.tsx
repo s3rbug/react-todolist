@@ -1,7 +1,7 @@
 import { useState, useRef } from "react"
 import { IconButton, Box } from "@mui/material"
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward"
-import { TaskFormDataType } from "../../types/index_d"
+import { TaskFormDataType } from "../../redux/types/goal"
 import { useForm } from "react-hook-form"
 import { addGoal } from "../../redux/middleware/goal"
 import { useTypedDispatch } from "../../redux/store"

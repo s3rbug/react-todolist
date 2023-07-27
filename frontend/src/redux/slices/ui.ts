@@ -1,6 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
-import { UiStateType } from "../../types/index_d"
-import { LOCALS } from "../../constants"
+import { UiStateType, ModalsType, LOCALS } from "../types/ui"
 
 const initialState: UiStateType = {
 	isLight: true,
@@ -8,6 +7,12 @@ const initialState: UiStateType = {
 	usernameError: null,
 	passwordError: null,
 	lang: LOCALS.EN,
+	modals: {
+		addTag: false,
+		editTag: false,
+		addFolder: false,
+		editFolder: false,
+	},
 }
 
 const uiSlice = createSlice({
@@ -42,6 +47,13 @@ const uiSlice = createSlice({
 		setLanguage: (state, action: PayloadAction<{ lang: LOCALS }>) => {
 			const { lang } = action.payload
 			state.lang = lang
+		},
+		setModalOpen: (
+			state,
+			action: PayloadAction<{ type: keyof ModalsType; open: boolean }>
+		) => {
+			const { type, open } = action.payload
+			state.modals[type] = open
 		},
 	},
 })

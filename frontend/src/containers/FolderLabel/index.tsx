@@ -8,7 +8,7 @@ import {
 	Box,
 } from "@mui/material"
 import FolderIcon from "@mui/icons-material/FolderOutlined"
-import { FolderType } from "../../types/index_d"
+import { FolderType } from "../../redux/types/goal"
 import { reorderCurrentFolders } from "../../redux/middleware/goal"
 import { useTypedDispatch } from "../../redux/store"
 

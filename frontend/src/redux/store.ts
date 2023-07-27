@@ -1,9 +1,9 @@
 import { TypedUseSelectorHook, useSelector, useDispatch } from "react-redux"
 import { configureStore, ThunkAction, AnyAction } from "@reduxjs/toolkit"
 
-import { goalReducer } from "./slices/goal"
-import { uiReducer } from "./slices/ui"
-import { authReducer } from "./slices/auth"
+import { goalReducer, goalActions } from "./slices/goal"
+import { uiReducer, uiActions } from "./slices/ui"
+import { authReducer, authActions } from "./slices/auth"
 
 const store = configureStore({
 	reducer: {
@@ -13,6 +13,7 @@ const store = configureStore({
 	},
 })
 
+export type actions = typeof goalActions | typeof uiActions | typeof authActions
 export type AppDispatchType = typeof store.dispatch
 export type AppStateType = ReturnType<typeof store.getState>
 

@@ -2,27 +2,27 @@ import { useState, useEffect, ChangeEvent } from "react"
 import { Dialog, DialogTitle, Input } from "@mui/material"
 import { DialogButtons } from "../../../../components"
 import { deleteTag, editTag } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/store"
+import { useTypedDispatch, useTypedSelector } from "../../../../redux/store"
 import { useTranslation } from "react-i18next"
+import { uiActions } from "../../../../redux/slices/ui"
 
 type PropsType = {
-	open: boolean
-	setOpen: (open: boolean) => void
 	tagName: string
 	tagId: string
 }
 
-export const EditTagDialog = ({ open, setOpen, tagId, tagName }: PropsType) => {
+export const EditTagDialog = ({ tagId, tagName }: PropsType) => {
 	const [newName, setNewName] = useState("")
 	const dispatch = useTypedDispatch()
 	const { t } = useTranslation()
+	const { editTag: open } = useTypedSelector((state) => state.ui.modals)
 
 	useEffect(() => {
 		setNewName(tagName)
 	}, [tagName])
 
 	const handleClose = () => {
-		setOpen(false)
+		dispatch(uiActions.setModalOpen({ type: "editTag", open: false }))
 	}
 	const handleEdit = () => {
 		dispatch(editTag({ tagId, newTag: { name: newName } }))

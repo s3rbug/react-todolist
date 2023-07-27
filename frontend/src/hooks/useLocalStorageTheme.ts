@@ -3,7 +3,7 @@ import {
 	LOCAL_STORAGE_KEY,
 	localStorageWrapper,
 } from "../utils/localStorageWrapper"
-import { ThemeResponseType } from "../types/index_d"
+import { ThemeResponseType } from "../redux/types/ui"
 import { uiActions } from "../redux/slices/ui"
 import { useTypedDispatch } from "../redux/store"
 

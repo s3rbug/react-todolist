@@ -1,4 +1,4 @@
-import { AuthFormType } from "../../types/index_d"
+import { AuthFormType } from "../../redux/types/auth"
 import { AuthForm } from "../../containers"
 import { login } from "../../redux/middleware/auth"
 import { useTypedDispatch } from "../../redux/store"

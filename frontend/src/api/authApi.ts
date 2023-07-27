@@ -1,5 +1,4 @@
-import { LoginResponseType } from "./../types/index_d"
-import { AuthFormType } from "../types/index_d"
+import { LoginResponseType, AuthFormType } from "./../redux/types/auth"
 import { instance } from "./config"
 
 export const authApi = {

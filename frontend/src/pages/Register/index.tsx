@@ -1,6 +1,6 @@
 import { register } from "../../redux/middleware/auth"
 import { useTypedDispatch } from "../../redux/store"
-import { AuthFormType } from "../../types/index_d"
+import { AuthFormType } from "../../redux/types/auth"
 import { AuthForm } from "../../containers"
 import { useTranslation } from "react-i18next"
 

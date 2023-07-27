@@ -3,7 +3,7 @@ import {
 	LOCAL_STORAGE_KEY,
 	localStorageWrapper,
 } from "../utils/localStorageWrapper"
-import { LoginResponseType } from "../types/index_d"
+import { LoginResponseType } from "../redux/types/auth"
 import { setApiHeader } from "../api/config"
 import { setUserData } from "../redux/middleware/goal"
 import { uiActions } from "../redux/slices/ui"

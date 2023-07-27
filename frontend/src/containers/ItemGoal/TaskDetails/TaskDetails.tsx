@@ -6,7 +6,11 @@ import {
 	TextField,
 	Box,
 } from "@mui/material"
-import { GoalType, TagType, TaskDetailsFormType } from "../../../types/index_d"
+import {
+	GoalType,
+	TagType,
+	TaskDetailsFormType,
+} from "../../../redux/types/goal"
 import { DialogButtons } from "../../../components"
 import Chip from "@mui/material/Chip"
 import { useForm } from "react-hook-form"

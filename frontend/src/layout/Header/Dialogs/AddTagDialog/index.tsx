@@ -9,20 +9,17 @@ import {
 import { ColorResult, HuePicker } from "react-color"
 import { Goal, DialogButtons } from "../../../../components"
 import { addTag } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/store"
+import { useTypedDispatch, useTypedSelector } from "../../../../redux/store"
 import { Box } from "@mui/system"
-import { GoalType } from "../../../../types/index_d"
+import { GoalType } from "../../../../redux/types/goal"
 import { useTranslation } from "react-i18next"
+import { uiActions } from "../../../../redux/slices/ui"
 
-type PropsType = {
-	open: boolean
-	setOpen: (open: boolean) => void
-}
-
-export const AddTagDialog = ({ open, setOpen }: PropsType) => {
+export const AddTagDialog = () => {
 	const theme = useTheme()
 	const dispatch = useTypedDispatch()
 	const { t } = useTranslation()
+	const { addTag: open } = useTypedSelector((state) => state.ui.modals)
 
 	const [checked, setChecked] = useState(false)
 	const [color, setColor] = useState(theme.palette.primary.main)
@@ -37,7 +34,7 @@ export const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	}
 
 	const handleClose = () => {
-		setOpen(false)
+		dispatch(uiActions.setModalOpen({ type: "addTag", open: false }))
 	}
 	const toggleCheckbox = () => {
 		setChecked(!checked)
@@ -55,7 +52,7 @@ export const AddTagDialog = ({ open, setOpen }: PropsType) => {
 	}
 	const handleAddTag = () => {
 		dispatch(addTag({ name: tagName, color }))
-		setOpen(false)
+		handleClose()
 	}
 	return (
 		<Dialog open={open} onClose={handleClose}>

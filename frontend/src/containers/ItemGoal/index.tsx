@@ -1,6 +1,6 @@
 import { useState } from "react"
 import ListItem from "@mui/material/ListItem"
-import { GoalType } from "../../types/index_d"
+import { GoalType } from "../../redux/types/goal"
 import { TaskDetails } from "./TaskDetails"
 import { useTypedSelector } from "../../redux/store"
 import { Goal } from "../../components"

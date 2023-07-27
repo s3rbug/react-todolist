@@ -26,29 +26,12 @@ type PropsType = {
 }
 
 export const HeaderDrawer = ({ open, setOpen, drawerWidth }: PropsType) => {
-	const [modalState, setModalState] = useState({
-		addTagOpened: false,
-		editTagOpened: false,
-		addFolderOpened: false,
-		editFolderOpened: false,
-	})
-
 	const [formDataState, setFormDataState] = useState({
 		headline: "",
 		tagId: "",
 		currentFolderId: "",
 		tagName: "",
 	})
-
-	const setModalOpened = (
-		modalName: keyof typeof modalState,
-		isOpen: boolean = true
-	) => {
-		setModalState((prevState) => ({
-			...prevState,
-			[modalName]: isOpen,
-		}))
-	}
 
 	const setFormData = (formData: keyof typeof formDataState, value: string) => {
 		setFormDataState((prevState) => ({
@@ -72,10 +55,6 @@ export const HeaderDrawer = ({ open, setOpen, drawerWidth }: PropsType) => {
 		>
 			<DrawerHeader drawerWidth={drawerWidth} />
 			<FoldersTreeView
-				openAddTag={() => setModalOpened("addTagOpened")}
-				openEditTag={() => setModalOpened("editTagOpened")}
-				openAddFolder={() => setModalOpened("addFolderOpened")}
-				openEditFolder={() => setModalOpened("editFolderOpened")}
 				setEditTagName={(value: string) => setFormData("tagName", value)}
 				setEditTagId={(value: string) => setFormData("tagId", value)}
 				setHeadline={(value: string) => setFormData("headline", value)}
@@ -83,26 +62,14 @@ export const HeaderDrawer = ({ open, setOpen, drawerWidth }: PropsType) => {
 					setFormData("currentFolderId", value)
 				}
 			/>
-			<AddTagDialog
-				setOpen={(isOpen: boolean) => setModalOpened("addTagOpened", isOpen)}
-				open={modalState.addTagOpened}
-			/>
+			<AddTagDialog />
 			<EditTagDialog
-				setOpen={(isOpen: boolean) => setModalOpened("editTagOpened", isOpen)}
-				open={modalState.editTagOpened}
 				tagId={formDataState.tagId}
 				tagName={formDataState.tagName}
 			/>
-			<AddFolderDialog
-				open={modalState.addFolderOpened}
-				setOpen={(isOpen: boolean) => setModalOpened("addFolderOpened", isOpen)}
-			/>
+			<AddFolderDialog />
 			<EditFolderDialog
 				headline={formDataState.headline}
-				open={modalState.editFolderOpened}
-				setOpen={(isOpen: boolean) =>
-					setModalOpened("editFolderOpened", isOpen)
-				}
 				folderId={formDataState.currentFolderId}
 			/>
 		</Drawer>

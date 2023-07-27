@@ -1,5 +1,5 @@
 import { Box, Tooltip, ListItemSecondaryAction, Checkbox } from "@mui/material"
-import { GoalType, TagType } from "../../types/index_d"
+import { GoalType, TagType } from "../../redux/types/goal"
 
 type PropsType = {
 	handleClick?: () => void

@@ -4,7 +4,7 @@ import {
 	FolderType,
 	CurrentFolderIdType,
 	GoalType,
-} from "./../../types/index_d"
+} from "../types/goal"
 import { createSlice, PayloadAction } from "@reduxjs/toolkit"
 
 const initialState: GoalStateType = {

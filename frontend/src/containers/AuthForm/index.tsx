@@ -5,7 +5,7 @@ import { useDispatch } from "react-redux"
 import { NavLink, Navigate } from "react-router-dom"
 import { useTypedSelector } from "../../redux/store"
 import { uiActions } from "../../redux/slices/ui"
-import { AuthFormType } from "../../types/index_d"
+import { AuthFormType } from "../../redux/types/auth"
 import { useTranslation } from "react-i18next"
 
 type PropsType = {
@@ -29,8 +29,7 @@ export const AuthForm = ({
 	const { t } = useTranslation()
 	const token = useTypedSelector((state) => state.auth.token)
 
-	const usernameError = useTypedSelector((state) => state.ui.usernameError)
-	const passwordError = useTypedSelector((state) => state.ui.passwordError)
+	const { usernameError, passwordError } = useTypedSelector((state) => state.ui)
 
 	const {
 		watch,

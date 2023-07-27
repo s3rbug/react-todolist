@@ -5,25 +5,20 @@ import {
 	deleteFolder,
 	editFolderHeadline,
 } from "../../../../redux/middleware/goal"
-import { useTypedDispatch } from "../../../../redux/store"
+import { useTypedDispatch, useTypedSelector } from "../../../../redux/store"
 import { useTranslation } from "react-i18next"
+import { uiActions } from "../../../../redux/slices/ui"
 
 type PropsType = {
 	headline: string
-	open: boolean
-	setOpen: (open: boolean) => void
 	folderId: string
 }
 
-export const EditFolderDialog = ({
-	open,
-	setOpen,
-	headline,
-	folderId,
-}: PropsType) => {
+export const EditFolderDialog = ({ headline, folderId }: PropsType) => {
 	const [newHeadline, setNewHeadline] = useState(headline)
 	const dispatch = useTypedDispatch()
 	const { t } = useTranslation()
+	const { editFolder: open } = useTypedSelector((state) => state.ui.modals)
 
 	useEffect(() => {
 		setNewHeadline(headline)
@@ -31,7 +26,7 @@ export const EditFolderDialog = ({
 
 	const handleClose = () => {
 		setNewHeadline(headline)
-		setOpen(false)
+		dispatch(uiActions.setModalOpen({ type: "editFolder", open: false }))
 	}
 
 	const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
